@@ -1,5 +1,6 @@
 package ch.bfh.eadj.bookstore.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -10,6 +11,7 @@ public class CreditCard {
 	}
 
 	private CreditCardType type;
+	@Column(name = "creditCardNumber")
 	private String number;
 	private Integer expirationMonth;
 	private Integer expirationYear;

@@ -3,6 +3,7 @@ package ch.bfh.eadj.bookstore.entity;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,11 +13,11 @@ public class User extends BaseEntity {
 	private String name;
 	private String password;
 
-        /**
-         Type of "Set" because unique required but not ordered
-         */
+	/**
+	 * Type of "Set" because unique required but not ordered
+	 */
 	@ManyToMany
-	private Set<Group> groups;
+	private Set<Group> groups = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -40,5 +41,10 @@ public class User extends BaseEntity {
 
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
+	}
+
+	public void addGroup(Group group) {
+		groups.add(group);
+		group.getUsers().add(this);
 	}
 }

@@ -1,7 +1,7 @@
-package ch.bfh.eadj.bookstore;
+package ch.bfh.eadj.bookstore.repository;
 
+import ch.bfh.eadj.bookstore.AbstractTest;
 import ch.bfh.eadj.bookstore.entity.User;
-import ch.bfh.eadj.bookstore.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +17,8 @@ public class UserRepositoryTest extends AbstractTest {
 
 	@Test
 	public void searchByName() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> User namedQuery <<<<<<<<<<<<<<<<<<<<");
+
 		User user = userRepository.findByName("bookstore");
 		Assert.assertNotNull(user);
 		Assert.assertEquals("bookstore", user.getPassword());

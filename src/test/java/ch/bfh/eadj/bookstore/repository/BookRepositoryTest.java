@@ -1,11 +1,13 @@
-package ch.bfh.eadj.bookstore;
+package ch.bfh.eadj.bookstore.repository;
 
-import static ch.bfh.eadj.bookstore.AbstractTest.em;
 import ch.bfh.eadj.bookstore.entity.Book;
 import ch.bfh.eadj.bookstore.entity.User;
 import ch.bfh.eadj.bookstore.repository.BookRepository;
 import org.junit.Assert;
 import org.junit.Before;
+
+import ch.bfh.eadj.bookstore.AbstractTest;
+
 import org.junit.Test;
 
 public class BookRepositoryTest extends AbstractTest {

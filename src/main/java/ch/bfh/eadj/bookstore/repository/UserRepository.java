@@ -11,7 +11,7 @@ import java.util.Map;
 /*
 Lukas
  */
-public class UserRepository extends AbstractRepository<User, String> {
+public class UserRepository extends AbstractRepository<User, Long> {
 
 	public UserRepository(EntityManager em) {
 		super(em);
