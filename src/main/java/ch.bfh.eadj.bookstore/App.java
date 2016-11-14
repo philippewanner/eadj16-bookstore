@@ -1,4 +1,4 @@
-package bookstore;
+package ch.bfh.eadj.bookstore;
 
 /**
  * Hello world!
