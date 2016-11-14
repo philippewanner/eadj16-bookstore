@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import ch.bfh.eadj.bookstore.common.definition.Definitions.OrderStatus;
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.OneToOne;
 
@@ -15,9 +16,9 @@ import javax.persistence.OneToOne;
 public class SalesOrder extends BaseEntity {
 
     /**
-     * Type Set because unique required but not ordered
+     * Type of "Set" because unique required but not ordered
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "salesOrder_id")
     private Set<SalesOrderItem> salesOrderItems;
 
