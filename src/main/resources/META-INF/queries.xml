@@ -20,4 +20,12 @@
         </query>
     </named-query>
 
+    <named-query name="Customer.findByName">
+        <query>
+            <![CDATA[
+            select c from Customer c where c.name like %:name% or c.firstName like %:name%
+        ]]>
+        </query>
+    </named-query>
+
 </entity-mappings>
