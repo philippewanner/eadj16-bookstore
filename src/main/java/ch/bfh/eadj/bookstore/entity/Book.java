@@ -1,7 +1,6 @@
 package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
@@ -11,7 +10,6 @@ public class Book extends BaseEntity {
 		HARD_COVER, SOFT_COVER
 	}
 
-	@Id
 	private String isbn;
 
 	private String title;

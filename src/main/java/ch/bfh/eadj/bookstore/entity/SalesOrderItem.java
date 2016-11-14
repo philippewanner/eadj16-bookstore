@@ -11,15 +11,12 @@ import javax.persistence.ManyToOne;
  */
 
 @Entity
-public class SalesOrderItem extends BaseEntity{
-    
-    @Id
-    private Long id;
-       
-    @ManyToOne
-    private Book book;    
-    
-    private Integer quantity;
-    
-    private BigDecimal price;
+public class SalesOrderItem extends BaseEntity {
+
+	@ManyToOne(optional = false)
+	private Book book;
+
+	private Integer quantity;
+
+	private BigDecimal price;
 }
