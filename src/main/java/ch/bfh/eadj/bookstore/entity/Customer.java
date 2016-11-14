@@ -8,7 +8,6 @@ import javax.persistence.OneToOne;
 @Entity
 public class Customer extends BaseEntity {
 
-	@Id
 	private Long number;
 	private String firstName;
 	private String name;
