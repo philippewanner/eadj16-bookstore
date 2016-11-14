@@ -1,11 +1,14 @@
 package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
-
-/**
- * Created by philippewanner on 14.11.16.
- */
+import javax.persistence.Id;
 
 @Entity
 public class Customer {
+
+	@Id
+	private Long number;
+	private String firstName;
+	private String name;
+	private String email;
 }
