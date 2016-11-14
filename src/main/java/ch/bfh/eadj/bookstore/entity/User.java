@@ -10,6 +10,9 @@ public class User extends BaseEntity {
 	private String name;
 	private String password;
 
+        /**
+         Type of "Set" because unique required but not ordered
+         */
 	@ManyToMany
 	private Set<Group> groups;
 
