@@ -5,10 +5,20 @@
  */
 package ch.bfh.eadj.bookstore.dto;
 
+import ch.bfh.eadj.bookstore.entity.SalesOrder.OrderStatus;
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  *
  * @author jlue4
  */
 public class OrderInfo {
+    private Long number;
     
+    private Date date;
+    
+    private BigDecimal amount;
+    
+    private OrderStatus status;
 }

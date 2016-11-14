@@ -5,10 +5,16 @@
  */
 package ch.bfh.eadj.bookstore.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author jlue4
  */
 public class BookInfo {
+    private String isbn;
     
+    private String title;
+    
+    private BigDecimal price;
 }
