@@ -3,6 +3,7 @@ package ch.bfh.eadj.bookstore.entity;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by philippewanner on 14.11.16.
@@ -13,6 +14,9 @@ public class SalesOrderItem {
     
     @Id
     private Long id;
+       
+    @ManyToOne
+    private Book book;    
     
     private Integer quantity;
     
