@@ -11,6 +11,9 @@ public class Group extends BaseEntity {
 
 	private String name;
 
+        /**
+         Type of "Set" because unique required but not ordered
+         */
 	@ManyToMany
 	private Set<User> users;
 

@@ -22,7 +22,7 @@ public abstract class AbstractTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		emf = Persistence.createEntityManagerFactory("hr");
+		emf = Persistence.createEntityManagerFactory("bookstore");
 		em = emf.createEntityManager();
 	}
 
@@ -42,8 +42,8 @@ public abstract class AbstractTest {
 			em.getTransaction().begin();
 
 			User user = new User();
-			user.setName("muster");
-			user.setPassword("md5");
+			user.setName("bookstore");
+			user.setPassword("bookstore");
 
 			em.persist(user);
 
