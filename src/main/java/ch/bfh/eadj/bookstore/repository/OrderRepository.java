@@ -3,7 +3,7 @@ package ch.bfh.eadj.bookstore.repository;
 import javax.persistence.criteria.Order;
 
 /**
- * Created by philippewanner on 14.11.16.
+ * Philippe
  */
 public class OrderRepository extends AbstractRepository<Order, Integer> {
 
