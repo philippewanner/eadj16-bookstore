@@ -3,7 +3,7 @@ package ch.bfh.eadj.bookstore.entity;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class CreditCard extends BaseEntity {
+public class CreditCard {
 
 	public enum CreditCardType {
 		AMERICAN_EXPRESS, MASTER_CARD, VISA

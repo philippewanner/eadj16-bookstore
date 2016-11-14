@@ -3,7 +3,7 @@ package ch.bfh.eadj.bookstore.entity;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Address extends BaseEntity {
+public class Address {
 
 	private String street;
 	private String city;
