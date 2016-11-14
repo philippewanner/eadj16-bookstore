@@ -1,4 +1,4 @@
-package ch.bfh.eadj.repository;
+package ch.bfh.eadj.bookstore.repository;
 
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;

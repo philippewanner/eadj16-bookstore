@@ -5,7 +5,7 @@
  */
 package ch.bfh.eadj.bookstore.dto;
 
-import ch.bfh.eadj.entity.SalesOrder.OrderStatus;
+import ch.bfh.eadj.bookstore.entity.SalesOrder.OrderStatus;
 import java.math.BigDecimal;
 import java.util.Date;
 

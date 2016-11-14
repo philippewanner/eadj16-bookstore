@@ -1,4 +1,4 @@
-package ch.bfh.eadj.entity;
+package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
 import java.math.BigDecimal;

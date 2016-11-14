@@ -1,6 +1,6 @@
-package ch.bfh.eadj.repository;
+package ch.bfh.eadj.bookstore.repository;
 
-import ch.bfh.eadj.entity.Book;
+import ch.bfh.eadj.bookstore.entity.Book;
 
 /**
  * Created by philippewanner on 14.11.16.
