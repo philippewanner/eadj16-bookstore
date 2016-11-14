@@ -2,9 +2,11 @@ package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
+@Table(name = "BookstoreGroup")
 public class Group extends BaseEntity {
 
 	private String name;
