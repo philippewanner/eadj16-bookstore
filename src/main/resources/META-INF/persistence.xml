@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="hr" transaction-type="RESOURCE_LOCAL">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-      <class>ch.bfh.eadj.bookstore.entity.Address</class>
-      <class>ch.bfh.eadj.bookstore.entity.BaseEntity</class>
-      <class>ch.bfh.eadj.bookstore.entity.Book</class>
-      <class>ch.bfh.eadj.bookstore.entity.CreditCard</class>
-      <class>ch.bfh.eadj.bookstore.entity.Customer</class>
-      <class>ch.bfh.eadj.bookstore.entity.Group</class>
-      <class>ch.bfh.eadj.bookstore.entity.SalesOrder</class>
-      <class>ch.bfh.eadj.bookstore.entity.SalesOrderItem</class>
-      <class>ch.bfh.eadj.bookstore.entity.User</class>
-    <property name="javax.persistence.validation.mode" value="AUTO" />
-    <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/bookstore"/>
-      <property name="javax.persistence.jdbc.user" value="bookstore"/>
-      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
-      <property name="javax.persistence.jdbc.password" value="bookstore"/>
-      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-      <property name="eclipselink.logging.level" value="FINE"/>
-    </properties>
-  </persistence-unit>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="hr" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>ch.bfh.eadj.bookstore.entity.Address</class>
+        <class>ch.bfh.eadj.bookstore.entity.BaseEntity</class>
+        <class>ch.bfh.eadj.bookstore.entity.Book</class>
+        <class>ch.bfh.eadj.bookstore.entity.CreditCard</class>
+        <class>ch.bfh.eadj.bookstore.entity.Customer</class>
+        <class>ch.bfh.eadj.bookstore.entity.Group</class>
+        <class>ch.bfh.eadj.bookstore.entity.SalesOrder</class>
+        <class>ch.bfh.eadj.bookstore.entity.SalesOrderItem</class>
+        <class>ch.bfh.eadj.bookstore.entity.User</class>
+        <mapping-file>META-INF/queries.xml</mapping-file>
+        <property name="javax.persistence.validation.mode" value="AUTO"/>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/bookstore"/>
+            <property name="javax.persistence.jdbc.user" value="bookstore"/>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+            <property name="javax.persistence.jdbc.password" value="bookstore"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+        </properties>
+    </persistence-unit>
 </persistence>
