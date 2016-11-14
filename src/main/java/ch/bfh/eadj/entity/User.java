@@ -1,4 +1,4 @@
-package ch.bfh.eadj.bookstore.entity;
+package ch.bfh.eadj.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
