@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Set;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import ch.bfh.eadj.bookstore.common.definition.Definitions.OrderStatus;
 
 @Entity
 public class SalesOrder extends BaseEntity {
@@ -23,9 +24,5 @@ public class SalesOrder extends BaseEntity {
     private BigDecimal amount;
 
     private OrderStatus status;
-
-    public enum OrderStatus {
-        CANCELLED, ORDERED, PAYED, DELIVERED
-    }
 
 }
