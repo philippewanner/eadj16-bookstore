@@ -1,7 +1,5 @@
 package ch.bfh.eadj.bookstore.repository;
 
-import ch.bfh.eadj.bookstore.entity.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
@@ -64,21 +62,28 @@ public abstract class AbstractRepository<T, PK> {
 	/**
 	 * Remove an object from persistent storage in the database.
 	 *
-	 * @param id the id of the persistent object to remove.
+	 * @param item the persistent object to remove.
 	 */
-	public void delete(PK id) {
-
-		this.em.remove(id);
+	public void delete(T item) {
+		this.em.remove(item);
 	}
 
 	public List<T> findByNamedQuery(String queryName) {
-		TypedQuery<T> q = em.createNamedQuery(queryName, entityClass);
+		return findByNamedQuery(entityClass, queryName);
+	}
+
+	public List<T> findByNamedQuery(String queryName, Map<String, Object> parameters) {
+		return findByNamedQuery(entityClass, queryName, parameters);
+	}
+
+	public <X> List<X> findByNamedQuery(Class<X> clazz, String queryName) {
+		TypedQuery<X> q = em.createNamedQuery(queryName, clazz);
 
 		return q.getResultList();
 	}
 
-	public List<T> findByNamedQuery(String queryName, Map<String, Object> parameters) {
-		TypedQuery<T> q = em.createNamedQuery(queryName, entityClass);
+	public <X> List<X> findByNamedQuery(Class<X> clazz, String queryName, Map<String, Object> parameters) {
+		TypedQuery<X> q = em.createNamedQuery(queryName, clazz);
 
 		for (String key : parameters.keySet()) {
 			q.setParameter(key, parameters.get(key));

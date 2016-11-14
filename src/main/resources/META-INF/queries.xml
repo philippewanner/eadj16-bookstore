@@ -23,7 +23,18 @@
     <named-query name="Customer.findByName">
         <query>
             <![CDATA[
-            select c from Customer c where c.name like CONCAT(:name, '%') or c.firstName like CONCAT(:name, '%')
+            select c from Customer c where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
+            or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
+        ]]>
+        </query>
+    </named-query>
+
+    <named-query name="Customer.findInfosByName">
+        <query>
+            <![CDATA[
+            select NEW ch.bfh.eadj.bookstore.dto.CustomerInfo(c.number, c.firstName, c.name, c.email) from Customer c
+            where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
+            or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
         ]]>
         </query>
     </named-query>
