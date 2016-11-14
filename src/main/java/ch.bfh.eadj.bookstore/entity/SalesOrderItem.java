@@ -2,6 +2,7 @@ package ch.bfh.eadj.bookstore.entity;
 
 import java.math.BigDecimal;
 import javax.persistence.Entity;
+
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne;
  */
 
 @Entity
-public class SalesOrderItem {
+public class SalesOrderItem extends BaseEntity{
     
     @Id
     private Long id;
