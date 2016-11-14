@@ -51,8 +51,18 @@ public class BookRepositoryTest extends AbstractTest {
         
         @Test
 	public void findBook() {
-		Book book = bookRepository.findByISBN("978-3-455-00000-7");
-		Assert.assertNull(book);
+            Book book=new Book();
+            book.setTitle("Die Assistentinnen");
+            book.setIsbn("978-3-86396-095-7");
+                
+            bookRepository.persist(book);
+                            
+            Assert.assertTrue(em.contains(book));
+            
+            Long id = book.getId();
+            
+            //book = bookRepository.find(id);
+           // Assert.assertNotNull(book);
 	}
         
         @Test
