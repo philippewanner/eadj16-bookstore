@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractTest {
@@ -23,7 +24,8 @@ public abstract class AbstractTest {
     private Long groupId;
     private Long userId;
     private Long customerId;
-
+    
+    
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         emf = Persistence.createEntityManagerFactory("bookstore");
@@ -111,7 +113,8 @@ public abstract class AbstractTest {
             Customer customer = em.find(Customer.class, customerId);
             em.remove(customer);
 
-            // TODO: remove Books
+            removeBooks();
+            
             em.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,5 +135,12 @@ public abstract class AbstractTest {
         }
 
         em.getTransaction().commit();
+    }
+
+    private void removeBooks() {
+        for (int i =0;i<TestDataProvider.getISBNs().size();i++){
+            Book book = em.find(Book.class, TestDataProvider.getISBNs().get(i));
+            em.remove(book);
+        }
     }
 }

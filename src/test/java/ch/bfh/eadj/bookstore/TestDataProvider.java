@@ -16,14 +16,22 @@ import java.util.List;
  */
 public class TestDataProvider {
 
+    private static List<String> isbns = new ArrayList<>();
+    
     public static List<Book> getBooks() {
+        isbns = new ArrayList<>();
+        
         List<Book> books = new ArrayList();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 7; i++) {
             Book book = createBook(i);
             books.add(book);
         }
 
         return books;
+    }
+    
+    public static List<String> getISBNs(){
+        return isbns;
     }
 
     private static Book createBook(int i) {
@@ -39,6 +47,7 @@ public class TestDataProvider {
                 book.setPublicationYear(2016);
                 book.setPublisher("Atlantik Verlag");
                 book.setTitle("Das Bild aus meinem Traum");
+                
                 break;
 
             case 1:
@@ -50,6 +59,7 @@ public class TestDataProvider {
                 book.setPublicationYear(2016);
                 book.setPublisher("Ruetten & Loening");
                 book.setTitle("Die Nachtigall");
+                
                 break;
 
             case 2:
@@ -95,8 +105,22 @@ public class TestDataProvider {
                 book.setPublisher("DUMONT Buchverlag");
                 book.setTitle("Brennender Midi / Capitaine Roger Blanc Bd. 3");
                 break;
+                
+                case 6:
+                book.setIsbn("978-3-455-60055-1");
+                book.setAuthors("Agatha Christie");
+                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setNumberOfPages(192);
+                book.setPrice(BigDecimal.valueOf(22.90));
+                book.setPublicationYear(2016);
+                book.setPublisher("Atlantik Verlag");
+                book.setTitle("Das Geheimnis des Weihnachtspuddings");
+                
+                break;
         }
 
+        isbns.add(book.getIsbn());
+        
         return book;
     }
 }

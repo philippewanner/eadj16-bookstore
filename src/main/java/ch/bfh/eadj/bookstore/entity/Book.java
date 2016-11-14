@@ -2,14 +2,16 @@ package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
 import java.math.BigDecimal;
+import javax.persistence.Id;
 
 @Entity
-public class Book extends BaseEntity {
+public class Book {
 
 	public enum BookBinding {
 		HARD_COVER, SOFT_COVER
 	}
 
+        @Id
 	private String isbn;
 
 	private String title;
@@ -40,6 +42,14 @@ public class Book extends BaseEntity {
         this.isbn = isbn;
     }
 
+    public String getId() {
+        return isbn;
+    }
+
+    public void setId(String isbn) {
+        this.isbn = isbn;
+    }
+    
     /**
      * @return the title
      */
