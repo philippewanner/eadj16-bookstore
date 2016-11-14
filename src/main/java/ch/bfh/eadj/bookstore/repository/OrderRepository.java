@@ -1,5 +1,6 @@
 package ch.bfh.eadj.bookstore.repository;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.Order;
 
 /**
@@ -7,5 +8,9 @@ import javax.persistence.criteria.Order;
  */
 public class OrderRepository extends AbstractRepository<Order, Integer> {
 
-    //search(Customer, Integer) List<OrderInfo>
+	public OrderRepository(EntityManager em) {
+		super(em);
+	}
+
+	//search(Customer, Integer) List<OrderInfo>
 }
