@@ -2,10 +2,25 @@ package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.Entity;
 
-/**
- * Created by philippewanner on 14.11.16.
- */
-
 @Entity
 public class User {
+
+	private String name;
+	private String password;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }
