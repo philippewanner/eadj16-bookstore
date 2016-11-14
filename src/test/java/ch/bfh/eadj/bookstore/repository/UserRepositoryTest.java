@@ -17,6 +17,8 @@ public class UserRepositoryTest extends AbstractTest {
 
 	@Test
 	public void searchByName() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> User namedQuery <<<<<<<<<<<<<<<<<<<<");
+
 		User user = userRepository.findByName("bookstore");
 		Assert.assertNotNull(user);
 		Assert.assertEquals("bookstore", user.getPassword());
