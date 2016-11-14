@@ -75,6 +75,9 @@ public abstract class AbstractTest {
             em.remove(user);
 
             em.getTransaction().commit();
+            
+            // TODO: remove books
+            
         } catch (Exception e) {
             e.printStackTrace();
             if (em.getTransaction().isActive()) {
@@ -86,53 +89,13 @@ public abstract class AbstractTest {
     private void fillBooks() {
         em.getTransaction().begin();
 
-        for (int i = 0; i < 3; i++) {
-            Book book = createBook(i);
+        List<Book> books = TestDataProvider.getBooks();
+        for (int i = 0; i < books.size(); i++) {
+            Book book = books.get(i);
             em.persist(book);
             //Long id = book.getId();
         }
 
         em.getTransaction().commit();
-    }
-
-    private Book createBook(int i) {
-        Book book = new Book();
-
-        switch (i) {
-            case 0:
-                book.setIsbn("978-3-455-65045-7");
-                book.setAuthors("Antoine Laurain");
-                book.setBinding(Book.BookBinding.HARD_COVER);
-                book.setNumberOfPages(192);
-                book.setPrice(BigDecimal.valueOf(28.90));
-                book.setPublicationYear(2016);
-                book.setPublisher("Atlantik Verlag");
-                book.setTitle("Das Bild aus meinem Traum");
-                break;
-
-            case 1:
-                book.setIsbn("978-3-352-00885-6");
-                book.setAuthors("Kristin Hannah");
-                book.setBinding(Book.BookBinding.HARD_COVER);
-                book.setNumberOfPages(608);
-                book.setPrice(BigDecimal.valueOf(25.90));
-                book.setPublicationYear(2016);
-                book.setPublisher("Ruetten & Loening");
-                book.setTitle("Die Nachtigall");
-                break;
-
-            case 2:
-                book.setIsbn("978-3-8105-2471-3");
-                book.setAuthors("Lori Nelson Spielman");
-                book.setBinding(Book.BookBinding.HARD_COVER);
-                book.setNumberOfPages(384);
-                book.setPrice(BigDecimal.valueOf(21.90));
-                book.setPublicationYear(2016);
-                book.setPublisher("Fischer Krüger");
-                book.setTitle("Und nebenan warten die Sterne");
-                break;
-        }
-
-        return book;
     }
 }
