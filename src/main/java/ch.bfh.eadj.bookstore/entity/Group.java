@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Group {
+public class Group extends BaseEntity {
 
 	@Id
 	private String name;

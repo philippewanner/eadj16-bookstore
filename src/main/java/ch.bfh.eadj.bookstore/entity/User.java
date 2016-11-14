@@ -3,7 +3,7 @@ package ch.bfh.eadj.bookstore.entity;
 import javax.persistence.Entity;
 
 @Entity
-public class User {
+public class User extends BaseEntity {
 
 	private String name;
 	private String password;

@@ -1,28 +1,19 @@
 package ch.bfh.eadj.bookstore.entity;
 
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-/**
- * Created by philippewanner on 14.11.16.
- */
 @Entity
-public class SalesOrder {
+public class SalesOrder extends BaseEntity {
 
-    @Id
-    private Long number;
-    
-    private LocalDate date;
-    
-    private BigDecimal amount;
-    
-    private OrderStatus status;
-    
-    public enum OrderStatus {
-        CANCELLED, ORDERED, PAYED, DELIVERED
-    }
+	public enum OrderStatus {
+		CANCELLED, ORDERED, PAYED, DELIVERED
+	}
 
-    
+	private LocalDate date;
+
+	private BigDecimal amount;
+
+	private OrderStatus status;
 }
