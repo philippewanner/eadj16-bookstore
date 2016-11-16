@@ -2,12 +2,20 @@ package ch.bfh.eadj.bookstore.repository;
 
 import ch.bfh.eadj.bookstore.entity.Book;
 import ch.bfh.eadj.bookstore.entity.User;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Jan
@@ -33,27 +41,38 @@ public class BookRepository extends AbstractRepository<Book, Long> {
     }
     
     public List<Book> findByKeywords(String[] keywords) {
-       
-        Query q = em.createNativeQuery("SELECT * FROM Book WHERE (title LIKE ?1) or (authors LIKE ?1) or (publisher LIKE ?1)", Book.class);
-        q.setParameter(1, "%"+keywords[0]+"%");
-        List<Book> books = q.getResultList();        
         
-        for (int b =books.size()-1;b>-1;b--){
-            boolean containsKeyword=true;
-            Book book=books.get(b);
-            for (int i=1;i<keywords.length;i++){
-                String keyword=keywords[i];
-                if (!(book.getTitle().contains(keyword) || 
-                        book.getAuthors().contains(keyword) || book.getPublisher().contains(keyword))){
-                    containsKeyword=false;
-                }
-            }
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Book> cq = cb.createQuery(Book.class);
+        Root<Book> book = cq.from(Book.class);
+        
+        cq.select(book);
+                        
+        List<Predicate> predicatesOR = new ArrayList<>();
+                
+        for (String kw: keywords){
+            List<Predicate> predicates = new ArrayList<>();        
+            ParameterExpression<String> parameter = cb.parameter(String.class, kw);
+                                    
+            predicates.add(cb.like(cb.lower(book.get("title")), parameter));              
+            predicates.add(cb.like(cb.lower(book.get("authors")), parameter));
+            predicates.add(cb.like(cb.lower(book.get("publisher")), parameter));  
+           
+            cb.lower(book.get("title"));
             
-            if (!containsKeyword){
-                books.remove(book);
-            }
+            predicatesOR.add(cb.or(predicates.toArray(new Predicate[predicates.size()])));
         }
-
+        
+        cq.where(cb.and(
+                predicatesOR.toArray(new Predicate[predicatesOR.size()])));      
+        
+        TypedQuery<Book> q = em.createQuery(cq);
+        for (String kw: keywords){
+            q.setParameter(kw, "%"+kw.toLowerCase()+"%");
+        }
+        
+        List<Book> books=q.getResultList();               
+       
         return books;
     }
 }

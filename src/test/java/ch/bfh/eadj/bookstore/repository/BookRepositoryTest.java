@@ -56,7 +56,11 @@ public class BookRepositoryTest extends AbstractTest {
 		Long id = book.getId();
 
 		em.getTransaction().begin();
-		book = bookRepository.find(id);
+		
+                book = bookRepository.find(id);
+                
+                Assert.assertNotNull(book);
+                
 		bookRepository.delete(book);
 		em.getTransaction().commit();
 
@@ -67,8 +71,10 @@ public class BookRepositoryTest extends AbstractTest {
 
 	@Test
 	public void findBook() {
-		Book book = bookRepository.findByISBN(TestDataProvider.getISBNs().get(0));
+            for (String isbn: TestDataProvider.getISBNs()){
+		Book book = bookRepository.findByISBN(isbn);
 		Assert.assertNotNull(book);
+            }
 	}
 
 	@Test
@@ -88,15 +94,43 @@ public class BookRepositoryTest extends AbstractTest {
 		Assert.assertNotNull(book);
 		Assert.assertEquals(2, book.size());
 
-		String[] keywords5 = { "Atlantik", "Weihnachtspudding" };
+		String[] keywords5 = { "atlantik", "weihnachtspudding" };
 		book = bookRepository.findByKeywords(keywords5);
 		Assert.assertNotNull(book);
 		Assert.assertEquals(1, book.size());
+                
+                String[] keywords6 = { "Laurain", "Traum", "Atlantik" };
+		book = bookRepository.findByKeywords(keywords6);
+		Assert.assertNotNull(book);
+		Assert.assertEquals(1, book.size());
+                
+                String[] keywords7 = { "Laurain", "irgendwas", "Atlantik" };
+		book = bookRepository.findByKeywords(keywords7);
+		Assert.assertNotNull(book);
+		Assert.assertEquals(0, book.size());
 	}
 
 	@Test
 	public void findUpdate() {
-		//Book book = bookRepository.findByISBN("978-3-455-00000-7");
-		//Assert.assertNull(book);
+            String testIsbn= TestDataProvider.getISBNs().get(0);
+            Book book = bookRepository.findByISBN(testIsbn);
+            Assert.assertNotNull(book);
+            
+            String testTitle="MyNew Title";
+            
+            book.setTitle(testTitle);
+            
+            em.getTransaction().begin();
+            
+            bookRepository.update(book);
+            
+            em.getTransaction().commit();
+            em.clear();
+            emf.getCache().evictAll();
+            
+            book = bookRepository.findByISBN(testIsbn);
+            Assert.assertNotNull(book);
+            
+            Assert.assertEquals(testTitle, book.getTitle());
 	}
 }

@@ -25,6 +25,8 @@ public abstract class AbstractTest {
     private Long userId;
     private Long customerId;
     
+    private List<Long> bookIds;
+    
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -125,21 +127,23 @@ public abstract class AbstractTest {
     }
 
     private void fillBooks() {
-        em.getTransaction().begin();
-
+        
+        bookIds = new ArrayList<Long>();
+        
         List<Book> books = TestDataProvider.getBooks();
         for (int i = 0; i < books.size(); i++) {
             Book book = books.get(i);
+            em.getTransaction().begin();
             em.persist(book);
-            //Long id = book.getId();
+            em.getTransaction().commit();
+            Long id = book.getId();
+            bookIds.add(id);
         }
-
-        em.getTransaction().commit();
     }
 
     private void removeBooks() {
-        for (int i =0;i<TestDataProvider.getISBNs().size();i++){
-            Book book = em.find(Book.class, TestDataProvider.getISBNs().get(i));
+        for (Long id: bookIds){
+            Book book = em.find(Book.class, id);
             em.remove(book);
         }
     }
