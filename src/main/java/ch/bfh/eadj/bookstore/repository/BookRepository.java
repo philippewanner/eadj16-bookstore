@@ -39,40 +39,40 @@ public class BookRepository extends AbstractRepository<Book, Long> {
             return books.get(0);
         }
     }
-    
+
     public List<Book> findByKeywords(String[] keywords) {
-        
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Book> cq = cb.createQuery(Book.class);
         Root<Book> book = cq.from(Book.class);
-        
+
         cq.select(book);
-                        
+
         List<Predicate> predicatesOR = new ArrayList<>();
-                
-        for (String kw: keywords){
-            List<Predicate> predicates = new ArrayList<>();        
+
+        for (String kw : keywords) {
+            List<Predicate> predicates = new ArrayList<>();
             ParameterExpression<String> parameter = cb.parameter(String.class, kw);
-                                    
-            predicates.add(cb.like(cb.lower(book.get("title")), parameter));              
+
+            predicates.add(cb.like(cb.lower(book.get("title")), parameter));
             predicates.add(cb.like(cb.lower(book.get("authors")), parameter));
-            predicates.add(cb.like(cb.lower(book.get("publisher")), parameter));  
-           
+            predicates.add(cb.like(cb.lower(book.get("publisher")), parameter));
+
             cb.lower(book.get("title"));
-            
+
             predicatesOR.add(cb.or(predicates.toArray(new Predicate[predicates.size()])));
         }
-        
+
         cq.where(cb.and(
-                predicatesOR.toArray(new Predicate[predicatesOR.size()])));      
-        
+                predicatesOR.toArray(new Predicate[predicatesOR.size()])));
+
         TypedQuery<Book> q = em.createQuery(cq);
-        for (String kw: keywords){
-            q.setParameter(kw, "%"+kw.toLowerCase()+"%");
+        for (String kw : keywords) {
+            q.setParameter(kw, "%" + kw.toLowerCase() + "%");
         }
-        
-        List<Book> books=q.getResultList();               
-       
+
+        List<Book> books = q.getResultList();
+
         return books;
     }
 }
