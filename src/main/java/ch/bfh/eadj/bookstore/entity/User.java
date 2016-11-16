@@ -16,7 +16,7 @@ public class User extends BaseEntity {
 	/**
 	 * Type of "Set" because unique required but not ordered
 	 */
-	@ManyToMany
+	@ManyToMany(mappedBy = "users")
 	private Set<Group> groups = new HashSet<>();
 
 	public String getName() {

@@ -19,4 +19,28 @@ public class SalesOrderItem extends BaseEntity {
 	private Integer quantity;
 
 	private BigDecimal price;
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 }

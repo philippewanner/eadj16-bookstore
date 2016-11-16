@@ -13,7 +13,7 @@ public class Customer extends BaseEntity {
 	private String name;
 	private String email;
 
-	@OneToOne
+	@OneToOne(optional = false)
 	private User user;
 	@Embedded
 	private Address address;

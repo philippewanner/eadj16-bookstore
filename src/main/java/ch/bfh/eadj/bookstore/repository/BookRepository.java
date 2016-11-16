@@ -12,7 +12,7 @@ import javax.persistence.Query;
 /**
  * Jan
  */
-public class BookRepository extends AbstractRepository<Book, String> {
+public class BookRepository extends AbstractRepository<Book, Long> {
 
     public BookRepository(EntityManager em) {
         super(em);
