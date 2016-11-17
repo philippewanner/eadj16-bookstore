@@ -9,6 +9,7 @@ import java.util.Set;
 import ch.bfh.eadj.bookstore.common.definition.Definitions.OrderStatus;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "number" }) })
 public class SalesOrder extends BaseEntity {
 
 	/**
@@ -26,6 +27,8 @@ public class SalesOrder extends BaseEntity {
 
 	@ManyToOne(optional = false)
 	private Customer customer;
+
+	private Long number;
 
 	private LocalDate date;
 
@@ -63,6 +66,14 @@ public class SalesOrder extends BaseEntity {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public Long getNumber() {
+		return number;
+	}
+
+	public void setNumber(Long number) {
+		this.number = number;
 	}
 
 	public LocalDate getDate() {

@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,8 @@ public abstract class AbstractTest {
     protected static EntityManagerFactory emf;
     protected static EntityManager em;
 
-    private Long groupId;
+	private Long groupId;
+	private Long employeeGroupId;
     private Long userId;
     private Long customerId;
     
@@ -52,6 +52,10 @@ public abstract class AbstractTest {
             Group group = new Group();
             group.setName("customer");
             em.persist(group);
+
+            Group employeeGroup = new Group();
+			employeeGroup.setName("employee");
+            em.persist(employeeGroup);
 
             User user = new User();
             user.setName("bookstore");
@@ -86,9 +90,10 @@ public abstract class AbstractTest {
 
             em.getTransaction().commit();
 
-            fillBooks();            
-            
-            groupId = group.getId();
+            fillBooks();
+
+			groupId = group.getId();
+			employeeGroupId = employeeGroup.getId();
             userId = user.getId();
             customerId = customer.getId();
 
@@ -109,8 +114,10 @@ public abstract class AbstractTest {
             User user = em.find(User.class, userId);
             em.remove(user);
 
-            Group group = em.find(Group.class, groupId);
-            em.remove(group);
+			Group group = em.find(Group.class, groupId);
+			em.remove(group);
+			group = em.find(Group.class, employeeGroupId);
+			em.remove(group);
 
             Customer customer = em.find(Customer.class, customerId);
             em.remove(customer);

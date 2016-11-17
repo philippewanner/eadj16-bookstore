@@ -1,16 +1,16 @@
 package ch.bfh.eadj.bookstore.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "BookstoreGroup")
+@Table(name = "BookstoreGroup", uniqueConstraints =
+		{ @UniqueConstraint(columnNames = { "name" }) })
 public class Group extends BaseEntity {
 
+	@NotNull
 	private String name;
 
 	/**

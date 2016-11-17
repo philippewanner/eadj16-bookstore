@@ -3,10 +3,14 @@ package ch.bfh.eadj.bookstore.repository;
 import ch.bfh.eadj.bookstore.AbstractTest;
 import ch.bfh.eadj.bookstore.dto.CustomerInfo;
 import ch.bfh.eadj.bookstore.entity.Customer;
+import ch.bfh.eadj.bookstore.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -17,27 +21,6 @@ public class CustomerRepositoryTest extends AbstractTest {
 	@Before
 	public void setUpBeforeTest() {
 		repository = new CustomerRepository(em);
-	}
-
-	@Test
-	public void searchByName() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer namedQuery <<<<<<<<<<<<<<<<<<<<");
-
-		Customer customer = repository.findByName("Hans");
-		assertNotNull(customer);
-		assertEquals("hans@muster.ch", customer.getEmail());
-
-		customer = repository.findByName("Muster");
-		assertNotNull(customer);
-		assertEquals("hans@muster.ch", customer.getEmail());
-
-		customer = repository.findByName("hans");
-		assertNotNull(customer);
-		assertEquals("hans@muster.ch", customer.getEmail());
-
-		customer = repository.findByName("muster");
-		assertNotNull(customer);
-		assertEquals("hans@muster.ch", customer.getEmail());
 	}
 
 	@Test
@@ -76,5 +59,69 @@ public class CustomerRepositoryTest extends AbstractTest {
 		customer = repository.find(customer.getId());
 
 		assertNull(customer);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void insertError() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> User insertError <<<<<<<<<<<<<<<<<<<<");
+
+		try {
+			em.getTransaction().begin();
+
+			Customer customer = new Customer();
+			repository.persist(customer);
+		} finally {
+			em.getTransaction().rollback();
+		}
+	}
+
+	@Test(expected = RollbackException.class)
+	public void unique() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer unique <<<<<<<<<<<<<<<<<<<<");
+
+		em.getTransaction().begin();
+
+		Customer customer = new Customer();
+		customer.setName("a");
+		customer.setFirstName("a");
+		customer.setEmail("a");
+		customer.setNumber(123456L);
+
+		repository.persist(customer);
+		em.getTransaction().commit();
+	}
+
+	@Test(expected = ConstraintViolationException.class)
+	public void notNull() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer notNull <<<<<<<<<<<<<<<<<<<<");
+
+		try {
+			em.getTransaction().begin();
+
+			Customer customer = new Customer();
+			customer.setUser(new User());
+			repository.persist(customer);
+		} finally {
+			em.getTransaction().rollback();
+		}
+	}
+
+	@Test(expected = ConstraintViolationException.class)
+	public void noUser() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer notNull <<<<<<<<<<<<<<<<<<<<");
+
+		try {
+			em.getTransaction().begin();
+
+			Customer customer = new Customer();
+			customer.setName("a");
+			customer.setFirstName("a");
+			customer.setEmail("a");
+			customer.setNumber(new Random().nextLong());
+
+			repository.persist(customer);
+		} finally {
+			em.getTransaction().rollback();
+		}
 	}
 }

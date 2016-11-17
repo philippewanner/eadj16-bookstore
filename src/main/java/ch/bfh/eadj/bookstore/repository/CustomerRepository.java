@@ -18,15 +18,6 @@ public class CustomerRepository extends AbstractRepository<Customer, Long> {
 		super(em);
 	}
 
-	public Customer findByName(String name) {
-		Map<String, Object> parameters = new HashMap<>(1);
-		parameters.put("name", name);
-
-		// TODO: Anforderung nachfragen: LIKE oder =?
-		List<Customer> customers = findByNamedQuery("Customer.findByName", parameters);
-		return customers.get(0);
-	}
-
 	public List<CustomerInfo> findInfosByName(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);
 		parameters.put("name", name);

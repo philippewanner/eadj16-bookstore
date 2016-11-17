@@ -10,6 +10,8 @@ package ch.bfh.eadj.bookstore.dto;
  */
 public class CustomerInfo {
 
+	private Long id;
+
 	private Long number;
 
 	private String firstName;
@@ -18,7 +20,8 @@ public class CustomerInfo {
 
 	private String email;
 
-	public CustomerInfo(Long number, String firstName, String lastName, String email) {
+	public CustomerInfo(Long id, Long number, String firstName, String lastName, String email) {
+		this.id = id;
 		this.number = number;
 		this.firstName = firstName;
 		this.lastName = lastName;

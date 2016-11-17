@@ -4,6 +4,14 @@
         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
         http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
 
+    <named-query name="Group.findByName">
+        <query>
+            <![CDATA[
+            select g from Group g where g.name = :name
+        ]]>
+        </query>
+    </named-query>
+
     <named-query name="User.findByName">
         <query>
             <![CDATA[
@@ -20,19 +28,10 @@
         </query>
     </named-query>
 
-    <named-query name="Customer.findByName">
-        <query>
-            <![CDATA[
-            select c from Customer c where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
-            or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
-        ]]>
-        </query>
-    </named-query>
-
     <named-query name="Customer.findInfosByName">
         <query>
             <![CDATA[
-            select NEW ch.bfh.eadj.bookstore.dto.CustomerInfo(c.number, c.firstName, c.name, c.email) from Customer c
+            select NEW ch.bfh.eadj.bookstore.dto.CustomerInfo(c.id, c.number, c.firstName, c.name, c.email) from Customer c
             where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
             or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
         ]]>

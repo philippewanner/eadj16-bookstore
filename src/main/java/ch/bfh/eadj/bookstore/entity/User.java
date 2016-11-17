@@ -3,13 +3,17 @@ package ch.bfh.eadj.bookstore.entity;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "BookstoreUser")
+@Table(name = "BookstoreUser", uniqueConstraints =
+		{ @UniqueConstraint(columnNames = { "name" }) })
 public class User extends BaseEntity {
 
+	@NotNull
 	private String name;
 	private String password;
 

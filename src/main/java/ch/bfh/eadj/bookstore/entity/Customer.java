@@ -1,19 +1,23 @@
 package ch.bfh.eadj.bookstore.entity;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "number" }) })
 public class Customer extends BaseEntity {
 
+	@NotNull
 	private Long number;
+	@NotNull
 	private String firstName;
+	@NotNull
 	private String name;
+	@NotNull
 	private String email;
 
 	@OneToOne(optional = false)
+	@NotNull
 	private User user;
 	@Embedded
 	private Address address;
