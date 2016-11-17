@@ -2,6 +2,7 @@ package ch.bfh.eadj.bookstore.repository;
 
 import ch.bfh.eadj.bookstore.AbstractTest;
 import ch.bfh.eadj.bookstore.TestDataProvider;
+import ch.bfh.eadj.bookstore.dto.BookInfo;
 import ch.bfh.eadj.bookstore.entity.Book;
 import org.junit.Assert;
 import org.junit.Before;
@@ -80,11 +81,12 @@ public class BookRepositoryTest extends AbstractTest {
     @Test
     public void findByKeywords() {
         String[] keywords = {"Nachtigall", "Kristin"};
-        List<Book> book = bookRepository.findByKeywords(keywords);
+        List<BookInfo> book = bookRepository.findByKeywords(keywords);
         Assert.assertNotNull(book);
         Assert.assertEquals(1, book.size());
+        Assert.assertEquals("978-3-352-00885-6", book.get(0).getIsbn());
 
-        String[] keywords2 = {"Lori", "Fischer"};
+        String[] keywords2 = {"LORI", "Fischer"};
         book = bookRepository.findByKeywords(keywords2);
         Assert.assertNotNull(book);
         Assert.assertEquals(1, book.size());

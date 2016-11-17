@@ -1,5 +1,6 @@
 package ch.bfh.eadj.bookstore.repository;
 
+import ch.bfh.eadj.bookstore.dto.BookInfo;
 import ch.bfh.eadj.bookstore.entity.Book;
 import ch.bfh.eadj.bookstore.entity.User;
 import java.util.ArrayList;
@@ -40,13 +41,13 @@ public class BookRepository extends AbstractRepository<Book, Long> {
         }
     }
 
-    public List<Book> findByKeywords(String[] keywords) {
+    public List<BookInfo> findByKeywords(String[] keywords) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Book> cq = cb.createQuery(Book.class);
+        CriteriaQuery<BookInfo> cq = cb.createQuery(BookInfo.class);
         Root<Book> book = cq.from(Book.class);
 
-        cq.select(book);
+        cq.multiselect(book.get("isbn"), book.get("title"), book.get("price"));
 
         List<Predicate> predicatesOR = new ArrayList<>();
 
@@ -66,12 +67,12 @@ public class BookRepository extends AbstractRepository<Book, Long> {
         cq.where(cb.and(
                 predicatesOR.toArray(new Predicate[predicatesOR.size()])));
 
-        TypedQuery<Book> q = em.createQuery(cq);
+        TypedQuery<BookInfo> q = em.createQuery(cq);
         for (String kw : keywords) {
             q.setParameter(kw, "%" + kw.toLowerCase() + "%");
         }
 
-        List<Book> books = q.getResultList();
+        List<BookInfo> books = q.getResultList();
 
         return books;
     }
