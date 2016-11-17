@@ -17,10 +17,12 @@ import static org.junit.Assert.*;
 public class CustomerRepositoryTest extends AbstractTest {
 
 	private CustomerRepository repository;
+	private UserRepository userRepository;
 
 	@Before
 	public void setUpBeforeTest() {
 		repository = new CustomerRepository(em);
+		userRepository = new UserRepository(em);
 	}
 
 	@Test
@@ -38,8 +40,15 @@ public class CustomerRepositoryTest extends AbstractTest {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer insertDelete <<<<<<<<<<<<<<<<<<<<");
 		em.getTransaction().begin();
 
+		User user = userRepository.findByName("bookstore");
+
 		Customer customer = new Customer();
 		customer.setName("RepoCustomer");
+		customer.setFirstName("a");
+		customer.setEmail("a");
+		customer.setNumber(new Random().nextLong());
+		customer.setUser(user);
+
 		repository.persist(customer);
 
 		em.getTransaction().commit();
@@ -61,20 +70,6 @@ public class CustomerRepositoryTest extends AbstractTest {
 		assertNull(customer);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void insertError() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User insertError <<<<<<<<<<<<<<<<<<<<");
-
-		try {
-			em.getTransaction().begin();
-
-			Customer customer = new Customer();
-			repository.persist(customer);
-		} finally {
-			em.getTransaction().rollback();
-		}
-	}
-
 	@Test(expected = RollbackException.class)
 	public void unique() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer unique <<<<<<<<<<<<<<<<<<<<");
@@ -86,6 +81,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 		customer.setFirstName("a");
 		customer.setEmail("a");
 		customer.setNumber(123456L);
+		customer.setUser(new User());
 
 		repository.persist(customer);
 		em.getTransaction().commit();
