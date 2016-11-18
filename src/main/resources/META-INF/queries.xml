@@ -28,6 +28,25 @@
         </query>
     </named-query>
 
+
+    <named-query name="Book.findInfosByPublicationYear">
+        <query>
+            <![CDATA[
+            select NEW ch.bfh.eadj.bookstore.dto.BookInfo(b.isbn, b.title, b.price) from Book b where b.publicationYear = :year
+        ]]>
+        </query>
+    </named-query>
+
+
+    <named-query name="Book.getInfosAll">
+        <query>
+            <![CDATA[
+            select NEW ch.bfh.eadj.bookstore.dto.BookInfo(b.isbn, b.title, b.price) from Book b
+        ]]>
+        </query>
+    </named-query>
+
+
     <named-query name="Customer.findInfosByName">
         <query>
             <![CDATA[

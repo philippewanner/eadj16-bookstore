@@ -112,7 +112,7 @@ public class TestDataProvider {
                 book.setBinding(Book.BookBinding.HARD_COVER);
                 book.setNumberOfPages(192);
                 book.setPrice(BigDecimal.valueOf(22.90));
-                book.setPublicationYear(2016);
+                book.setPublicationYear(2000);
                 book.setPublisher("Atlantik Verlag");
                 book.setTitle("Das Geheimnis des Weihnachtspuddings");
                 

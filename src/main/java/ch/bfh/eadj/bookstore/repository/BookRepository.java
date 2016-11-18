@@ -26,7 +26,6 @@ public class BookRepository extends AbstractRepository<Book, Long> {
     public BookRepository(EntityManager em) {
         super(em);
     }
-    //search(String) List<BookInfo>
 
     public List<Book> findByISBN(String isbn) {
         Map<String, Object> parameters = new HashMap<>(1);
@@ -34,7 +33,23 @@ public class BookRepository extends AbstractRepository<Book, Long> {
 
         List<Book> books = findByNamedQuery("Book.findByISBN", parameters);
 
-        return books;                
+        return books;
+    }
+
+    public List<BookInfo> findInfosByPublicationYear(Integer year) {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put("year", year);
+
+        List<BookInfo> books = findByNamedQuery(BookInfo.class, "Book.findInfosByPublicationYear", parameters);
+
+        return books;
+    }
+
+    public List<BookInfo> getInfosAll() {
+
+        List<BookInfo> books = findByNamedQuery(BookInfo.class, "Book.getInfosAll");
+
+        return books;
     }
 
     public List<BookInfo> findByKeywords(String[] keywords) {

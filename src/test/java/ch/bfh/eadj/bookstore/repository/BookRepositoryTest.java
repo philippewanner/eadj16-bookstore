@@ -23,7 +23,7 @@ public class BookRepositoryTest extends AbstractTest {
     public void searchByISBN() {
 
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book searchByISBN <<<<<<<<<<<<<<<<<<<<");
-        
+
         List<Book> books = bookRepository.findByISBN("978-3-455-65045-7");
         Assert.assertNotNull(books);
         Assert.assertEquals(1, books.size());
@@ -40,18 +40,18 @@ public class BookRepositoryTest extends AbstractTest {
 
     @Test
     public void notFoundByISBN() {
-        
+
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book isbn not found <<<<<<<<<<<<<<<<<<<<");
-        
+
         List<Book> book = bookRepository.findByISBN("978-3-455-00000-7");
         Assert.assertEquals(0, book.size());
     }
 
     @Test
     public void insertDelete() {
-        
+
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book insertDelete <<<<<<<<<<<<<<<<<<<<");
-        
+
         Book book = new Book();
         book.setTitle("Die Assistentinnen");
         book.setIsbn("978-3-86396-095-7");
@@ -82,9 +82,9 @@ public class BookRepositoryTest extends AbstractTest {
 
     @Test
     public void findBook() {
-        
+
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book findBook <<<<<<<<<<<<<<<<<<<<");
-        
+
         for (String isbn : TestDataProvider.getISBNs()) {
             List<Book> books = bookRepository.findByISBN(isbn);
             Assert.assertNotNull(books);
@@ -93,10 +93,42 @@ public class BookRepositoryTest extends AbstractTest {
     }
 
     @Test
+    public void findPublicationYearInfos() {
+
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book find by publication year <<<<<<<<<<<<<<<<<<<<");
+
+        List<BookInfo> infos = bookRepository.findInfosByPublicationYear(2016);
+
+        Assert.assertNotNull(infos);
+        Assert.assertEquals(6, infos.size());
+    }
+
+    @Test
+    public void findNoPublicationYearInfos() {
+
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book find nothing by publication year <<<<<<<<<<<<<<<<<<<<");
+
+        List<BookInfo> infos = bookRepository.findInfosByPublicationYear(1999);
+
+        Assert.assertNotNull(infos);
+        Assert.assertEquals(0, infos.size());
+    }
+
+    @Test
+    public void getAllInfos() {
+
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book get all <<<<<<<<<<<<<<<<<<<<");
+
+        List<BookInfo> infos = bookRepository.getInfosAll();
+
+        Assert.assertEquals(7, infos.size());
+    }
+
+    @Test
     public void findByKeywords() {
-        
+
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book findByKeywords <<<<<<<<<<<<<<<<<<<<");
-        
+
         String[] keywords = {"Nachtigall", "Kristin"};
         List<BookInfo> book = bookRepository.findByKeywords(keywords);
         Assert.assertNotNull(book);
@@ -131,15 +163,15 @@ public class BookRepositoryTest extends AbstractTest {
 
     @Test
     public void findUpdate() {
-        
+
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Book find update <<<<<<<<<<<<<<<<<<<<");
-        
+
         String testIsbn = TestDataProvider.getISBNs().get(0);
         List<Book> books = bookRepository.findByISBN(testIsbn);
         Assert.assertNotNull(books);
         Assert.assertEquals(1, books.size());
         Book book = books.get(0);
-        
+
         String testTitle = "MyNew Title";
 
         book.setTitle(testTitle);
@@ -155,7 +187,7 @@ public class BookRepositoryTest extends AbstractTest {
         books = bookRepository.findByISBN(testIsbn);
         Assert.assertEquals(1, books.size());
         book = books.get(0);
-        
+
         Assert.assertEquals(testTitle, book.getTitle());
     }
 }
