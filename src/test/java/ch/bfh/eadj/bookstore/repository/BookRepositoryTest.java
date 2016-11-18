@@ -22,26 +22,36 @@ public class BookRepositoryTest extends AbstractTest {
     @Test
     public void searchByISBN() {
 
-        Book book = bookRepository.findByISBN("978-3-455-65045-7");
-        Assert.assertNotNull(book);
-        Assert.assertEquals("978-3-455-65045-7", book.getIsbn());
-        Assert.assertEquals("Das Bild aus meinem Traum", book.getTitle());
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book searchByISBN <<<<<<<<<<<<<<<<<<<<");
+        
+        List<Book> books = bookRepository.findByISBN("978-3-455-65045-7");
+        Assert.assertNotNull(books);
+        Assert.assertEquals(1, books.size());
+        Assert.assertEquals("978-3-455-65045-7", books.get(0).getIsbn());
+        Assert.assertEquals("Das Bild aus meinem Traum", books.get(0).getTitle());
 
-        book = bookRepository.findByISBN(" 978-3-8105- 2471 -3");
-        Assert.assertNotNull(book);
-        Assert.assertEquals("978-3-8105-2471-3", book.getIsbn());
-        Assert.assertEquals("Und nebenan warten die Sterne", book.getTitle());
+        books = bookRepository.findByISBN(" 978-3-8105- 2471 -3");
+        Assert.assertNotNull(books);
+        Assert.assertEquals(1, books.size());
+        Assert.assertEquals("978-3-8105-2471-3", books.get(0).getIsbn());
+        Assert.assertEquals("Und nebenan warten die Sterne", books.get(0).getTitle());
 
     }
 
     @Test
     public void notFoundByISBN() {
-        Book book = bookRepository.findByISBN("978-3-455-00000-7");
-        Assert.assertNull(book);
+        
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book isbn not found <<<<<<<<<<<<<<<<<<<<");
+        
+        List<Book> book = bookRepository.findByISBN("978-3-455-00000-7");
+        Assert.assertEquals(0, book.size());
     }
 
     @Test
     public void insertDelete() {
+        
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book insertDelete <<<<<<<<<<<<<<<<<<<<");
+        
         Book book = new Book();
         book.setTitle("Die Assistentinnen");
         book.setIsbn("978-3-86396-095-7");
@@ -72,14 +82,21 @@ public class BookRepositoryTest extends AbstractTest {
 
     @Test
     public void findBook() {
+        
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book findBook <<<<<<<<<<<<<<<<<<<<");
+        
         for (String isbn : TestDataProvider.getISBNs()) {
-            Book book = bookRepository.findByISBN(isbn);
-            Assert.assertNotNull(book);
+            List<Book> books = bookRepository.findByISBN(isbn);
+            Assert.assertNotNull(books);
+            Assert.assertEquals(1, books.size());
         }
     }
 
     @Test
     public void findByKeywords() {
+        
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book findByKeywords <<<<<<<<<<<<<<<<<<<<");
+        
         String[] keywords = {"Nachtigall", "Kristin"};
         List<BookInfo> book = bookRepository.findByKeywords(keywords);
         Assert.assertNotNull(book);
@@ -114,10 +131,15 @@ public class BookRepositoryTest extends AbstractTest {
 
     @Test
     public void findUpdate() {
+        
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Book find update <<<<<<<<<<<<<<<<<<<<");
+        
         String testIsbn = TestDataProvider.getISBNs().get(0);
-        Book book = bookRepository.findByISBN(testIsbn);
-        Assert.assertNotNull(book);
-
+        List<Book> books = bookRepository.findByISBN(testIsbn);
+        Assert.assertNotNull(books);
+        Assert.assertEquals(1, books.size());
+        Book book = books.get(0);
+        
         String testTitle = "MyNew Title";
 
         book.setTitle(testTitle);
@@ -130,9 +152,10 @@ public class BookRepositoryTest extends AbstractTest {
         em.clear();
         emf.getCache().evictAll();
 
-        book = bookRepository.findByISBN(testIsbn);
-        Assert.assertNotNull(book);
-
+        books = bookRepository.findByISBN(testIsbn);
+        Assert.assertEquals(1, books.size());
+        book = books.get(0);
+        
         Assert.assertEquals(testTitle, book.getTitle());
     }
 }

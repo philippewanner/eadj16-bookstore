@@ -28,17 +28,13 @@ public class BookRepository extends AbstractRepository<Book, Long> {
     }
     //search(String) List<BookInfo>
 
-    public Book findByISBN(String isbn) {
+    public List<Book> findByISBN(String isbn) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("isbn", isbn.replace(" ", ""));
 
         List<Book> books = findByNamedQuery("Book.findByISBN", parameters);
 
-        if (books.size() == 0) {
-            return null;
-        } else {
-            return books.get(0);
-        }
+        return books;                
     }
 
     public List<BookInfo> findByKeywords(String[] keywords) {
