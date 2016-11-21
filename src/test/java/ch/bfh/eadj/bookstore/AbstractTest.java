@@ -1,5 +1,6 @@
 package ch.bfh.eadj.bookstore;
 
+import ch.bfh.eadj.bookstore.common.definition.Definitions;
 import ch.bfh.eadj.bookstore.entity.*;
 import org.jboss.logging.Logger;
 import org.junit.After;
@@ -10,8 +11,10 @@ import org.junit.BeforeClass;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class AbstractTest {
 
@@ -24,8 +27,10 @@ public abstract class AbstractTest {
 	private Long employeeGroupId;
     private Long userId;
     private Long customerId;
-    
+
     private List<Long> bookIds;
+
+    private Long salesOrderId;
     
     
     @BeforeClass
@@ -97,6 +102,8 @@ public abstract class AbstractTest {
             userId = user.getId();
             customerId = customer.getId();
 
+            this.salesOrderId = this.getNewPersistedSalesOrder().getId();
+
             em.clear();
             emf.getCache().evictAll();
 
@@ -110,6 +117,8 @@ public abstract class AbstractTest {
     public void tearDown() {
         try {
             em.getTransaction().begin();
+
+            em.remove(em.find(SalesOrder.class, this.salesOrderId));
 
             User user = em.find(User.class, userId);
             em.remove(user);
@@ -133,9 +142,19 @@ public abstract class AbstractTest {
         }
     }
 
+    protected Customer getPersistedCustomer(){
+
+        return em.find(Customer.class, customerId);
+    }
+
+    protected SalesOrder getPersistedSalesOrder() {
+
+        return em.find(SalesOrder.class, salesOrderId);
+    }
+
     private void fillBooks() {
         
-        bookIds = new ArrayList<Long>();
+        bookIds = new ArrayList<>();
         
         List<Book> books = TestDataProvider.getBooks();
         for (int i = 0; i < books.size(); i++) {
@@ -154,4 +173,57 @@ public abstract class AbstractTest {
             em.remove(book);
         }
     }
+
+    private SalesOrder getNewPersistedSalesOrder() {
+
+        SalesOrder salesOrder = new SalesOrder();
+        salesOrder.setNumber(2L);
+        salesOrder.setAddress(new Address("street", "city", "postalCode", "state", "country"));
+        salesOrder.setAmount(new BigDecimal(10.5));
+        salesOrder.setCreditCard(new CreditCard());
+        salesOrder.setCustomer(getPersistedCustomer());
+        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date orderDate = null;
+        try {
+            orderDate = dateformat.parse("17/07/1989");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        salesOrder.setDate(orderDate);
+        salesOrder.setStatus(Definitions.OrderStatus.ORDERED);
+        salesOrder.setSalesOrderItems(getNewPersistedSalesOrderItems());
+
+        em.getTransaction().begin();
+        em.persist(salesOrder);
+        em.getTransaction().commit();
+
+        return salesOrder;
+    }
+
+    private void removePersistedSalesOrder(SalesOrder salesOrder){
+
+        em.getTransaction().begin();
+        em.remove(salesOrder);
+        em.getTransaction().commit();
+    }
+
+    private Set<SalesOrderItem> getNewPersistedSalesOrderItems(){
+
+        SalesOrderItem salesOrderItem = new SalesOrderItem();
+        salesOrderItem.setBook(em.find(Book.class, bookIds.get(0)));
+        salesOrderItem.setPrice(new BigDecimal(1));
+        salesOrderItem.setQuantity(12);
+
+        em.getTransaction().begin();
+        em.persist(salesOrderItem);
+        em.getTransaction().commit();
+
+        Set<SalesOrderItem> salesOrderItems = new HashSet<>();
+        salesOrderItems.add(salesOrderItem);
+
+        return salesOrderItems;
+    }
+
 }

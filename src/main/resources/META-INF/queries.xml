@@ -57,4 +57,26 @@
         </query>
     </named-query>
 
+    <named-query name="SalesOrder.findByNumber">
+        <query>
+            <![CDATA[
+            SELECT o
+            FROM SalesOrder o
+            WHERE o.number = :number
+        ]]>
+        </query>
+    </named-query>
+
+    <named-query name="SalesOrder.findByCustomerAndYear">
+        <query>
+            <![CDATA[
+            SELECT NEW ch.bfh.eadj.bookstore.dto.OrderInfo(o)
+            FROM SalesOrder o
+            WHERE o.customer = :customer AND EXTRACT(YEAR from o.date) = :year
+        ]]>
+        </query>
+    </named-query>
+
+
+
 </entity-mappings>

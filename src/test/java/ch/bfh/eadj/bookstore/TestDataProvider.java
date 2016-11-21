@@ -6,8 +6,12 @@
 package ch.bfh.eadj.bookstore;
 
 import ch.bfh.eadj.bookstore.entity.Book;
+import ch.bfh.eadj.bookstore.entity.SalesOrder;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**

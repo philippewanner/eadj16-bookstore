@@ -1,9 +1,11 @@
 package ch.bfh.eadj.bookstore.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 import ch.bfh.eadj.bookstore.common.definition.Definitions.OrderStatus;
@@ -15,8 +17,9 @@ public class SalesOrder extends BaseEntity {
 	/**
 	 * Type of "Set" because unique required but not ordered
 	 */
+
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "salesOrder_id")
 	private Set<SalesOrderItem> salesOrderItems;
 
 	@Embedded
@@ -28,37 +31,41 @@ public class SalesOrder extends BaseEntity {
 	@ManyToOne(optional = false)
 	private Customer customer;
 
+	@NotNull
 	private Long number;
 
-	private LocalDate date;
+    @Temporal(TemporalType.DATE)
+	private Date date;
 
-	private BigDecimal amount;
+        @NotNull
+        private BigDecimal amount;
 
-	private OrderStatus status;
+        @NotNull
+        private OrderStatus status;
 
-	public Set<SalesOrderItem> getSalesOrderItems() {
-		return salesOrderItems;
-	}
+        public Set<SalesOrderItem> getSalesOrderItems() {
+            return salesOrderItems;
+        }
 
-	public void setSalesOrderItems(Set<SalesOrderItem> salesOrderItems) {
-		this.salesOrderItems = salesOrderItems;
-	}
+        public void setSalesOrderItems(Set<SalesOrderItem> salesOrderItems) {
+            this.salesOrderItems = salesOrderItems;
+        }
 
-	public Address getAddress() {
-		return address;
-	}
+        public Address getAddress() {
+            return address;
+        }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+        public void setAddress(Address address) {
+            this.address = address;
+        }
 
-	public CreditCard getCreditCard() {
-		return creditCard;
-	}
+        public CreditCard getCreditCard() {
+            return creditCard;
+        }
 
-	public void setCreditCard(CreditCard creditCard) {
-		this.creditCard = creditCard;
-	}
+        public void setCreditCard(CreditCard creditCard) {
+            this.creditCard = creditCard;
+        }
 
 	public Customer getCustomer() {
 		return customer;
@@ -76,11 +83,11 @@ public class SalesOrder extends BaseEntity {
 		this.number = number;
 	}
 
-	public LocalDate getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
