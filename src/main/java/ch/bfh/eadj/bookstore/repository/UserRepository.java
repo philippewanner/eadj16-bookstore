@@ -4,6 +4,7 @@ import ch.bfh.eadj.bookstore.entity.Group;
 import ch.bfh.eadj.bookstore.entity.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PrePersist;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,14 +16,6 @@ public class UserRepository extends AbstractRepository<User, Long> {
 
 	public UserRepository(EntityManager em) {
 		super(em);
-	}
-
-	@Override
-	public void persist(User user) {
-		if (user.getGroups() == null || user.getGroups().isEmpty()) {
-			throw new IllegalArgumentException("User must have at least one group");
-		}
-		super.persist(user);
 	}
 
 	public User findByName(String name) {

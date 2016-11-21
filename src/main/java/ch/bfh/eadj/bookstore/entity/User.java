@@ -1,9 +1,6 @@
 package ch.bfh.eadj.bookstore.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,5 +47,12 @@ public class User extends BaseEntity {
 	public void addGroup(Group group) {
 		groups.add(group);
 		group.getUsers().add(this);
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (groups == null || groups.isEmpty()) {
+			throw new IllegalArgumentException("User must have at least one group");
+		}
 	}
 }

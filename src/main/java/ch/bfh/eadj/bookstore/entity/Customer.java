@@ -24,16 +24,16 @@ public class Customer extends BaseEntity {
 	@Embedded
 	private CreditCard creditCard;
 
-	public Customer(){}
+	public Customer() {
+	}
 
-    public Customer(Long number, String firstName, String name, String email, User user) {
-
-        this.number = number;
-        this.firstName = firstName;
-        this.name = name;
-        this.email = email;
-        this.user = user;
-    }
+	public Customer(Long number, String firstName, String name, String email, User user) {
+		this.number = number;
+		this.firstName = firstName;
+		this.name = name;
+		this.email = email;
+		this.user = user;
+	}
 
 	public Long getNumber() {
 		return number;
