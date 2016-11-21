@@ -42,13 +42,13 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Integer> {
      * @param year particular year search criteria.
      * @return a list of OrderInfo.
      */
-	public List<OrderInfo> search(@Valid Customer customer, @Past Integer year) {
+	public List<OrderInfo> searchByCustomerAndYear(@Valid Customer customer, @Past Integer year) {
 
         Map<String, Object> parameters = new HashMap<>(2);
         parameters.put("customer", customer);
         parameters.put("year", year);
 
-        List<OrderInfo> orderInfos = findByNamedQuery(OrderInfo.class, "SalesOrder.searchByCustomerAndYear");
+        List<OrderInfo> orderInfos = findByNamedQuery(OrderInfo.class, "SalesOrder.searchByCustomerAndYear", parameters);
         return orderInfos;
     }
 }

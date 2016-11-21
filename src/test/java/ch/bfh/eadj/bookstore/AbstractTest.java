@@ -202,13 +202,6 @@ public abstract class AbstractTest {
         return salesOrder;
     }
 
-    private void removePersistedSalesOrder(SalesOrder salesOrder){
-
-        em.getTransaction().begin();
-        em.remove(salesOrder);
-        em.getTransaction().commit();
-    }
-
     private Set<SalesOrderItem> getNewPersistedSalesOrderItems(){
 
         SalesOrderItem salesOrderItem = new SalesOrderItem();

@@ -67,10 +67,10 @@
         </query>
     </named-query>
 
-    <named-query name="SalesOrder.findByCustomerAndYear">
+    <named-query name="SalesOrder.searchByCustomerAndYear">
         <query>
             <![CDATA[
-            SELECT NEW ch.bfh.eadj.bookstore.dto.OrderInfo(o)
+            SELECT NEW ch.bfh.eadj.bookstore.dto.OrderInfo(o.id, o.number, o.date, o.amount, o.status)
             FROM SalesOrder o
             WHERE o.customer = :customer AND EXTRACT(YEAR from o.date) = :year
         ]]>
