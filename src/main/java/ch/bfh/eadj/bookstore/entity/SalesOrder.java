@@ -17,8 +17,6 @@ public class SalesOrder extends BaseEntity {
 	/**
 	 * Type of "Set" because unique required but not ordered
 	 */
-
-
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<SalesOrderItem> salesOrderItems;
 

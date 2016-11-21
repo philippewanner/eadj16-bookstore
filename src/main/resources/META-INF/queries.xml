@@ -76,6 +76,18 @@
         ]]>
         </query>
     </named-query>
+    
+    
+    <named-query name="SalesOrder.sumOrdersGroupedByCustomerForYear">
+        <query>
+            <![CDATA[
+            SELECT c.name, SUM(o.amount) , COUNT(SIZE(o.salesOrderItems)), SUM(o.amount)/COUNT(SIZE(o.salesOrderItems))
+            FROM SalesOrder o JOIN o.customer c
+            WHERE EXTRACT(YEAR from o.date) = :year
+            GROUP BY o.customer
+        ]]>
+        </query>
+    </named-query>
 
 
 

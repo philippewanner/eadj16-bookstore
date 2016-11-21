@@ -5,19 +5,22 @@ import ch.bfh.eadj.bookstore.dto.OrderInfo;
 import ch.bfh.eadj.bookstore.entity.Customer;
 import ch.bfh.eadj.bookstore.entity.SalesOrder;
 import ch.bfh.eadj.bookstore.entity.User;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import org.apache.commons.lang3.StringUtils;
 import static org.junit.Assert.assertNull;
 
-public class OrderRepositoryTest extends AbstractTest{
+public class OrderRepositoryTest extends AbstractTest {
 
     private OrderRepository orderRepository;
 
@@ -44,7 +47,6 @@ public class OrderRepositoryTest extends AbstractTest{
     public void searchByNumber_nonExistingNumber() {
 
         // Given
-
         // When
         SalesOrder actualSalesOrder = orderRepository.findByNumber(29L);
 
@@ -54,7 +56,7 @@ public class OrderRepositoryTest extends AbstractTest{
     }
 
     @Test
-    public void searchByCustomerAndYear_matchingCustomerAndYear(){
+    public void searchByCustomerAndYear_matchingCustomerAndYear() {
 
         // Given
         SalesOrder salesOrder = getPersistedSalesOrder();
@@ -73,7 +75,35 @@ public class OrderRepositoryTest extends AbstractTest{
     }
 
     @Test
-    public void searchByCustomerAndYear_onlyMatchingYear(){
+    public void sumUpByYear() {
+
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> sum up <<<<<<<<<<<<<<<<<<<<");
+
+        Integer year = 1989;
+        List<Object> foundOrderInfos = this.orderRepository.sumAmountNumberPositionsAvgAmountPerYear(year);
+
+        StringBuilder out = new StringBuilder();
+
+        out.append("\n-----------------------------------------------------------\n");
+        out.append("Name      | sum amount |  # positions |  Avg/pos\n");
+
+        for (Object ob : foundOrderInfos) {
+            Object[] o = (Object[]) ob;
+            out.append(String.format("%8s", (String) (o[0]))
+                    + "  |   " + String.format("%6s", o[1])
+                    + "   |   " + StringUtils.leftPad(Long.toString((Long) o[2]), 9)
+                    + "  |  " + String.format("%8s", o[3]) + "\n");
+        }
+
+        out.append("-----------------------------------------------------------\n");
+
+        LOGGER.info(out.toString());
+
+        // TODO: more tests
+    }
+
+    @Test
+    public void searchByCustomerAndYear_onlyMatchingYear() {
 
         // Given
         Integer year = 1989;
@@ -88,7 +118,7 @@ public class OrderRepositoryTest extends AbstractTest{
     }
 
     @Test
-    public void searchByCustomerAndYear_onlyMatchingCustomer(){
+    public void searchByCustomerAndYear_onlyMatchingCustomer() {
 
         // Given
         Integer year = 2011;
@@ -103,7 +133,7 @@ public class OrderRepositoryTest extends AbstractTest{
     }
 
     @Test
-    public void searchByCustomerAndYear_notAtAllMatching(){
+    public void searchByCustomerAndYear_notAtAllMatching() {
 
         // Given
         Integer year = 2011;
