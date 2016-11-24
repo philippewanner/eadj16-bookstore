@@ -64,7 +64,7 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Integer> {
      */
     public List<Object> sumAmountNumberPositionsAvgAmountPerYear(@Past Integer year) {
 
-        Map<String, Object> parameters = new HashMap<>(2);
+        Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("year", year);
 
         Query q = em.createNamedQuery("SalesOrder.sumOrdersGroupedByCustomerForYear");

@@ -99,7 +99,7 @@ public class OrderRepositoryTest extends AbstractTest {
 
         LOGGER.info(out.toString());
 
-        // TODO: more tests
+        assertEquals(1, foundOrderInfos.size());
     }
 
     @Test
