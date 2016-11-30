@@ -32,7 +32,7 @@
     <named-query name="Book.findInfosByPublicationYear">
         <query>
             <![CDATA[
-            select NEW ch.bfh.eadj.bookstore.dto.BookInfo(b.isbn, b.title, b.price) from Book b where b.publicationYear = :year
+            select NEW org.books.persistence.dto.BookInfo(b.isbn, b.title, b.price) from Book b where b.publicationYear = :year
         ]]>
         </query>
     </named-query>
@@ -41,7 +41,7 @@
     <named-query name="Book.getInfosAll">
         <query>
             <![CDATA[
-            select NEW ch.bfh.eadj.bookstore.dto.BookInfo(b.isbn, b.title, b.price) from Book b
+            select NEW org.books.persistence.dto.BookInfo(b.isbn, b.title, b.price) from Book b
         ]]>
         </query>
     </named-query>
@@ -50,7 +50,7 @@
     <named-query name="Customer.findInfosByName">
         <query>
             <![CDATA[
-            select NEW ch.bfh.eadj.bookstore.dto.CustomerInfo(c.id, c.number, c.firstName, c.name, c.email) from Customer c
+            select NEW org.books.persistence.dto.CustomerInfo(c.id, c.number, c.firstName, c.name, c.email) from Customer c
             where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
             or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
         ]]>
@@ -70,14 +70,14 @@
     <named-query name="SalesOrder.searchByCustomerAndYear">
         <query>
             <![CDATA[
-            SELECT NEW ch.bfh.eadj.bookstore.dto.OrderInfo(o.id, o.number, o.date, o.amount, o.status)
+            SELECT NEW org.books.persistence.dto.OrderInfo(o.id, o.number, o.date, o.amount, o.status)
             FROM SalesOrder o
             WHERE o.customer = :customer AND EXTRACT(YEAR from o.date) = :year
         ]]>
         </query>
     </named-query>
-    
-    
+
+
     <named-query name="SalesOrder.sumOrdersGroupedByCustomerForYear">
         <query>
             <![CDATA[
@@ -88,7 +88,5 @@
         ]]>
         </query>
     </named-query>
-
-
 
 </entity-mappings>
