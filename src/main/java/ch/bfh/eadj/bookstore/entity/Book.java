@@ -10,7 +10,7 @@ import javax.persistence.Id;
 public class Book extends BaseEntity {
 
 	public enum BookBinding {
-		HARD_COVER, SOFT_COVER
+		EBOOK, HARDCOVER, PAPAERBACK, UNKNOWN
 	}
 
 	private String isbn;

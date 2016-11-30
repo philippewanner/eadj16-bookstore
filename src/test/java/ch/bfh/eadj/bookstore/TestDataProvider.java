@@ -45,7 +45,7 @@ public class TestDataProvider {
             case 0:
                 book.setIsbn("978-3-455-65045-7");
                 book.setAuthors("Antoine Laurain");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(192);
                 book.setPrice(BigDecimal.valueOf(28.90));
                 book.setPublicationYear(2016);
@@ -57,7 +57,7 @@ public class TestDataProvider {
             case 1:
                 book.setIsbn("978-3-352-00885-6");
                 book.setAuthors("Kristin Hannah");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(608);
                 book.setPrice(BigDecimal.valueOf(25.90));
                 book.setPublicationYear(2016);
@@ -69,7 +69,7 @@ public class TestDataProvider {
             case 2:
                 book.setIsbn("978-3-8105-2471-3");
                 book.setAuthors("Lori Nelson Spielman");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(384);
                 book.setPrice(BigDecimal.valueOf(21.90));
                 book.setPublicationYear(2016);
@@ -80,7 +80,7 @@ public class TestDataProvider {
             case 3:
                 book.setIsbn("	978-3-95967-049-4");
                 book.setAuthors("Daniel Silva");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(416);
                 book.setPrice(BigDecimal.valueOf(22.90));
                 book.setPublicationYear(2016);
@@ -91,7 +91,7 @@ public class TestDataProvider {
             case 4:
                 book.setIsbn("	978-3-453-41944-5");
                 book.setAuthors("Luis Sellano");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(368);
                 book.setPrice(BigDecimal.valueOf(22.90));
                 book.setPublicationYear(2016);
@@ -102,7 +102,7 @@ public class TestDataProvider {
             case 5:
                 book.setIsbn("	978-3-8321-9819-0");
                 book.setAuthors("Cay Rademacher");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(304);
                 book.setPrice(BigDecimal.valueOf(17.00));
                 book.setPublicationYear(2016);
@@ -113,7 +113,7 @@ public class TestDataProvider {
                 case 6:
                 book.setIsbn("978-3-455-60055-1");
                 book.setAuthors("Agatha Christie");
-                book.setBinding(Book.BookBinding.HARD_COVER);
+                book.setBinding(Book.BookBinding.HARDCOVER);
                 book.setNumberOfPages(192);
                 book.setPrice(BigDecimal.valueOf(22.90));
                 book.setPublicationYear(2000);
