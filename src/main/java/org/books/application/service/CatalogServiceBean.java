@@ -18,11 +18,7 @@ import org.books.persistence.entity.Book;
  */
 @Stateless(name="CatalogService")
 public class CatalogServiceBean extends AbstractService implements CatalogService {
-
-    public CatalogServiceBean(){
-        this.logger = Logger.getLogger(CatalogServiceBean.class.getName());
-    }
-    
+        
     @Override
     public Book findBook(long id) throws BookNotFoundException {
         logInfo("Book findBook(long id)");

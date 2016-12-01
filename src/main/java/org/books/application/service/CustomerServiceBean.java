@@ -9,13 +9,10 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import org.books.application.dto.Registration;
-import org.books.application.exception.BookNotFoundException;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.exception.InvalidPasswordException;
-import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.CustomerInfo;
-import org.books.persistence.entity.Book;
 import org.books.persistence.entity.Customer;
 
 /**
@@ -24,11 +21,7 @@ import org.books.persistence.entity.Customer;
  */
 @Stateless(name="CustomerService")
 public class CustomerServiceBean extends AbstractService implements CustomerService {
-
-    public CustomerServiceBean(){
-        this.logger = Logger.getLogger(CustomerServiceBean.class.getName());
-    }
-
+   
     @Override
     public void authenticateCustomer(String email, String password) throws CustomerNotFoundException, InvalidPasswordException {
         logInfo("authenticateCustomer");
