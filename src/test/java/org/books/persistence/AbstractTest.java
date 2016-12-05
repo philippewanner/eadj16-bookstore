@@ -35,7 +35,7 @@ public abstract class AbstractTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		emf = Persistence.createEntityManagerFactory("bookstore");
+		emf = Persistence.createEntityManagerFactory("bookstore-test");
 		em = emf.createEntityManager();
 	}
 

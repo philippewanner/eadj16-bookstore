@@ -1,6 +1,7 @@
 package org.books.persistence.repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -14,16 +15,19 @@ import java.util.Map;
  */
 public abstract class AbstractRepository<T, PK> {
 
+	@PersistenceContext(name = "bookstore")
 	protected EntityManager em;
 
 	private Class<T> entityClass;
 
-	public AbstractRepository(EntityManager em) {
-		this.em = em;
-
+	public AbstractRepository() {
 		Type type = getClass().getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) type;
 		entityClass = (Class<T>) pt.getActualTypeArguments()[0];
+	}
+
+	void setEntityManager(EntityManager em) {
+		this.em = em;
 	}
 
 	/**

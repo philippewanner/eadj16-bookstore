@@ -16,7 +16,8 @@ public class UserRepositoryTest extends AbstractTest {
 
 	@Before
 	public void setUpBeforeTest() {
-		repository = new UserRepository(em);
+		repository = new UserRepository();
+		repository.setEntityManager(em);
 	}
 
 	@Test

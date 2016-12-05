@@ -21,8 +21,11 @@ public class CustomerRepositoryTest extends AbstractTest {
 
 	@Before
 	public void setUpBeforeTest() {
-		repository = new CustomerRepository(em);
-		userRepository = new UserRepository(em);
+		repository = new CustomerRepository();
+		userRepository = new UserRepository();
+
+		repository.setEntityManager(em);
+		userRepository.setEntityManager(em);
 	}
 
 	@Test
@@ -41,7 +44,6 @@ public class CustomerRepositoryTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		User user = userRepository.findByName("bookstore");
-		userRepository.foo();
 
 		Customer customer = new Customer();
 		customer.setName("RepoCustomer");

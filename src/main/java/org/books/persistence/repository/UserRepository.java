@@ -3,7 +3,7 @@ package org.books.persistence.repository;
 import org.books.persistence.entity.Group;
 import org.books.persistence.entity.User;
 
-import javax.persistence.EntityManager;
+import javax.ejb.Stateless;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +11,8 @@ import java.util.Map;
 /*
 Lukas
  */
+@Stateless
 public class UserRepository extends AbstractRepository<User, Long> {
-
-	public UserRepository(EntityManager em) {
-		super(em);
-	}
 
 	public User findByName(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);

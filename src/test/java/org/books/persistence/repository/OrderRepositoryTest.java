@@ -25,7 +25,8 @@ public class OrderRepositoryTest extends AbstractTest {
 
     @Before
     public void setUpBeforeTest() {
-        orderRepository = new OrderRepository(em);
+        orderRepository = new OrderRepository();
+        orderRepository.setEntityManager(em);
     }
 
     @Test

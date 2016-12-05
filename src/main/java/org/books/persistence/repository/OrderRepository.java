@@ -4,22 +4,19 @@ import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.Customer;
 import org.books.persistence.entity.SalesOrder;
 
-import javax.persistence.EntityManager;
+import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.validation.Valid;
 import javax.validation.constraints.Past;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.Query;
 
 /**
  * Philippe
  */
+@Stateless
 public class OrderRepository extends AbstractRepository<SalesOrder, Integer> {
-
-    public OrderRepository(EntityManager em) {
-        super(em);
-    }
 
     /**
      * Get an order with a particular order number.

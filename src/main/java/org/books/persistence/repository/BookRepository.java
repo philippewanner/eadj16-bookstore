@@ -3,7 +3,7 @@ package org.books.persistence.repository;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 
-import javax.persistence.EntityManager;
+import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -14,11 +14,8 @@ import java.util.Map;
 /**
  * Jan
  */
+@Stateless
 public class BookRepository extends AbstractRepository<Book, Long> {
-
-    public BookRepository(EntityManager em) {
-        super(em);
-    }
 
     public List<Book> findByISBN(String isbn) {
         Map<String, Object> parameters = new HashMap<>(1);
