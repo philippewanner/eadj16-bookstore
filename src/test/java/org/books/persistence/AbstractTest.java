@@ -3,6 +3,7 @@ package org.books.persistence;
 import org.books.persistence.entity.*;
 import org.books.persistence.enumeration.CreditCardType;
 import org.books.persistence.enumeration.OrderStatus;
+import org.books.persistence.enumeration.UserGroup;
 import org.jboss.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,8 +25,6 @@ public abstract class AbstractTest {
 	protected static EntityManagerFactory emf;
 	protected static EntityManager em;
 
-	private Long groupId;
-	private Long employeeGroupId;
 	private Long userId;
 	private Long customerId;
 
@@ -54,27 +53,19 @@ public abstract class AbstractTest {
 		try {
 			em.getTransaction().begin();
 
-			Group group = new Group();
-			group.setName("customer");
-			em.persist(group);
+			Login login = new Login();
+			login.setUserName("bookstore");
+			login.setPassword("bookstore");
+			login.setGroup(UserGroup.CUSTOMER);
 
-			Group employeeGroup = new Group();
-			employeeGroup.setName("employee");
-			em.persist(employeeGroup);
-
-			User user = new User();
-			user.setName("bookstore");
-			user.setPassword("bookstore");
-			user.addGroup(group);
-
-			em.persist(user);
+			em.persist(login);
 
 			Customer customer = new Customer();
 			customer.setName("Muster");
 			customer.setFirstName("Hans");
 			customer.setEmail("hans@muster.ch");
 			customer.setNumber(123456L);
-			customer.setUser(user);
+			customer.setLogin(login);
 
 			Address address = new Address();
 			address.setStreet("Musterstrasse 55");
@@ -97,9 +88,7 @@ public abstract class AbstractTest {
 
 			fillBooks();
 
-			groupId = group.getId();
-			employeeGroupId = employeeGroup.getId();
-			userId = user.getId();
+			userId = login.getId();
 			customerId = customer.getId();
 
 			this.salesOrderId = this.getNewPersistedSalesOrder().getId();
@@ -120,13 +109,8 @@ public abstract class AbstractTest {
 
 			em.remove(em.find(SalesOrder.class, this.salesOrderId));
 
-			User user = em.find(User.class, userId);
-			em.remove(user);
-
-			Group group = em.find(Group.class, groupId);
-			em.remove(group);
-			group = em.find(Group.class, employeeGroupId);
-			em.remove(group);
+			Login login = em.find(Login.class, userId);
+			em.remove(login);
 
 			Customer customer = em.find(Customer.class, customerId);
 			em.remove(customer);

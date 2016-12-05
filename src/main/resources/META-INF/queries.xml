@@ -4,18 +4,10 @@
         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
         http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
 
-    <named-query name="Group.findByName">
+    <named-query name="Login.findByName">
         <query>
             <![CDATA[
-            select g from Group g where g.name = :name
-        ]]>
-        </query>
-    </named-query>
-
-    <named-query name="User.findByName">
-        <query>
-            <![CDATA[
-            select u from User u where u.name = :name
+            select l from Login l where l.userName = :name
         ]]>
         </query>
     </named-query>

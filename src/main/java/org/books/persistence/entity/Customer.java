@@ -18,7 +18,7 @@ public class Customer extends BaseEntity {
 
 	@OneToOne(optional = false)
 	@NotNull
-	private User user;
+	private Login login;
 	@Embedded
 	private Address address;
 	@Embedded
@@ -27,12 +27,12 @@ public class Customer extends BaseEntity {
 	public Customer() {
 	}
 
-	public Customer(Long number, String firstName, String name, String email, User user) {
+	public Customer(Long number, String firstName, String name, String email, Login login) {
 		this.number = number;
 		this.firstName = firstName;
 		this.name = name;
 		this.email = email;
-		this.user = user;
+		this.login = login;
 	}
 
 	public Long getNumber() {
@@ -67,12 +67,12 @@ public class Customer extends BaseEntity {
 		this.email = email;
 	}
 
-	public User getUser() {
-		return user;
+	public Login getLogin() {
+		return login;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setLogin(Login login) {
+		this.login = login;
 	}
 
 	public Address getAddress() {

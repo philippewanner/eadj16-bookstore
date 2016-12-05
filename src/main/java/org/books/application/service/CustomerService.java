@@ -7,11 +7,13 @@ import org.books.application.exception.InvalidPasswordException;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
 
+import javax.ejb.Remote;
 import java.util.List;
 
 /*
 Lukas
  */
+@Remote
 public interface CustomerService {
 
 	void authenticateCustomer(String email, String password) throws CustomerNotFoundException, InvalidPasswordException;

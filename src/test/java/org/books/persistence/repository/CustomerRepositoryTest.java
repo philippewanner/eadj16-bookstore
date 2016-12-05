@@ -3,7 +3,7 @@ package org.books.persistence.repository;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
-import org.books.persistence.entity.User;
+import org.books.persistence.entity.Login;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,14 +43,14 @@ public class CustomerRepositoryTest extends AbstractTest {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer insertDelete <<<<<<<<<<<<<<<<<<<<");
 		em.getTransaction().begin();
 
-		User user = userRepository.findByName("bookstore");
+		Login login = userRepository.findByName("bookstore");
 
 		Customer customer = new Customer();
 		customer.setName("RepoCustomer");
 		customer.setFirstName("a");
 		customer.setEmail("a");
 		customer.setNumber(new Random().nextLong());
-		customer.setUser(user);
+		customer.setLogin(login);
 
 		repository.persist(customer);
 
@@ -84,7 +84,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 		customer.setFirstName("a");
 		customer.setEmail("a");
 		customer.setNumber(123456L);
-		customer.setUser(new User());
+		customer.setLogin(new Login());
 
 		repository.persist(customer);
 		em.getTransaction().commit();
@@ -98,7 +98,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 			em.getTransaction().begin();
 
 			Customer customer = new Customer();
-			customer.setUser(new User());
+			customer.setLogin(new Login());
 			repository.persist(customer);
 		} finally {
 			em.getTransaction().rollback();

@@ -1,8 +1,8 @@
 package org.books.persistence.repository;
 
 import org.books.persistence.AbstractTest;
-import org.books.persistence.entity.Group;
-import org.books.persistence.entity.User;
+import org.books.persistence.entity.Login;
+import org.books.persistence.enumeration.UserGroup;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,113 +22,89 @@ public class UserRepositoryTest extends AbstractTest {
 
 	@Test
 	public void searchByName() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User namedQuery <<<<<<<<<<<<<<<<<<<<");
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login namedQuery <<<<<<<<<<<<<<<<<<<<");
 
-		User user = repository.findByName("bookstore");
-		Assert.assertNotNull(user);
-		Assert.assertEquals("bookstore", user.getPassword());
+		Login login = repository.findByName("bookstore");
+		Assert.assertNotNull(login);
+		Assert.assertEquals("bookstore", login.getPassword());
 	}
 
 	@Test
 	public void update() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User update <<<<<<<<<<<<<<<<<<<<");
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login update <<<<<<<<<<<<<<<<<<<<");
 
-		User user = repository.findByName("bookstore");
-		Assert.assertNotNull(user);
+		Login login = repository.findByName("bookstore");
+		Assert.assertNotNull(login);
 
-		user.setPassword("md5");
+		login.setPassword("md5");
 
 		em.getTransaction().begin();
-		repository.update(user);
+		repository.update(login);
 		em.getTransaction().commit();
 
-		user = repository.findByName("bookstore");
-		Assert.assertNotNull(user);
-		Assert.assertEquals("md5", user.getPassword());
+		login = repository.findByName("bookstore");
+		Assert.assertNotNull(login);
+		Assert.assertEquals("md5", login.getPassword());
 
-		user.setPassword("bookstore");
+		login.setPassword("bookstore");
 		em.getTransaction().begin();
-		repository.update(user);
+		repository.update(login);
 		em.getTransaction().commit();
 	}
 
 	@Test
 	public void insertDelete() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User insertDelete <<<<<<<<<<<<<<<<<<<<");
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login insertDelete <<<<<<<<<<<<<<<<<<<<");
 
 		em.getTransaction().begin();
 
-		User user = new User();
-		user.setName("employee");
-		user.setPassword("employee");
-		Group group = repository.findGroupByName("employee");
-		user.addGroup(group);
+		Login login = new Login();
+		login.setUserName("employee");
+		login.setPassword("employee");
+		login.setGroup(UserGroup.EMPLOYEE);
 
-		repository.persist(user);
+		repository.persist(login);
 
 		em.getTransaction().commit();
 
 		em.getTransaction().begin();
 
-		user = repository.findByName("employee");
-		Assert.assertNotNull(user);
-		Assert.assertEquals("employee", user.getPassword());
+		login = repository.findByName("employee");
+		Assert.assertNotNull(login);
+		Assert.assertEquals("employee", login.getPassword());
 
-		repository.delete(user);
+		repository.delete(login);
 
 		em.getTransaction().commit();
 
-		user = repository.findByName("employee");
-		Assert.assertNull(user);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void insertError() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User insertError <<<<<<<<<<<<<<<<<<<<");
-
-		try {
-			em.getTransaction().begin();
-
-			User user = new User();
-			user.setName("employee");
-			user.setPassword("employee");
-
-			repository.persist(user);
-		} finally {
-			em.getTransaction().rollback();
-		}
+		login = repository.findByName("employee");
+		Assert.assertNull(login);
 	}
 
 	@Test(expected = RollbackException.class)
 	public void unique() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User unique <<<<<<<<<<<<<<<<<<<<");
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login unique <<<<<<<<<<<<<<<<<<<<");
 
 		em.getTransaction().begin();
 
-		User user = new User();
-		user.setName("bookstore");
-		user.setPassword("md5");
+		Login login = new Login();
+		login.setUserName("bookstore");
+		login.setPassword("md5");
 
-		Group group = repository.findGroupByName("customer");
-		user.addGroup(group);
-
-		repository.persist(user);
+		repository.persist(login);
 		em.getTransaction().commit();
 	}
 
 
 	@Test(expected = ConstraintViolationException.class)
 	public void notNull() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> User notNull <<<<<<<<<<<<<<<<<<<<");
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login notNull <<<<<<<<<<<<<<<<<<<<");
 
 		try {
 			em.getTransaction().begin();
 
-			User user = new User();
-			Group group = repository.findGroupByName("customer");
-			user.addGroup(group);
-
-			repository.persist(user);
+			Login login = new Login();
+			repository.persist(login);
 		} finally {
 			em.getTransaction().rollback();
 		}

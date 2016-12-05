@@ -3,8 +3,8 @@ package org.books.persistence.repository;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.Customer;
+import org.books.persistence.entity.Login;
 import org.books.persistence.entity.SalesOrder;
-import org.books.persistence.entity.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -107,7 +107,7 @@ public class OrderRepositoryTest extends AbstractTest {
 
         // Given
         Integer year = 1989;
-        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new User());
+        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new Login());
 
         // When
         List<OrderInfo> foundOrderInfos = this.orderRepository.searchByCustomerAndYear(customer, year);
@@ -122,7 +122,7 @@ public class OrderRepositoryTest extends AbstractTest {
 
         // Given
         Integer year = 2011;
-        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new User());
+        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new Login());
 
         // When
         List<OrderInfo> foundOrderInfos = this.orderRepository.searchByCustomerAndYear(customer, year);
