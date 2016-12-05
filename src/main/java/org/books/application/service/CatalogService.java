@@ -6,6 +6,9 @@ import org.books.persistence.entity.Book;
 
 import java.util.List;
 
+/*
+Jan
+ */
 public interface CatalogService {
 
 	Book findBook(long id) throws BookNotFoundException;

@@ -9,6 +9,9 @@ import org.books.persistence.entity.Customer;
 
 import java.util.List;
 
+/*
+Lukas
+ */
 public interface CustomerService {
 
 	void authenticateCustomer(String email, String password) throws CustomerNotFoundException, InvalidPasswordException;

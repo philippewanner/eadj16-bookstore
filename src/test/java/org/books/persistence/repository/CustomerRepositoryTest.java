@@ -41,6 +41,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		User user = userRepository.findByName("bookstore");
+		userRepository.foo();
 
 		Customer customer = new Customer();
 		customer.setName("RepoCustomer");
