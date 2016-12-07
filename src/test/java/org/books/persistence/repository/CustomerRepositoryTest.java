@@ -3,28 +3,24 @@ package org.books.persistence.repository;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 public class CustomerRepositoryTest extends AbstractTest {
 
 	private CustomerRepository repository;
-	private UserRepository userRepository;
 
-	@Before
+	@BeforeClass
 	public void setUpBeforeTest() {
 		repository = new CustomerRepository();
-		userRepository = new UserRepository();
-
 		repository.setEntityManager(em);
-		userRepository.setEntityManager(em);
 	}
 
 	@Test
@@ -73,7 +69,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 		assertNull(customer);
 	}
 
-	@Test(expected = RollbackException.class)
+	@Test(expectedExceptions = RollbackException.class)
 	public void unique() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer unique <<<<<<<<<<<<<<<<<<<<");
 
@@ -88,7 +84,7 @@ public class CustomerRepositoryTest extends AbstractTest {
 		em.getTransaction().commit();
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test(expectedExceptions = ConstraintViolationException.class)
 	public void notNull() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer notNull <<<<<<<<<<<<<<<<<<<<");
 

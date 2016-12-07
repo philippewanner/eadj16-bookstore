@@ -3,18 +3,19 @@ package org.books.persistence.repository;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.entity.Login;
 import org.books.persistence.enumeration.UserGroup;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolationException;
+
+import static org.testng.Assert.*;
 
 public class UserRepositoryTest extends AbstractTest {
 
 	private UserRepository repository;
 
-	@Before
+	@BeforeClass
 	public void setUpBeforeTest() {
 		repository = new UserRepository();
 		repository.setEntityManager(em);
@@ -24,17 +25,17 @@ public class UserRepositoryTest extends AbstractTest {
 	public void searchByName() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login namedQuery <<<<<<<<<<<<<<<<<<<<");
 
-		Login login = repository.findByUserName("bookstore");
-		Assert.assertNotNull(login);
-		Assert.assertEquals("bookstore", login.getPassword());
+		Login login = repository.findByUserName("hans@muster.ch");
+		assertNotNull(login);
+		assertEquals("bookstore", login.getPassword());
 	}
 
 	@Test
 	public void update() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login update <<<<<<<<<<<<<<<<<<<<");
 
-		Login login = repository.findByUserName("bookstore");
-		Assert.assertNotNull(login);
+		Login login = repository.findByUserName("hans@muster.ch");
+		assertNotNull(login);
 
 		login.setPassword("md5");
 
@@ -42,9 +43,9 @@ public class UserRepositoryTest extends AbstractTest {
 		repository.update(login);
 		em.getTransaction().commit();
 
-		login = repository.findByUserName("bookstore");
-		Assert.assertNotNull(login);
-		Assert.assertEquals("md5", login.getPassword());
+		login = repository.findByUserName("hans@muster.ch");
+		assertNotNull(login);
+		assertEquals("md5", login.getPassword());
 
 		login.setPassword("bookstore");
 		em.getTransaction().begin();
@@ -70,33 +71,32 @@ public class UserRepositoryTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		login = repository.findByUserName("employee");
-		Assert.assertNotNull(login);
-		Assert.assertEquals("employee", login.getPassword());
+		assertNotNull(login);
+		assertEquals("employee", login.getPassword());
 
 		repository.delete(login);
 
 		em.getTransaction().commit();
 
 		login = repository.findByUserName("employee");
-		Assert.assertNull(login);
+		assertNull(login);
 	}
 
-	@Test(expected = RollbackException.class)
+	@Test(expectedExceptions = RollbackException.class)
 	public void unique() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login unique <<<<<<<<<<<<<<<<<<<<");
 
 		em.getTransaction().begin();
 
 		Login login = new Login();
-		login.setUserName("bookstore");
+		login.setUserName("hans@muster.ch");
 		login.setPassword("md5");
 
 		repository.persist(login);
 		em.getTransaction().commit();
 	}
 
-
-	@Test(expected = ConstraintViolationException.class)
+	@Test(expectedExceptions = ConstraintViolationException.class)
 	public void notNull() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login notNull <<<<<<<<<<<<<<<<<<<<");
 
