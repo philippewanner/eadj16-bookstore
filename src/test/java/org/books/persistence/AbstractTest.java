@@ -5,10 +5,8 @@ import org.books.persistence.enumeration.CreditCardType;
 import org.books.persistence.enumeration.OrderStatus;
 import org.books.persistence.enumeration.UserGroup;
 import org.jboss.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,39 +31,24 @@ public abstract class AbstractTest {
 	private Long salesOrderId;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("bookstore-test");
 		em = emf.createEntityManager();
-	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		if (em != null) {
-			em.close();
-		}
-		if (emf != null) {
-			emf.close();
-		}
-	}
-
-	@Before
-	public void setUp() {
 		try {
 			em.getTransaction().begin();
 
 			Login login = new Login();
-			login.setUserName("bookstore");
+			login.setUserName("hans@muster.ch");
 			login.setPassword("bookstore");
 			login.setGroup(UserGroup.CUSTOMER);
 
 			em.persist(login);
 
 			Customer customer = new Customer();
-			customer.setName("Muster");
+			customer.setLastName("Muster");
 			customer.setFirstName("Hans");
 			customer.setEmail("hans@muster.ch");
-			customer.setNumber(123456L);
-			customer.setLogin(login);
 
 			Address address = new Address();
 			address.setStreet("Musterstrasse 55");
@@ -89,7 +72,7 @@ public abstract class AbstractTest {
 			fillBooks();
 
 			userId = login.getId();
-			customerId = customer.getId();
+			customerId = customer.getNumber();
 
 			this.salesOrderId = this.getNewPersistedSalesOrder().getId();
 
@@ -102,8 +85,8 @@ public abstract class AbstractTest {
 		}
 	}
 
-	@After
-	public void tearDown() {
+	@AfterClass
+	public void tearDownAfterClass() throws Exception {
 		try {
 			em.getTransaction().begin();
 
@@ -123,6 +106,13 @@ public abstract class AbstractTest {
 			if (em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
+		}
+
+		if (em != null) {
+			em.close();
+		}
+		if (emf != null) {
+			emf.close();
 		}
 	}
 

@@ -12,7 +12,6 @@ import java.io.Serializable;
  */
 public class CustomerInfo implements Serializable {
 
-	private Long id;
 	private Long number;
 	private String firstName;
 	private String lastName;
@@ -28,11 +27,6 @@ public class CustomerInfo implements Serializable {
 	* Constructor for Fischlin Unit Tests
 	 */
 	public CustomerInfo(Long number, String firstName, String lastName, String email) {
-		this(null, number, firstName, lastName, email);
-	}
-
-	public CustomerInfo(Long id, Long number, String firstName, String lastName, String email) {
-		this.id = id;
 		this.number = number;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -69,13 +63,5 @@ public class CustomerInfo implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }

@@ -20,10 +20,8 @@ public abstract class AbstractRepository<T, PK> {
 
 	private Class<T> entityClass;
 
-	public AbstractRepository() {
-		Type type = getClass().getGenericSuperclass();
-		ParameterizedType pt = (ParameterizedType) type;
-		entityClass = (Class<T>) pt.getActualTypeArguments()[0];
+	protected AbstractRepository(Class<T> entityClass) {
+		this.entityClass = entityClass;
 	}
 
 	void setEntityManager(EntityManager em) {
@@ -61,6 +59,10 @@ public abstract class AbstractRepository<T, PK> {
 	public T update(T t) {
 
 		return this.em.merge(t);
+	}
+
+	public void flush() {
+		em.flush();
 	}
 
 	/**

@@ -16,9 +16,13 @@ import java.util.Map;
  * Philippe
  */
 @Stateless
-public class OrderRepository extends AbstractRepository<SalesOrder, Integer> {
+public class OrderRepository extends AbstractRepository<SalesOrder, Long> {
 
-    /**
+	public OrderRepository() {
+		super(SalesOrder.class);
+	}
+
+	/**
      * Get an order with a particular order number.
      *
      * @param number particular order number.
@@ -54,9 +58,9 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Integer> {
     }
 
    /**
-     * sum of amount and number of positions and average amount per position on 
+     * sum of amount and number of positions and average amount per position on
      * all orders of all customers of a particular year group by customer
-     * 
+     *
      */
     public List<Object> sumAmountNumberPositionsAvgAmountPerYear(@Past Integer year) {
 

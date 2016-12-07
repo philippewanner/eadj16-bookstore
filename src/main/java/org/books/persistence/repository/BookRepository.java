@@ -17,6 +17,10 @@ import java.util.Map;
 @Stateless
 public class BookRepository extends AbstractRepository<Book, Long> {
 
+    public BookRepository() {
+        super(Book.class);
+    }
+
     public List<Book> findByISBN(String isbn) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("isbn", isbn.replace(" ", ""));

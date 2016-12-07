@@ -11,7 +11,10 @@ import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.exception.InvalidPasswordException;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
+import org.books.persistence.entity.Login;
+import org.books.persistence.enumeration.UserGroup;
 import org.books.persistence.repository.CustomerRepository;
+import org.books.persistence.repository.UserRepository;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -25,54 +28,115 @@ public class CustomerServiceBean extends AbstractService implements CustomerServ
 
 	@EJB
 	private CustomerRepository customerRepository;
+	@EJB
+	private UserRepository userRepository;
 
 	@Override
 	public void authenticateCustomer(String email, String password)
 			throws CustomerNotFoundException, InvalidPasswordException {
 		logInfo("authenticateCustomer");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		Login login = userRepository.findByUserName(email);
+		if (login == null) {
+			throw new CustomerNotFoundException();
+		}
+
+		if (!password.equals(login.getPassword())) {
+			throw new InvalidPasswordException();
+		}
 	}
 
 	@Override
 	public void changePassword(String email, String password) throws CustomerNotFoundException {
 		logInfo("changePassword");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		Login login = userRepository.findByUserName(email);
+		if (login == null) {
+			throw new CustomerNotFoundException();
+		}
+
+		login.setPassword(password);
 	}
 
 	@Override
 	public Customer findCustomer(Long customerNr) throws CustomerNotFoundException {
 		logInfo("findCustomer(Long customerNr)");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		Customer customer = customerRepository.find(customerNr);
+		if (customer != null) {
+			return customer;
+		}
+		throw new CustomerNotFoundException();
 	}
 
 	@Override
 	public Customer findCustomer(String email) throws CustomerNotFoundException {
 		logInfo("findCustomer(String email)");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		Customer customer = customerRepository.find(email);
+		if (customer != null) {
+			return customer;
+		}
+		throw new CustomerNotFoundException();
 	}
 
 	@Override
 	public Long registerCustomer(Registration registration) throws CustomerAlreadyExistsException {
 		logInfo("registerCustomer");
-		customerRepository.findInfosByName("Muster");
-		return 0L;
+		Customer customer = registration.getCustomer();
+		if (userRepository.findByUserName(customer.getEmail()) != null) {
+			throw new CustomerAlreadyExistsException();
+		}
+		if (customerRepository.find(customer.getEmail()) != null) {
+			throw new CustomerAlreadyExistsException();
+		}
+
+		Login login = new Login();
+		login.setGroup(UserGroup.CUSTOMER);
+		login.setUserName(customer.getEmail());
+		login.setPassword(registration.getPassword());
+		userRepository.persist(login);
+		customerRepository.persist(customer);
+
+		// Brauchen generierte nummer
+		customerRepository.flush();
+
+		return customer.getNumber();
 	}
 
 	@Override
 	public List<CustomerInfo> searchCustomers(String name) {
 		logInfo("searchCustomers");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return customerRepository.search(name);
 	}
 
 	@Override
 	public void updateCustomer(Customer customer) throws CustomerNotFoundException, CustomerAlreadyExistsException {
 		logInfo("updateCustomer");
-		throw new UnsupportedOperationException(
-				"Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (customer.getNumber() == null) {
+			throw new IllegalArgumentException("Number of customer must not be null");
+		}
+
+		Customer dbCustomer = customerRepository.find(customer.getNumber());
+		if (dbCustomer == null) {
+			throw new CustomerNotFoundException();
+		}
+
+		if (!dbCustomer.getEmail().equals(customer.getEmail())) {
+			Customer c = customerRepository.find(customer.getEmail());
+			if (c != null) {
+				throw new CustomerAlreadyExistsException();
+			}
+
+			Login login = userRepository.findByUserName(customer.getEmail());
+			if (login != null) {
+				throw new CustomerAlreadyExistsException();
+			}
+
+			login = userRepository.findByUserName(dbCustomer.getEmail());
+			if (login == null) {
+				throw new CustomerNotFoundException();
+			}
+
+			login.setUserName(customer.getEmail());
+		}
+
+		customerRepository.update(customer);
 	}
 }
