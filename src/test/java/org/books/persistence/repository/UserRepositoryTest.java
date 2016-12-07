@@ -24,7 +24,7 @@ public class UserRepositoryTest extends AbstractTest {
 	public void searchByName() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login namedQuery <<<<<<<<<<<<<<<<<<<<");
 
-		Login login = repository.findByName("bookstore");
+		Login login = repository.findByUserName("bookstore");
 		Assert.assertNotNull(login);
 		Assert.assertEquals("bookstore", login.getPassword());
 	}
@@ -33,7 +33,7 @@ public class UserRepositoryTest extends AbstractTest {
 	public void update() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Login update <<<<<<<<<<<<<<<<<<<<");
 
-		Login login = repository.findByName("bookstore");
+		Login login = repository.findByUserName("bookstore");
 		Assert.assertNotNull(login);
 
 		login.setPassword("md5");
@@ -42,7 +42,7 @@ public class UserRepositoryTest extends AbstractTest {
 		repository.update(login);
 		em.getTransaction().commit();
 
-		login = repository.findByName("bookstore");
+		login = repository.findByUserName("bookstore");
 		Assert.assertNotNull(login);
 		Assert.assertEquals("md5", login.getPassword());
 
@@ -69,7 +69,7 @@ public class UserRepositoryTest extends AbstractTest {
 
 		em.getTransaction().begin();
 
-		login = repository.findByName("employee");
+		login = repository.findByUserName("employee");
 		Assert.assertNotNull(login);
 		Assert.assertEquals("employee", login.getPassword());
 
@@ -77,7 +77,7 @@ public class UserRepositoryTest extends AbstractTest {
 
 		em.getTransaction().commit();
 
-		login = repository.findByName("employee");
+		login = repository.findByUserName("employee");
 		Assert.assertNull(login);
 	}
 

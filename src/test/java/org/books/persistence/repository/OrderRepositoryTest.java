@@ -2,9 +2,7 @@ package org.books.persistence.repository;
 
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.OrderInfo;
-import org.books.persistence.entity.Customer;
-import org.books.persistence.entity.Login;
-import org.books.persistence.entity.SalesOrder;
+import org.books.persistence.entity.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +89,7 @@ public class OrderRepositoryTest extends AbstractTest {
             Object[] o = (Object[]) ob;
             out.append(String.format("%8s", (String) (o[0]))
                     + "  |   " + String.format("%6s", o[1])
-                    + "   |   " + StringUtils.leftPad(Long.toString((Long) o[2]), 9)
+                    + "  |   " + StringUtils.leftPad(Long.toString((Long) o[2]), 9)
                     + "  |  " + String.format("%8s", o[3]) + "\n");
         }
 
@@ -107,7 +105,7 @@ public class OrderRepositoryTest extends AbstractTest {
 
         // Given
         Integer year = 1989;
-        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new Login());
+        Customer customer = new Customer("fakeFirst", "fakeLast", "fakeEmail", new Address(), new CreditCard());
 
         // When
         List<OrderInfo> foundOrderInfos = this.orderRepository.searchByCustomerAndYear(customer, year);
@@ -119,10 +117,9 @@ public class OrderRepositoryTest extends AbstractTest {
 
     @Test
     public void searchByCustomerAndYear_onlyMatchingCustomer() {
-
         // Given
         Integer year = 2011;
-        Customer customer = new Customer(900L, "fakeFirst", "fakeLast", "fakeEmail", new Login());
+        Customer customer = new Customer("fakeFirst", "fakeLast", "fakeEmail", new Address(), new CreditCard());
 
         // When
         List<OrderInfo> foundOrderInfos = this.orderRepository.searchByCustomerAndYear(customer, year);
@@ -134,7 +131,6 @@ public class OrderRepositoryTest extends AbstractTest {
 
     @Test
     public void searchByCustomerAndYear_notAtAllMatching() {
-
         // Given
         Integer year = 2011;
         Customer customer = getPersistedCustomer();

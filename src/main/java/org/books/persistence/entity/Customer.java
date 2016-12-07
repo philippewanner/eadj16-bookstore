@@ -4,21 +4,19 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "number" }) })
-public class Customer extends BaseEntity {
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
+public class Customer {
 
-	@NotNull
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long number;
 	@NotNull
 	private String firstName;
 	@NotNull
-	private String name;
+	private String lastName;
 	@NotNull
 	private String email;
 
-	@OneToOne(optional = false)
-	@NotNull
-	private Login login;
 	@Embedded
 	private Address address;
 	@Embedded
@@ -27,12 +25,17 @@ public class Customer extends BaseEntity {
 	public Customer() {
 	}
 
-	public Customer(Long number, String firstName, String name, String email, Login login) {
+	public Customer(Long number, String firstName, String lastName, String email, Address address, CreditCard creditCard) {
 		this.number = number;
 		this.firstName = firstName;
-		this.name = name;
+		this.lastName = lastName;
 		this.email = email;
-		this.login = login;
+		this.address = address;
+		this.creditCard = creditCard;
+	}
+
+	public Customer(String firstName, String lastName, String email, Address address, CreditCard creditCard) {
+		this(null, firstName, lastName, email, address, creditCard);
 	}
 
 	public Long getNumber() {
@@ -51,12 +54,12 @@ public class Customer extends BaseEntity {
 		this.firstName = firstName;
 	}
 
-	public String getName() {
-		return name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setLastName(String name) {
+		this.lastName = name;
 	}
 
 	public String getEmail() {
@@ -65,14 +68,6 @@ public class Customer extends BaseEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Login getLogin() {
-		return login;
-	}
-
-	public void setLogin(Login login) {
-		this.login = login;
 	}
 
 	public Address getAddress() {

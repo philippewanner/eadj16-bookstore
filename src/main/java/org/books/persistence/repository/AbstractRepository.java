@@ -61,6 +61,10 @@ public abstract class AbstractRepository<T, PK> {
 		return this.em.merge(t);
 	}
 
+	public void flush() {
+		em.flush();
+	}
+
 	/**
 	 * Remove an object from persistent storage in the database.
 	 *

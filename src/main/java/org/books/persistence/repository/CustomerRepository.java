@@ -18,10 +18,20 @@ public class CustomerRepository extends AbstractRepository<Customer, Long> {
 		super(Customer.class);
 	}
 
-	public List<CustomerInfo> findInfosByName(String name) {
+	public List<CustomerInfo> search(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);
 		parameters.put("name", name);
 
 		return findByNamedQuery(CustomerInfo.class, "Customer.findInfosByName", parameters);
+	}
+
+	public Customer find(String email) {
+		Map<String, Object> parameters = new HashMap<>(1);
+		parameters.put("email", email);
+
+		List<Customer> customers = findByNamedQuery("Customer.findByEmail", parameters);
+
+		// Unique Constraint number -> max one result
+		return customers.size() == 1 ? customers.get(0) : null;
 	}
 }

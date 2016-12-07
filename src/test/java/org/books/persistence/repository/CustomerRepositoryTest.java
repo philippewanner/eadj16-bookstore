@@ -3,7 +3,6 @@ package org.books.persistence.repository;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
-import org.books.persistence.entity.Login;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,10 +31,14 @@ public class CustomerRepositoryTest extends AbstractTest {
 	public void searchInfoByName() {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> CustomerInfo namedQuery <<<<<<<<<<<<<<<<<<<<");
 
-		List<CustomerInfo> customers = repository.findInfosByName("Hans");
+		List<CustomerInfo> customers = repository.search("Hans");
 		assertNotNull(customers);
 		assertFalse(customers.isEmpty());
 		assertEquals("hans@muster.ch", customers.get(0).getEmail());
+
+		Customer customer = repository.find(customers.get(0).getNumber());
+		assertNotNull(customer);
+		assertEquals("hans@muster.ch", customer.getEmail());
 	}
 
 	@Test
@@ -43,32 +46,29 @@ public class CustomerRepositoryTest extends AbstractTest {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer insertDelete <<<<<<<<<<<<<<<<<<<<");
 		em.getTransaction().begin();
 
-		Login login = userRepository.findByName("bookstore");
-
 		Customer customer = new Customer();
-		customer.setName("RepoCustomer");
+		customer.setLastName("RepoCustomer");
 		customer.setFirstName("a");
 		customer.setEmail("a");
 		customer.setNumber(new Random().nextLong());
-		customer.setLogin(login);
 
 		repository.persist(customer);
 
 		em.getTransaction().commit();
 
-		assertNotNull(customer.getId());
+		assertNotNull(customer.getNumber());
 
-		customer = repository.find(customer.getId());
+		customer = repository.find(customer.getNumber());
 
 		assertNotNull(customer);
-		assertEquals("RepoCustomer", customer.getName());
+		assertEquals("RepoCustomer", customer.getLastName());
 
 		em.getTransaction().begin();
-		customer = repository.find(customer.getId());
+		customer = repository.find(customer.getNumber());
 		repository.delete(customer);
 		em.getTransaction().commit();
 
-		customer = repository.find(customer.getId());
+		customer = repository.find(customer.getNumber());
 
 		assertNull(customer);
 	}
@@ -80,11 +80,9 @@ public class CustomerRepositoryTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		Customer customer = new Customer();
-		customer.setName("a");
+		customer.setLastName("a");
 		customer.setFirstName("a");
-		customer.setEmail("a");
-		customer.setNumber(123456L);
-		customer.setLogin(new Login());
+		customer.setEmail("hans@muster.ch");
 
 		repository.persist(customer);
 		em.getTransaction().commit();
@@ -98,26 +96,6 @@ public class CustomerRepositoryTest extends AbstractTest {
 			em.getTransaction().begin();
 
 			Customer customer = new Customer();
-			customer.setLogin(new Login());
-			repository.persist(customer);
-		} finally {
-			em.getTransaction().rollback();
-		}
-	}
-
-	@Test(expected = ConstraintViolationException.class)
-	public void noUser() {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer notNull <<<<<<<<<<<<<<<<<<<<");
-
-		try {
-			em.getTransaction().begin();
-
-			Customer customer = new Customer();
-			customer.setName("a");
-			customer.setFirstName("a");
-			customer.setEmail("a");
-			customer.setNumber(new Random().nextLong());
-
 			repository.persist(customer);
 		} finally {
 			em.getTransaction().rollback();

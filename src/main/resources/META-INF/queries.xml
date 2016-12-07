@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
-        http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/orm_2_1.xsd"
+        version="2.1">
 
-    <named-query name="Login.findByName">
+    <named-query name="Login.findByUserName">
         <query>
             <![CDATA[
             select l from Login l where l.userName = :name
@@ -38,13 +38,22 @@
         </query>
     </named-query>
 
-
     <named-query name="Customer.findInfosByName">
         <query>
             <![CDATA[
-            select NEW org.books.persistence.dto.CustomerInfo(c.id, c.number, c.firstName, c.name, c.email) from Customer c
-            where LOWER(c.name) like CONCAT('%', CONCAT(LOWER(:name), '%'))
+            select NEW org.books.persistence.dto.CustomerInfo(c.number, c.firstName, c.lastName, c.email) from Customer c
+            where LOWER(c.lastName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
             or LOWER(c.firstName) like CONCAT('%', CONCAT(LOWER(:name), '%'))
+        ]]>
+        </query>
+    </named-query>
+
+    <named-query name="Customer.findByEmail">
+        <query>
+            <![CDATA[
+            SELECT c
+            FROM Customer c
+            WHERE c.email = :email
         ]]>
         </query>
     </named-query>
@@ -73,7 +82,7 @@
     <named-query name="SalesOrder.sumOrdersGroupedByCustomerForYear">
         <query>
             <![CDATA[
-            SELECT c.name, SUM(o.amount) , COUNT(SIZE(o.salesOrderItems)), SUM(o.amount)/COUNT(SIZE(o.salesOrderItems))
+            SELECT c.lastName, SUM(o.amount) , COUNT(SIZE(o.salesOrderItems)), SUM(o.amount)/COUNT(SIZE(o.salesOrderItems))
             FROM SalesOrder o JOIN o.customer c
             WHERE EXTRACT(YEAR from o.date) = :year
             GROUP BY o.customer

@@ -61,11 +61,9 @@ public abstract class AbstractTest {
 			em.persist(login);
 
 			Customer customer = new Customer();
-			customer.setName("Muster");
+			customer.setLastName("Muster");
 			customer.setFirstName("Hans");
 			customer.setEmail("hans@muster.ch");
-			customer.setNumber(123456L);
-			customer.setLogin(login);
 
 			Address address = new Address();
 			address.setStreet("Musterstrasse 55");
@@ -89,7 +87,7 @@ public abstract class AbstractTest {
 			fillBooks();
 
 			userId = login.getId();
-			customerId = customer.getId();
+			customerId = customer.getNumber();
 
 			this.salesOrderId = this.getNewPersistedSalesOrder().getId();
 

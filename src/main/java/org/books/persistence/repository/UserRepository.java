@@ -17,11 +17,11 @@ public class UserRepository extends AbstractRepository<Login, Long> {
 		super(Login.class);
 	}
 
-	public Login findByName(String name) {
+	public Login findByUserName(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);
 		parameters.put("name", name);
 
-		List<Login> logins = findByNamedQuery("Login.findByName", parameters);
+		List<Login> logins = findByNamedQuery("Login.findByUserName", parameters);
 
 		// Always 1 or 0, because of unique constraint
 		return logins.size() == 1 ? logins.get(0) : null;

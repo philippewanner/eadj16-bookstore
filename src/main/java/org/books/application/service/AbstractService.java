@@ -13,46 +13,45 @@ import javax.ejb.PostActivate;
 import javax.ejb.PrePassivate;
 
 /**
- *
  * @author jan
  */
-public abstract class AbstractService{
-    
-    protected static Logger logger;
+public abstract class AbstractService {
 
-    protected void logInfo(String msg) {        
-        logger.log(Level.INFO, msg);
-    }
-    
-    protected void logError(String msg) {        
-        logger.log(Level.SEVERE, msg);
-    }
-    
-    protected void logWarn(String msg) {        
-        logger.log(Level.WARNING, msg);
-    }
-    
-    public AbstractService(){        
-        logger = Logger.getLogger(getClass().getName());
-    }
-    
-    @PostActivate
-    public void postActivate() {
-        logInfo("postActivate");
-    }
+	protected static Logger logger;
 
-    @PostConstruct
-    public void postConstruct() {
-        logInfo("postConstruct");
-    }
+	protected AbstractService() {
+		logger = Logger.getLogger(getClass().getName());
+	}
 
-    @PreDestroy
-    public void preDestroy() {
-        logInfo("preDestroy");
-    }
+	protected void logInfo(String msg) {
+		logger.log(Level.INFO, msg);
+	}
 
-    @PrePassivate
-    public void prePassivate() {
-        logInfo("prePassivate");
-    }
+	protected void logError(String msg) {
+		logger.log(Level.SEVERE, msg);
+	}
+
+	protected void logWarn(String msg) {
+		logger.log(Level.WARNING, msg);
+	}
+
+	@PostActivate
+	public void postActivate() {
+		logInfo("postActivate");
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		logInfo("postConstruct");
+	}
+
+	@PreDestroy
+	public void preDestroy() {
+		logInfo("preDestroy");
+	}
+
+	@PrePassivate
+	public void prePassivate() {
+		logInfo("prePassivate");
+	}
 }
