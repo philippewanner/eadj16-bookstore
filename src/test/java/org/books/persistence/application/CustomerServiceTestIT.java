@@ -14,6 +14,7 @@ import org.jboss.logging.Logger;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.List;
@@ -160,7 +161,7 @@ public class CustomerServiceTestIT {
 
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = EJBException.class)
 	public void update_noNumber() throws CustomerNotFoundException, CustomerAlreadyExistsException {
 		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_noNumber <<<<<<<<<<<<<<<<<<<<");
 

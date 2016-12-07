@@ -49,6 +49,10 @@ public class CustomerServiceBean extends AbstractService implements CustomerServ
 	public void changePassword(String email, String password) throws CustomerNotFoundException {
 		logInfo("changePassword");
 		Login login = userRepository.findByUserName(email);
+		if (login == null) {
+			throw new CustomerNotFoundException();
+		}
+
 		login.setPassword(password);
 	}
 
@@ -120,9 +124,14 @@ public class CustomerServiceBean extends AbstractService implements CustomerServ
 				throw new CustomerAlreadyExistsException();
 			}
 
-			Login login = userRepository.findByUserName(dbCustomer.getEmail());
+			Login login = userRepository.findByUserName(customer.getEmail());
 			if (login != null) {
 				throw new CustomerAlreadyExistsException();
+			}
+
+			login = userRepository.findByUserName(dbCustomer.getEmail());
+			if (login == null) {
+				throw new CustomerNotFoundException();
 			}
 
 			login.setUserName(customer.getEmail());
