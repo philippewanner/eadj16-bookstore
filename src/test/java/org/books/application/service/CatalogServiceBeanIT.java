@@ -5,27 +5,23 @@
  */
 package org.books.application.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.util.List;
-import java.util.logging.Level;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import org.books.DbUtil;
 import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
-import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.persistence.TestDataProvider;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
-import org.books.persistence.repository.BookRepository;
-import org.junit.Before;
 import org.jboss.logging.Logger;
-import org.junit.AfterClass;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.testng.Assert.*;
 
 /**
  *
@@ -42,7 +38,7 @@ public class CatalogServiceBeanIT {
     private String foundISBN;
 
     @BeforeClass
-    public void setup() throws NamingException {
+    public void setup() throws NamingException, SQLException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
         
         service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
@@ -51,8 +47,8 @@ public class CatalogServiceBeanIT {
         deleteBooks();
     }
 
-    @org.testng.annotations.AfterClass
-    public void tearDown() {
+    @AfterClass
+    public void tearDown() throws SQLException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog tearDown <<<<<<<<<<<<<<<<<<<<");
         deleteBooks();
     }
@@ -62,8 +58,7 @@ public class CatalogServiceBeanIT {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooks <<<<<<<<<<<<<<<<<<<<");
 
         List<Book> books = TestDataProvider.getBooks();
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
+        for (Book b : books) {
             try {
                 service.addBook(b);
             } catch (BookAlreadyExistsException ex) {
@@ -123,27 +118,9 @@ public class CatalogServiceBeanIT {
         service.findBook("000-0-000-00000-0");
     }
 
-    private void deleteBooks() {
+    private void deleteBooks() throws SQLException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog deleteBooks <<<<<<<<<<<<<<<<<<<<");
-        
-        String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
-        String DB_URL = "jdbc:derby://localhost:1527/bookstore";
-        String USER = "app";
-        String PASS = "app";
-        Connection conn = null;
-        Statement stmt = null;
-        try {
-            Class.forName(JDBC_DRIVER);
-            
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            //delete books            
-            stmt = conn.createStatement();
-            String sql;
-            sql = "delete from BOOK";
-            stmt.executeQuery(sql);
-        } catch (Exception ex) {
-        }
+        DbUtil.executeSql("delete from BOOK");
     }
-
 }

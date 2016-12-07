@@ -1,22 +1,24 @@
-package org.books.persistence.application;
+package org.books.application.service;
 
+import org.books.DbUtil;
 import org.books.application.dto.Registration;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.exception.InvalidPasswordException;
-import org.books.application.service.CustomerService;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Address;
 import org.books.persistence.entity.CreditCard;
 import org.books.persistence.entity.Customer;
 import org.books.persistence.enumeration.CreditCardType;
 import org.jboss.logging.Logger;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.testng.Assert.*;
@@ -33,6 +35,12 @@ public class CustomerServiceTestIT {
 	public void lookup() throws NamingException {
 		service = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
 		assertNotNull(service);
+	}
+
+	@AfterClass
+	public void tearDown() throws SQLException {
+		DbUtil.executeSql("delete from Customer where email = 'lukas@kalt.ch'");
+		DbUtil.executeSql("delete from UserLogin where userName = 'lukas@kalt.ch'");
 	}
 
 	@Test
