@@ -70,10 +70,16 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
     }
 
     @Override
-    public void addBook(Book book) throws BookAlreadyExistsException{
+    public void addBook(Book book) throws BookAlreadyExistsException {
+        List<Book> b = bookRepository.findByISBN(book.getIsbn());
+
+        if (b != null && b.size() > 0) { 
+            throw new BookAlreadyExistsException();
+        }
+
         bookRepository.persist(book);
     }
-    
+
     private String[] ConvertToArray(String keywords) {
         String[] array = keywords.split(" ");
 

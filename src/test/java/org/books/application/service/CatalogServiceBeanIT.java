@@ -5,6 +5,9 @@
  */
 package org.books.application.service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import javax.naming.InitialContext;
@@ -18,6 +21,7 @@ import org.books.persistence.entity.Book;
 import org.books.persistence.repository.BookRepository;
 import org.junit.Before;
 import org.jboss.logging.Logger;
+import org.junit.AfterClass;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.BeforeClass;
@@ -39,9 +43,17 @@ public class CatalogServiceBeanIT {
 
     @BeforeClass
     public void setup() throws NamingException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
+        
         service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
         assertNotNull(service);
 
+        deleteBooks();
+    }
+
+    @org.testng.annotations.AfterClass
+    public void tearDown() {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog tearDown <<<<<<<<<<<<<<<<<<<<");
         deleteBooks();
     }
 
@@ -60,6 +72,17 @@ public class CatalogServiceBeanIT {
         }
     }
 
+    @Test(dependsOnMethods = "addBooks", expectedExceptions = BookAlreadyExistsException.class)
+    public void addBooksExists() throws BookAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooksExists <<<<<<<<<<<<<<<<<<<<");
+
+        List<Book> books = TestDataProvider.getBooks();
+
+        Book b = books.get(0);
+
+        service.addBook(b);
+    }
+
     @Test(dependsOnMethods = "addBooks")
     public void searchBook() {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBook <<<<<<<<<<<<<<<<<<<<");
@@ -71,6 +94,16 @@ public class CatalogServiceBeanIT {
         assertEquals(books.get(0).getIsbn(), "978-3-352-00885-6");
 
         foundISBN = books.get(0).getIsbn();
+    }
+
+    @Test(dependsOnMethods = "addBooks")
+    public void searchBookNothingFound() {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBookNothingFound <<<<<<<<<<<<<<<<<<<<");
+
+        List<BookInfo> books = service.searchBooks("unbekanntes Buch King");
+
+        assertNotNull(books);
+        assertEquals(books.size(), 0);
     }
 
     @Test(dependsOnMethods = "searchBook")
@@ -91,7 +124,26 @@ public class CatalogServiceBeanIT {
     }
 
     private void deleteBooks() {
-        // TODO
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog deleteBooks <<<<<<<<<<<<<<<<<<<<");
+        
+        String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
+        String DB_URL = "jdbc:derby://localhost:1527/bookstore";
+        String USER = "app";
+        String PASS = "app";
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            //delete books            
+            stmt = conn.createStatement();
+            String sql;
+            sql = "delete from BOOK";
+            stmt.executeQuery(sql);
+        } catch (Exception ex) {
+        }
     }
 
 }
