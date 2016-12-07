@@ -13,6 +13,10 @@ Lukas
 @Stateless
 public class UserRepository extends AbstractRepository<Login, Long> {
 
+	public UserRepository() {
+		super(Login.class);
+	}
+
 	public Login findByName(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);
 		parameters.put("name", name);

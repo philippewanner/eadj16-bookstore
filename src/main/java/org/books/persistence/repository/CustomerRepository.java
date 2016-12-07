@@ -9,10 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
-Lukas
+ * Lukas
  */
 @Stateless
 public class CustomerRepository extends AbstractRepository<Customer, Long> {
+
+	public CustomerRepository() {
+		super(Customer.class);
+	}
 
 	public List<CustomerInfo> findInfosByName(String name) {
 		Map<String, Object> parameters = new HashMap<>(1);
