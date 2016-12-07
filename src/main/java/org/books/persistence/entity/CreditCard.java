@@ -4,9 +4,10 @@ import org.books.persistence.enumeration.CreditCardType;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class CreditCard {
+public class CreditCard implements Serializable {
 
 	private CreditCardType type;
 	@Column(name = "creditCardNumber")
