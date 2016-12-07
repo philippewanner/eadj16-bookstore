@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,14 +34,17 @@ public class CatalogServiceBeanIT {
 
     private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
 
+    private final static BigDecimal NEW_PRICE = BigDecimal.valueOf(1000);
+
     private CatalogService service;
 
     private String foundISBN;
+    private Book foundBook;
 
     @BeforeClass
     public void setup() throws NamingException, SQLException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
-        
+
         service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
         assertNotNull(service);
 
@@ -105,10 +109,29 @@ public class CatalogServiceBeanIT {
     public void searchISBN() throws BookNotFoundException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchISBN <<<<<<<<<<<<<<<<<<<<");
 
-        Book book = service.findBook(foundISBN);
+        foundBook = service.findBook(foundISBN);
 
-        assertNotNull(book);
-        assertEquals(book.getIsbn(), "978-3-352-00885-6");
+        assertNotNull(foundBook);
+        assertEquals(foundBook.getIsbn(), "978-3-352-00885-6");
+    }
+
+    @Test(dependsOnMethods = "searchISBN")
+    public void updateBook() throws BookNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog updateBook <<<<<<<<<<<<<<<<<<<<");
+
+        foundBook.setPrice(NEW_PRICE);
+
+        service.updateBook(foundBook);
+    }
+
+    @Test(dependsOnMethods = "updateBook")
+    public void searchUpdatedBook() throws BookNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchUpdatedBook <<<<<<<<<<<<<<<<<<<<");
+
+        Book b = service.findBook(foundISBN);
+
+        assertNotNull(b);
+        assertEquals(b.getPrice(), NEW_PRICE);
     }
 
     @Test(dependsOnMethods = "searchISBN", expectedExceptions = BookNotFoundException.class)
