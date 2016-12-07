@@ -5,6 +5,7 @@
  */
 package org.books.application.service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -37,14 +38,17 @@ public class CatalogServiceBeanIT {
 
     private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
 
+    private final static BigDecimal NEW_PRICE = BigDecimal.valueOf(1000);
+
     private CatalogService service;
 
     private String foundISBN;
+    private Book foundBook;
 
     @BeforeClass
     public void setup() throws NamingException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
-        
+
         service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
         assertNotNull(service);
 
@@ -110,10 +114,29 @@ public class CatalogServiceBeanIT {
     public void searchISBN() throws BookNotFoundException {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchISBN <<<<<<<<<<<<<<<<<<<<");
 
-        Book book = service.findBook(foundISBN);
+        foundBook = service.findBook(foundISBN);
 
-        assertNotNull(book);
-        assertEquals(book.getIsbn(), "978-3-352-00885-6");
+        assertNotNull(foundBook);
+        assertEquals(foundBook.getIsbn(), "978-3-352-00885-6");
+    }
+
+    @Test(dependsOnMethods = "searchISBN")
+    public void updateBook() throws BookNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog updateBook <<<<<<<<<<<<<<<<<<<<");
+
+        foundBook.setPrice(NEW_PRICE);
+
+        service.updateBook(foundBook);
+    }
+
+    @Test(dependsOnMethods = "updateBook")
+    public void searchUpdatedBook() throws BookNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchUpdatedBook <<<<<<<<<<<<<<<<<<<<");
+
+        Book b = service.findBook(foundISBN);
+
+        assertNotNull(b);
+        assertEquals(b.getPrice(), NEW_PRICE);
     }
 
     @Test(dependsOnMethods = "searchISBN", expectedExceptions = BookNotFoundException.class)
@@ -125,7 +148,7 @@ public class CatalogServiceBeanIT {
 
     private void deleteBooks() {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog deleteBooks <<<<<<<<<<<<<<<<<<<<");
-        
+
         String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
         String DB_URL = "jdbc:derby://localhost:1527/bookstore";
         String USER = "app";
@@ -134,7 +157,7 @@ public class CatalogServiceBeanIT {
         Statement stmt = null;
         try {
             Class.forName(JDBC_DRIVER);
-            
+
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             //delete books            
