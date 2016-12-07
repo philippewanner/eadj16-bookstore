@@ -5,17 +5,20 @@ import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 
 import java.util.List;
+import javax.ejb.Remote;
+import org.books.application.exception.BookAlreadyExistsException;
 
 /*
 Jan
  */
+@Remote
 public interface CatalogService {
 
-	Book findBook(long id) throws BookNotFoundException;
+    void addBook(Book book) throws BookAlreadyExistsException;
+    
+    Book findBook(String isbn) throws BookNotFoundException;
 
-	Book findBook(String isbn) throws BookNotFoundException;
+    List<BookInfo> searchBooks(String keywords);
 
-	List<BookInfo> searchBooks(String keywords);
-
-	void updateBook(Book book) throws BookNotFoundException;
+    void updateBook(Book book) throws BookNotFoundException;
 }

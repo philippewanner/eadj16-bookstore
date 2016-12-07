@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
@@ -24,19 +25,6 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
 
     @EJB
     private BookRepository bookRepository;
-
-    @Override
-    public Book findBook(long id) throws BookNotFoundException {
-        logInfo("Book findBook(long id)");
-
-        Book book = bookRepository.find(id);
-
-        if (book == null) {
-            throw new BookNotFoundException();
-        }
-
-        return book;
-    }
 
     @Override
     public Book findBook(String isbn) throws BookNotFoundException {
@@ -81,6 +69,11 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
         bookRepository.update(book);
     }
 
+    @Override
+    public void addBook(Book book) throws BookAlreadyExistsException{
+        bookRepository.persist(book);
+    }
+    
     private String[] ConvertToArray(String keywords) {
         String[] array = keywords.split(" ");
 
