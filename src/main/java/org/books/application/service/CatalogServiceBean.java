@@ -5,42 +5,86 @@
  */
 package org.books.application.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.books.application.exception.BookNotFoundException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
+import org.books.persistence.repository.BookRepository;
 
 /**
  *
  * @author jan
  */
-@Stateless(name="CatalogService")
+@Stateless(name = "CatalogService")
 public class CatalogServiceBean extends AbstractService implements CatalogService {
-        
+
+    @EJB
+    private BookRepository bookRepository;
+
     @Override
     public Book findBook(long id) throws BookNotFoundException {
         logInfo("Book findBook(long id)");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        Book book = bookRepository.find(id);
+
+        if (book == null) {
+            throw new BookNotFoundException();
+        }
+
+        return book;
     }
 
     @Override
     public Book findBook(String isbn) throws BookNotFoundException {
         logInfo("Book findBook(String isbn)");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        List<Book> b = bookRepository.findByISBN(isbn);
+
+        if (b == null) {
+            logInfo("findBook: empty list");
+        } else if (b.size() == 0) {
+            logInfo("no book found");
+
+        } else if (b.size() > 1) {
+            logInfo("multiple books ot found");
+        } else {
+            return b.get(0);
+        }
+
+        throw new BookNotFoundException();
     }
 
     @Override
     public List<BookInfo> searchBooks(String keywords) {
         logInfo("List<BookInfo> searchBooks(String keywords)");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        String[] temp = ConvertToArray(keywords);
+
+        List<BookInfo> books = bookRepository.findByKeywords(temp);
+
+        return books;
     }
 
     @Override
     public void updateBook(Book book) throws BookNotFoundException {
         logInfo("updateBook(Book book)");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        List<Book> books = bookRepository.findByISBN(book.getIsbn());
+        if (book == null || books.size() != 1) {
+            throw new BookNotFoundException();
+        }
+
+        bookRepository.update(book);
     }
-    
+
+    private String[] ConvertToArray(String keywords) {
+        String[] array = keywords.split(" ");
+
+        return array;
+    }
+
 }
