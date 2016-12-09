@@ -15,78 +15,93 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.books.DbUtil;
 
 public abstract class AbstractTest {
 
-	protected final static Logger LOGGER = Logger.getLogger(AbstractTest.class.getName());
+    protected final static Logger LOGGER = Logger.getLogger(AbstractTest.class.getName());
 
-	protected static EntityManagerFactory emf;
-	protected static EntityManager em;
+    protected static EntityManagerFactory emf;
+    protected static EntityManager em;
 
-	private Long userId;
-	private Long customerId;
+    private Long userId;
+    private Long customerId;
 
-	private List<Long> bookIds;
+    private List<Long> bookIds;
 
-	private Long salesOrderId;
+    private Long salesOrderId;
 
-	@BeforeClass
-	public void setUpBeforeClass() throws Exception {
-		emf = Persistence.createEntityManagerFactory("bookstore-test");
-		em = emf.createEntityManager();
+    @BeforeClass
+    public void setUpBeforeClass() throws Exception {
+        LOGGER.info("--------------- setUpBeforeClass --------------------");
 
-		try {
-			em.getTransaction().begin();
+        DbUtil.executeSqlTestDB("DELETE FROM SALESORDER_SALESORDERITEM");
+        DbUtil.executeSqlTestDB("DELETE FROM SALESORDERITEM");
+        DbUtil.executeSqlTestDB("DELETE FROM SALESORDER");
+        DbUtil.executeSqlTestDB("DELETE FROM USERLOGIN");
+        DbUtil.executeSqlTestDB("DELETE FROM CUSTOMER");
+        DbUtil.executeSqlTestDB("DELETE FROM BOOK");
 
-			Login login = new Login();
-			login.setUserName("hans@muster.ch");
-			login.setPassword("bookstore");
-			login.setGroup(UserGroup.CUSTOMER);
+        emf = Persistence.createEntityManagerFactory("bookstore-test");
+        em = emf.createEntityManager();
 
-			em.persist(login);
+        try {
+            em.getTransaction().begin();
 
-			Customer customer = new Customer();
-			customer.setLastName("Muster");
-			customer.setFirstName("Hans");
-			customer.setEmail("hans@muster.ch");
+            Login login = new Login();
+            login.setUserName("hans@muster.ch");
+            login.setPassword("bookstore");
+            login.setGroup(UserGroup.CUSTOMER);
 
-			Address address = new Address();
-			address.setStreet("Musterstrasse 55");
-			address.setCity("Mürren");
-			address.setPostalCode("3825");
-			address.setState("BE");
-			address.setCountry("Schweiz");
-			customer.setAddress(address);
+            em.persist(login);
 
-			CreditCard creditCard = new CreditCard();
-			creditCard.setType(CreditCardType.MASTER_CARD);
-			creditCard.setExpirationMonth(12);
-			creditCard.setExpirationYear(2017);
-			creditCard.setNumber("5555 5555 5555 5555");
-			customer.setCreditCard(creditCard);
+            Customer customer = new Customer();
+            customer.setLastName("Muster");
+            customer.setFirstName("Hans");
+            customer.setEmail("hans@muster.ch");
 
-			em.persist(customer);
+            Address address = new Address();
+            address.setStreet("Musterstrasse 55");
+            address.setCity("Mürren");
+            address.setPostalCode("3825");
+            address.setState("BE");
+            address.setCountry("Schweiz");
+            customer.setAddress(address);
 
-			em.getTransaction().commit();
+            CreditCard creditCard = new CreditCard();
+            creditCard.setType(CreditCardType.MASTER_CARD);
+            creditCard.setExpirationMonth(12);
+            creditCard.setExpirationYear(2017);
+            creditCard.setNumber("5555 5555 5555 5555");
+            customer.setCreditCard(creditCard);
 
-			fillBooks();
+            em.persist(customer);
 
-			userId = login.getId();
-			customerId = customer.getNumber();
+            em.getTransaction().commit();
 
-			this.salesOrderId = this.getNewPersistedSalesOrder().getId();
+            fillBooks();
 
-			em.clear();
-			emf.getCache().evictAll();
+            userId = login.getId();
+            customerId = customer.getNumber();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			em.getTransaction().rollback();
-		}
-	}
+            this.salesOrderId = this.getNewPersistedSalesOrder().getId();
 
-	@AfterClass
-	public void tearDownAfterClass() throws Exception {
+            em.clear();
+            emf.getCache().evictAll();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        }
+    }
+
+    @AfterClass
+    public void tearDownAfterClass() throws Exception {
+
+        /*  JL: excluded in order to skip local build errors
+            
+                LOGGER.info("--------------- tearDownAfterClass --------------------");
+            
 		try {
 			em.getTransaction().begin();
 
@@ -113,79 +128,79 @@ public abstract class AbstractTest {
 		}
 		if (emf != null) {
 			emf.close();
-		}
-	}
+		}*/
+    }
 
-	protected Customer getPersistedCustomer() {
+    protected Customer getPersistedCustomer() {
 
-		return em.find(Customer.class, customerId);
-	}
+        return em.find(Customer.class, customerId);
+    }
 
-	protected SalesOrder getPersistedSalesOrder() {
+    protected SalesOrder getPersistedSalesOrder() {
 
-		return em.find(SalesOrder.class, salesOrderId);
-	}
+        return em.find(SalesOrder.class, salesOrderId);
+    }
 
-	private void fillBooks() {
-		bookIds = new ArrayList<>();
+    private void fillBooks() {
+        bookIds = new ArrayList<>();
 
-		List<Book> books = TestDataProvider.getBooks();
-		for (Book book : books) {
-			em.getTransaction().begin();
-			em.persist(book);
-			em.getTransaction().commit();
-			Long id = book.getId();
-			bookIds.add(id);
-		}
-	}
+        List<Book> books = TestDataProvider.getBooks();
+        for (Book book : books) {
+            em.getTransaction().begin();
+            em.persist(book);
+            em.getTransaction().commit();
+            Long id = book.getId();
+            bookIds.add(id);
+        }
+    }
 
-	private void removeBooks() {
-		for (Long id : bookIds) {
-			Book book = em.find(Book.class, id);
-			em.remove(book);
-		}
-	}
+    private void removeBooks() {
+        for (Long id : bookIds) {
+            Book book = em.find(Book.class, id);
+            em.remove(book);
+        }
+    }
 
-	private SalesOrder getNewPersistedSalesOrder() {
-		SalesOrder salesOrder = new SalesOrder();
-		salesOrder.setNumber(2L);
-		salesOrder.setAddress(new Address("street", "city", "postalCode", "state", "country"));
-		salesOrder.setAmount(new BigDecimal(10.5));
-		salesOrder.setCreditCard(new CreditCard());
-		salesOrder.setCustomer(getPersistedCustomer());
-		SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
+    private SalesOrder getNewPersistedSalesOrder() {
+        SalesOrder salesOrder = new SalesOrder();
+        salesOrder.setNumber(2L);
+        salesOrder.setAddress(new Address("street", "city", "postalCode", "state", "country"));
+        salesOrder.setAmount(new BigDecimal(10.5));
+        salesOrder.setCreditCard(new CreditCard());
+        salesOrder.setCustomer(getPersistedCustomer());
+        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
 
-		Date orderDate = null;
-		try {
-			orderDate = dateformat.parse("17/07/1989");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+        Date orderDate = null;
+        try {
+            orderDate = dateformat.parse("17/07/1989");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-		salesOrder.setDate(orderDate);
-		salesOrder.setStatus(OrderStatus.ACCEPTED);
-		salesOrder.setSalesOrderItems(getNewPersistedSalesOrderItems());
+        salesOrder.setDate(orderDate);
+        salesOrder.setStatus(OrderStatus.ACCEPTED);
+        salesOrder.setSalesOrderItems(getNewPersistedSalesOrderItems());
 
-		em.getTransaction().begin();
-		em.persist(salesOrder);
-		em.getTransaction().commit();
+        em.getTransaction().begin();
+        em.persist(salesOrder);
+        em.getTransaction().commit();
 
-		return salesOrder;
-	}
+        return salesOrder;
+    }
 
-	private Set<SalesOrderItem> getNewPersistedSalesOrderItems() {
-		SalesOrderItem salesOrderItem = new SalesOrderItem();
-		salesOrderItem.setBook(em.find(Book.class, bookIds.get(0)));
-		salesOrderItem.setPrice(new BigDecimal(1));
-		salesOrderItem.setQuantity(12);
+    private Set<SalesOrderItem> getNewPersistedSalesOrderItems() {
+        SalesOrderItem salesOrderItem = new SalesOrderItem();
+        salesOrderItem.setBook(em.find(Book.class, bookIds.get(0)));
+        salesOrderItem.setPrice(new BigDecimal(1));
+        salesOrderItem.setQuantity(12);
 
-		em.getTransaction().begin();
-		em.persist(salesOrderItem);
-		em.getTransaction().commit();
+        em.getTransaction().begin();
+        em.persist(salesOrderItem);
+        em.getTransaction().commit();
 
-		Set<SalesOrderItem> salesOrderItems = new HashSet<>();
-		salesOrderItems.add(salesOrderItem);
+        Set<SalesOrderItem> salesOrderItems = new HashSet<>();
+        salesOrderItems.add(salesOrderItem);
 
-		return salesOrderItems;
-	}
+        return salesOrderItems;
+    }
 }
