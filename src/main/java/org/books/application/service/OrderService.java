@@ -5,24 +5,17 @@ import org.books.application.exception.*;
 import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.SalesOrder;
 
+import javax.ejb.Remote;
 import java.util.List;
 
 /**
  *
  * The order service provides operations to manage the orders of a bookstore.
- * Author: Philippe
  *
- * The objective of this task is to implement the order service of the bookstore application.
-
- Implement a stateless session bean specified by the remote interface OrderService.
- The service allows to
- place an order
- find an order by number
- search for orders by customer and year
- cancel an order
- Implement integration tests to verify the functionality of the service.
-
+ *  Author: Philippe
  */
+
+@Remote
 public interface OrderService {
 
     /**
