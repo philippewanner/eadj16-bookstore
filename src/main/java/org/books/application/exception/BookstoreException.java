@@ -1,4 +1,6 @@
 package org.books.application.exception;
 
-public class BookstoreException extends Exception {
+import java.io.Serializable;
+
+class BookstoreException extends Exception implements Serializable {
 }
