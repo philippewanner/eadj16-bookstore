@@ -9,8 +9,11 @@ import org.books.persistence.enumeration.OrderStatus;
 import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.OrderRepository;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.annotation.Resource;
+import javax.ejb.*;
+import javax.inject.Inject;
+import javax.jms.*;
+import javax.persistence.LockModeType;
 import java.util.List;
 
 /**
@@ -31,6 +34,13 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @EJB
     private CustomerRepository customerRepository;
+
+    @Inject
+    @JMSConnectionFactory("jms/ConnectionFactory")
+    private JMSContext jmsContext;
+
+    @Resource(lookup="jms/orderQueue")
+    private Queue queue;
 
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
@@ -65,6 +75,10 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
+        // TODO: place Order
+        SalesOrder order = new SalesOrder();
+
+        sendToQueue(order);
         return null;
     }
 
@@ -78,7 +92,27 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             throw new CustomerNotFoundException();
         }
 
-        List<OrderInfo> orderInfos = orderRepository.searchByCustomerAndYear(customer, year);
-        return orderInfos;
+        return orderRepository.searchByCustomerAndYear(customer, year);
+    }
+
+    @Schedule(hour = "*", minute = "15")
+    public void shipOrders(Timer timer) {
+        List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
+        for (SalesOrder order : orders) {
+            // TODO: in eigener Transaktion?
+            orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
+            order.setStatus(OrderStatus.SHIPPED);
+        }
+    }
+
+    private void sendToQueue(SalesOrder order) {
+        try {
+            JMSProducer producer = jmsContext.createProducer();
+            MapMessage msg = jmsContext.createMapMessage();
+            msg.setLong("orderId", order.getId());
+            producer.send(queue, msg);
+        } catch (JMSException e) {
+            logError(e.toString());
+        }
     }
 }

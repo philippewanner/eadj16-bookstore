@@ -3,6 +3,7 @@ package org.books.persistence.repository;
 import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.Customer;
 import org.books.persistence.entity.SalesOrder;
+import org.books.persistence.enumeration.OrderStatus;
 
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -37,6 +38,13 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Long> {
 
         // Always 1 or 0, because of unique constraint
         return salesOrder.size() == 1 ? salesOrder.get(0) : null;
+    }
+
+    public List<SalesOrder> findByStatus(OrderStatus status) {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put("status", status);
+
+        return findByNamedQuery("SalesOrder.findByStatus", parameters);
     }
 
     /**
