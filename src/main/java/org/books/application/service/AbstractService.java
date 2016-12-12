@@ -19,20 +19,23 @@ public abstract class AbstractService {
 
 	protected static Logger logger;
 
-	protected AbstractService() {
+	public AbstractService() {
 		logger = Logger.getLogger(getClass().getName());
 	}
 
 	protected void logInfo(String msg) {
+
 		logger.log(Level.INFO, msg);
 	}
 
 	protected void logError(String msg) {
-		logger.log(Level.SEVERE, msg);
+
+	    logger.log(Level.SEVERE, msg);
 	}
 
 	protected void logWarn(String msg) {
-		logger.log(Level.WARNING, msg);
+
+	    logger.log(Level.WARNING, msg);
 	}
 
 	@PostActivate

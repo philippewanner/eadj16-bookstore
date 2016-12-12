@@ -10,7 +10,7 @@ import java.util.Set;
 import org.books.persistence.enumeration.OrderStatus;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "number" }) })
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"number"})})
 public class SalesOrder extends BaseEntity {
 
 	/**
@@ -31,38 +31,38 @@ public class SalesOrder extends BaseEntity {
 	@NotNull
 	private Long number;
 
-    @Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)
 	private Date date;
 
-        @NotNull
-        private BigDecimal amount;
+	@NotNull
+	private BigDecimal amount;
 
-        @NotNull
-        private OrderStatus status;
+	@NotNull
+	private OrderStatus status;
 
-        public Set<SalesOrderItem> getSalesOrderItems() {
-            return salesOrderItems;
-        }
+	public Set<SalesOrderItem> getSalesOrderItems() {
+		return salesOrderItems;
+	}
 
-        public void setSalesOrderItems(Set<SalesOrderItem> salesOrderItems) {
-            this.salesOrderItems = salesOrderItems;
-        }
+	public void setSalesOrderItems(Set<SalesOrderItem> salesOrderItems) {
+		this.salesOrderItems = salesOrderItems;
+	}
 
-        public Address getAddress() {
-            return address;
-        }
+	public Address getAddress() {
+		return address;
+	}
 
-        public void setAddress(Address address) {
-            this.address = address;
-        }
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 
-        public CreditCard getCreditCard() {
-            return creditCard;
-        }
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
 
-        public void setCreditCard(CreditCard creditCard) {
-            this.creditCard = creditCard;
-        }
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
 
 	public Customer getCustomer() {
 		return customer;
