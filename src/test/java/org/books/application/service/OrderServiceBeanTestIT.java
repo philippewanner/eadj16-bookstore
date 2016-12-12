@@ -19,8 +19,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import static org.junit.Assert.assertNull;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
 public class OrderServiceBeanTestIT {
