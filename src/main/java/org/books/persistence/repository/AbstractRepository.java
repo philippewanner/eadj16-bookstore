@@ -51,6 +51,10 @@ public abstract class AbstractRepository<T, PK> {
 
 	}
 
+	public T find(PK id, LockModeType lockModeType) {
+		return this.em.find(entityClass, id, lockModeType);
+	}
+
 	/**
 	 * Save changes made to a persistent object.
 	 *
