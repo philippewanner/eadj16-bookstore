@@ -1,6 +1,7 @@
 package org.books.persistence.repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
@@ -50,6 +51,10 @@ public abstract class AbstractRepository<T, PK> {
 
 	}
 
+	public T find(PK id, LockModeType lockModeType) {
+		return this.em.find(entityClass, id, lockModeType);
+	}
+
 	/**
 	 * Save changes made to a persistent object.
 	 *
@@ -63,6 +68,10 @@ public abstract class AbstractRepository<T, PK> {
 
 	public void flush() {
 		em.flush();
+	}
+
+	public void lock(T t, LockModeType lockModeType) {
+		em.lock(t, lockModeType);
 	}
 
 	/**

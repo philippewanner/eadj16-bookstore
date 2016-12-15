@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.books.application.service;
+package org.books.application.interceptor;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;

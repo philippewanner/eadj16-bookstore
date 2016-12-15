@@ -5,14 +5,13 @@
  */
 package org.books.application.service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
+import org.books.application.interceptor.MyPOCInterceptor;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 import org.books.persistence.repository.BookRepository;

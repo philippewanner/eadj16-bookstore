@@ -68,6 +68,16 @@
         </query>
     </named-query>
 
+    <named-query name="SalesOrder.findByStatus">
+        <query>
+            <![CDATA[
+            SELECT o
+            FROM SalesOrder o
+            WHERE o.status = :status
+        ]]>
+        </query>
+    </named-query>
+
     <named-query name="SalesOrder.searchByCustomerAndYear">
         <query>
             <![CDATA[
