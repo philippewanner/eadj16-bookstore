@@ -11,7 +11,7 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
-import org.books.application.interceptor.MyPOCInterceptor;
+import org.books.application.interceptor.MethodLogger;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 import org.books.persistence.repository.BookRepository;
@@ -25,8 +25,7 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
 
     @EJB
     private BookRepository bookRepository;
-
-    @Interceptors(MyPOCInterceptor.class)
+    
     @Override
     public Book findBook(String isbn) throws BookNotFoundException {
         logInfo("Book findBook(String isbn)");
