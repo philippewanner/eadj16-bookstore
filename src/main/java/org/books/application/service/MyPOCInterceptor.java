@@ -16,8 +16,8 @@ public class MyPOCInterceptor {
 
     @AroundInvoke
     public Object findBookCatcher(InvocationContext invocation) throws Exception {
-        System.out.println("findBookCatcher");
-
+        System.out.println("interceptor: " + invocation.getMethod().getName());
+        
         try {
             return invocation.proceed();
         } finally {
