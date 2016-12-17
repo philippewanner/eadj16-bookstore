@@ -48,6 +48,10 @@ public class BookRepository extends AbstractRepository<Book, Long> {
 
     public List<BookInfo> findByKeywords(String[] keywords) {
 
+        if (keywords.length == 1 && (keywords[0].isEmpty() || keywords[0].equals("*"))) {
+            return getInfosAll();
+        }
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<BookInfo> cq = cb.createQuery(BookInfo.class);
         Root<Book> book = cq.from(Book.class);
