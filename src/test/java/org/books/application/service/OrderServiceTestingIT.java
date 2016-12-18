@@ -13,6 +13,7 @@ import org.books.application.exception.*;
 import org.books.persistence.TestDataProvider;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.*;
+import org.books.persistence.enumeration.CreditCardType;
 import org.jboss.logging.Logger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -79,9 +80,10 @@ public class OrderServiceTestingIT {
         salesOrder = orderService.placeOrder(purchaseOrder);
 // FIXME
         // Then
-//        assertNotNull(salesOrder);
-//        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
-//        assertEquals(salesOrder, orderService.findOrder(salesOrder.getNumber()));
+        assertNotNull(salesOrder);
+        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
+        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
+        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
     }
 
     @Test(expectedExceptions = PaymentFailedException.class)
@@ -147,7 +149,9 @@ public class OrderServiceTestingIT {
         assertNotNull(cs);
 
         Registration registration = new Registration();
-        registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", new Address(), new CreditCard()));
+        Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
+        CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, "1234567890123456", 8, 2018);
+        registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", address, cc));
         registration.setPassword("md5");
         Long number = cs.registerCustomer(registration);
 

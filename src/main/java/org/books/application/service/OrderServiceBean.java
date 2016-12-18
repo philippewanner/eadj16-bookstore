@@ -1,6 +1,12 @@
 package org.books.application.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.exception.*;
@@ -92,12 +98,14 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
-        
-        SalesOrder order = createSalesOrder(purchaseOrder);
 
-        // TODO: how to save???
-        //orderRepository.persist(order);
-        
+        Date orderDate = new Date();
+
+        SalesOrder order = createSalesOrder(purchaseOrder, orderDate);
+
+        orderRepository.persist(order);
+
+        // TODO:
         //sendToQueue(order);
         return order;
     }
@@ -145,10 +153,15 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         }
     }
 
-    private SalesOrder createSalesOrder(PurchaseOrder po) {
+    private SalesOrder createSalesOrder(PurchaseOrder po, Date orderDate) {
         SalesOrder so = new SalesOrder();
 
         Customer c = customerRepository.find(po.getCustomerNr());
+
+        Long orderNumber = getNewOrderNumber();
+
+        so.setNumber(orderNumber);
+        so.setDate(orderDate);
 
         so.setCustomer(c);
         so.setAddress(c.getAddress());
@@ -214,5 +227,26 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
         }
         return amount;
+    }
+
+    private Long getNewOrderNumber() {
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        String year = String.format("%d", calendar.get(Calendar.YEAR));
+        //Add one to month {0 - 11}
+        String month = String.format("%02d", calendar.get(Calendar.MONTH) + 1);
+        String day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
+        String hh = String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY));
+        String mm = String.format("%02d", calendar.get(Calendar.MINUTE));
+        String ss = String.format("%02d", calendar.get(Calendar.SECOND));
+        String ms = String.format("%03d", calendar.get(Calendar.MILLISECOND));
+
+        String nr = year + month + day + hh + mm + ss + ms;
+
+        Long on = Long.parseLong(nr, 10);
+
+        return on;
     }
 }
