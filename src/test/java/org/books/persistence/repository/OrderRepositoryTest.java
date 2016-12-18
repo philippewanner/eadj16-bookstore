@@ -34,7 +34,9 @@ public class OrderRepositoryTest extends AbstractTest {
 		// When
 		BigDecimal afterUpdate = new BigDecimal(10);
 		salesOrder.setAmount(afterUpdate);
+		em.getTransaction().begin();
 		orderRepository.update(salesOrder);
+		em.getTransaction().commit();
 
 		// Then
 		assertNotNull(salesOrder);
@@ -46,13 +48,18 @@ public class OrderRepositoryTest extends AbstractTest {
 
         // Given
         SalesOrder salesOrder = getUnpersitedSalesOrder();
+        em.getTransaction().begin();
+        salesOrder.setNumber(4L);
         orderRepository.persist(salesOrder);
+        em.getTransaction().commit();
         assertNotNull(salesOrder);
         assertNotNull(salesOrder.getNumber());
         assertNotNull(orderRepository.findByNumber(salesOrder.getNumber()));
 
         // When
+        em.getTransaction().begin();
         orderRepository.delete(salesOrder);
+        em.getTransaction().commit();
 
         // Then
         assertNull(orderRepository.findByNumber(salesOrder.getNumber()));
@@ -66,12 +73,13 @@ public class OrderRepositoryTest extends AbstractTest {
 		salesOrder.setNumber(3L);
 
 		// When
+        em.getTransaction().begin();
 		orderRepository.persist(salesOrder);
+        em.getTransaction().commit();
 
 		// Then
 		assertNotNull(salesOrder);
-		assertNotNull(salesOrder.getNumber());
-		assertNotNull(orderRepository.findByNumber(salesOrder.getNumber()));
+		assertNotNull(salesOrder.getId());
 	}
 
 	@Test
