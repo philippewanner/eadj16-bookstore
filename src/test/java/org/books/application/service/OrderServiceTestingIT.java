@@ -43,11 +43,17 @@ public class OrderServiceTestingIT {
 
     private SalesOrder salesOrder = null;
     
+    private static final int THREAD_COUNT = 100;
+    
    
     @BeforeClass
     public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
 
+        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDER");
+        
         DbUtil.executeSql("delete from Customer");
         DbUtil.executeSql("delete from UserLogin");
 
@@ -67,8 +73,7 @@ public class OrderServiceTestingIT {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
 
     }
-
-    //@Ignore
+    
     @Test
     public void placeOrder() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
@@ -86,6 +91,25 @@ public class OrderServiceTestingIT {
         assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
     }
 
+        
+    @Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+    public void placeOrderX() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
+        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        // Given
+        PurchaseOrder purchaseOrder = this.purchaseOrder;
+
+        // When
+        salesOrder = orderService.placeOrder(purchaseOrder);
+
+        // Then
+        assertNotNull(salesOrder);
+        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
+        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
+        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
+    }
+
+    
     @Test(expectedExceptions = PaymentFailedException.class)
     public void placeOrder_throwsPaymentFailedException() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
@@ -170,8 +194,8 @@ public class OrderServiceTestingIT {
         po.setItems(items);
 
         return po;
-    }
-
+    }    
+    
     private List<PurchaseOrderItem> getPOItems() throws NamingException {
         
         CatalogService catalogService = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);

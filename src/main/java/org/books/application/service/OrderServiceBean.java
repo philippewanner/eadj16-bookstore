@@ -29,6 +29,7 @@ import java.util.Set;
 import org.books.application.dto.PurchaseOrder;
 import org.books.persistence.entity.SalesOrderItem;
 import java.util.List;
+import java.util.Random;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
@@ -159,6 +160,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         Customer c = customerRepository.find(po.getCustomerNr());
 
         Long orderNumber = getNewOrderNumber();
+        logInfo("new order " + orderNumber);
 
         so.setNumber(orderNumber);
         so.setDate(orderDate);
@@ -229,23 +231,8 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         return amount;
     }
 
-    private Long getNewOrderNumber() {
-        Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-
-        String year = String.format("%d", calendar.get(Calendar.YEAR));
-        //Add one to month {0 - 11}
-        String month = String.format("%02d", calendar.get(Calendar.MONTH) + 1);
-        String day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
-        String hh = String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY));
-        String mm = String.format("%02d", calendar.get(Calendar.MINUTE));
-        String ss = String.format("%02d", calendar.get(Calendar.SECOND));
-        String ms = String.format("%03d", calendar.get(Calendar.MILLISECOND));
-
-        String nr = year + month + day + hh + mm + ss + ms;
-
-        Long on = Long.parseLong(nr, 10);
+    private Long getNewOrderNumber() {        
+        Long on = (new Random()).nextLong();
 
         return on;
     }
