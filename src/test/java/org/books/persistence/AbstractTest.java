@@ -161,7 +161,8 @@ public abstract class AbstractTest {
         }
     }
 
-    private SalesOrder getNewPersistedSalesOrder() {
+    protected SalesOrder getUnpersitedSalesOrder(){
+
         SalesOrder salesOrder = new SalesOrder();
         salesOrder.setNumber(2L);
         salesOrder.setAddress(new Address("street", "city", "postalCode", "state", "country"));
@@ -180,6 +181,14 @@ public abstract class AbstractTest {
         salesOrder.setDate(orderDate);
         salesOrder.setStatus(OrderStatus.ACCEPTED);
         salesOrder.setSalesOrderItems(getNewPersistedSalesOrderItems());
+
+        return salesOrder;
+
+    }
+
+    private SalesOrder getNewPersistedSalesOrder() {
+
+        SalesOrder salesOrder = this.getUnpersitedSalesOrder();
 
         em.getTransaction().begin();
         em.persist(salesOrder);

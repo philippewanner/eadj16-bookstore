@@ -4,6 +4,7 @@ import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -22,6 +23,55 @@ public class OrderRepositoryTest extends AbstractTest {
 	public void setUpBeforeTest() {
 		orderRepository = new OrderRepository();
 		orderRepository.setEntityManager(em);
+	}
+
+	@Test(dependsOnMethods = "persist")
+	public void update(){
+
+		// Given
+		SalesOrder salesOrder = getPersistedSalesOrder();
+
+		// When
+		BigDecimal afterUpdate = new BigDecimal(10);
+		salesOrder.setAmount(afterUpdate);
+		orderRepository.update(salesOrder);
+
+		// Then
+		assertNotNull(salesOrder);
+		assertEquals(afterUpdate, orderRepository.findByNumber(salesOrder.getNumber()).getAmount());
+	}
+
+	@Test(dependsOnMethods = "persist")
+	public void delete(){
+
+        // Given
+        SalesOrder salesOrder = getUnpersitedSalesOrder();
+        orderRepository.persist(salesOrder);
+        assertNotNull(salesOrder);
+        assertNotNull(salesOrder.getNumber());
+        assertNotNull(orderRepository.findByNumber(salesOrder.getNumber()));
+
+        // When
+        orderRepository.delete(salesOrder);
+
+        // Then
+        assertNull(orderRepository.findByNumber(salesOrder.getNumber()));
+	}
+
+	@Test
+	public void persist(){
+
+		// Given
+		SalesOrder salesOrder = getUnpersitedSalesOrder();
+		salesOrder.setNumber(3L);
+
+		// When
+		orderRepository.persist(salesOrder);
+
+		// Then
+		assertNotNull(salesOrder);
+		assertNotNull(salesOrder.getNumber());
+		assertNotNull(orderRepository.findByNumber(salesOrder.getNumber()));
 	}
 
 	@Test
