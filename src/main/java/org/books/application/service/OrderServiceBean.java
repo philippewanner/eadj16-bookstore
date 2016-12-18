@@ -1,5 +1,7 @@
 package org.books.application.service;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.exception.*;
 import org.books.persistence.dto.OrderInfo;
@@ -15,18 +17,23 @@ import javax.inject.Inject;
 import javax.jms.*;
 import javax.persistence.LockModeType;
 import javax.transaction.*;
+import org.books.application.dto.PurchaseOrderItem;
 import java.util.List;
+import java.util.Set;
+import org.books.application.dto.PurchaseOrder;
+import org.books.persistence.entity.SalesOrderItem;
+import java.util.List;
+import org.books.application.dto.PurchaseOrderItem;
+import org.books.persistence.dto.BookInfo;
+import org.books.persistence.entity.Book;
+import org.books.persistence.repository.BookRepository;
 
 /**
  * @author Philippe
  *
- * The service allows to:
- *      place an order,
- *      find an order by number
- *      search for orders by customer and year
- *      cancel an order
+ * The service allows to: place an order, find an order by number search for
+ * orders by customer and year cancel an order
  */
-
 @Stateless(name = "OrderService")
 public class OrderServiceBean extends AbstractService implements OrderService {
 
@@ -37,31 +44,34 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     private CustomerRepository customerRepository;
 
     @EJB
+    private BookRepository bookRepository;
+
+    @EJB
     private MailService mailService;
 
     @Inject
-    @JMSConnectionFactory("jms/ConnectionFactory")
+    @JMSConnectionFactory("jms/connectionFactory")
     private JMSContext jmsContext;
 
-    @Resource(lookup="jms/orderQueue")
+    @Resource(lookup = "jms/orderQueue")
     private Queue queue;
 
-    @Resource
-	private UserTransaction userTransaction;
-
+    //@Res//ource
+    //private UserTransaction userTransaction;
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
 
         SalesOrder orderFound = orderRepository.findByNumber(orderNr);
-        if(orderFound == null) {
+        if (orderFound == null) {
 
-            logInfo("Order nr "+orderNr + " not found");
+            logInfo("Order nr " + orderNr + " not found");
             throw new OrderNotFoundException();
         }
-        if(orderFound.getStatus().equals(OrderStatus.SHIPPED)){
+        if (orderFound.getStatus().equals(OrderStatus.SHIPPED)) {
 
-            logInfo("Order nr "+orderNr + " already shipped");
-            throw new OrderAlreadyShippedException(); }
+            logInfo("Order nr " + orderNr + " already shipped");
+            throw new OrderAlreadyShippedException();
+        }
 
         orderFound.setStatus(OrderStatus.CANCELED);
         orderRepository.update(orderFound);
@@ -71,9 +81,9 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     public SalesOrder findOrder(Long orderNr) throws OrderNotFoundException {
 
         SalesOrder orderFound = orderRepository.findByNumber(orderNr);
-        if(orderFound == null) {
+        if (orderFound == null) {
 
-            logInfo("Order nr "+orderNr + " not found");
+            logInfo("Order nr " + orderNr + " not found");
             throw new OrderNotFoundException();
         }
 
@@ -82,20 +92,23 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
-        // TODO: place Order
-        SalesOrder order = new SalesOrder();
+        
+        SalesOrder order = createSalesOrder(purchaseOrder);
 
-        sendToQueue(order);
-        return null;
+        // TODO: how to save???
+        //orderRepository.persist(order);
+        
+        //sendToQueue(order);
+        return order;
     }
 
     @Override
     public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
 
         Customer customer = customerRepository.find(customerNr);
-        if( customer == null ) {
+        if (customer == null) {
 
-            logInfo("Customer nr "+customerNr + " not found");
+            logInfo("Customer nr " + customerNr + " not found");
             throw new CustomerNotFoundException();
         }
 
@@ -103,21 +116,21 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     }
 
     @Schedule(hour = "*", minute = "15")
-	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void shipOrders(Timer timer) {
         List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
         for (SalesOrder order : orders) {
-			try {
-				userTransaction.begin();
-				orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
-				order.setStatus(OrderStatus.SHIPPED);
-				userTransaction.commit();
+            try {
+                //userTransaction.begin();
+                orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
+                order.setStatus(OrderStatus.SHIPPED);
+                //userTransaction.commit();
 
-				mailService.sendEmail(order.getCustomer().getEmail(), "Order " + order.getNumber(),
-						"Order set to state shipped");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+                mailService.sendEmail(order.getCustomer().getEmail(), "Order " + order.getNumber(),
+                        "Order set to state shipped");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -130,5 +143,76 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         } catch (JMSException e) {
             logError(e.toString());
         }
+    }
+
+    private SalesOrder createSalesOrder(PurchaseOrder po) {
+        SalesOrder so = new SalesOrder();
+
+        Customer c = customerRepository.find(po.getCustomerNr());
+
+        so.setCustomer(c);
+        so.setAddress(c.getAddress());
+        so.setAmount(getAmount(po.getItems()));
+        so.setCreditCard(c.getCreditCard());
+        so.setSalesOrderItems(getSoItems(po.getItems()));
+        so.setStatus(OrderStatus.PROCESSING);
+
+        return so;
+    }
+
+    private Set<SalesOrderItem> getSoItems(List<PurchaseOrderItem> items) {
+        Set<SalesOrderItem> soItems = new HashSet<SalesOrderItem>();
+
+        for (PurchaseOrderItem poi : items) {
+            boolean added = false;
+            for (SalesOrderItem soi : soItems) {
+
+                if (soi.getBook().getIsbn().equals(poi.getBookInfo().getIsbn())) {
+                    Integer newQuantity = soi.getQuantity() + poi.getQuantity();
+                    BigDecimal newPrice
+                            = soi.getPrice().add(
+                                    poi.getBookInfo().getPrice().multiply(BigDecimal.valueOf(poi.getQuantity())));
+
+                    soi.setPrice(newPrice);
+                    soi.setQuantity(newQuantity);
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                SalesOrderItem newSoi = new SalesOrderItem();
+                Book book = getBook(poi.getBookInfo());
+                if (book != null) {
+                    newSoi.setBook(book);
+                    BigDecimal price = book.getPrice().multiply(BigDecimal.valueOf(poi.getQuantity()));
+                    newSoi.setPrice(price);
+                    newSoi.setQuantity(poi.getQuantity());
+
+                    soItems.add(newSoi);
+                }
+            }
+
+        }
+
+        return soItems;
+    }
+
+    private Book getBook(BookInfo bi) {
+        List<Book> books = bookRepository.findByISBN(bi.getIsbn());
+
+        if (books.size() > 0) {
+            return books.get(0);
+        }
+
+        return null;
+    }
+
+    private BigDecimal getAmount(List<PurchaseOrderItem> items) {
+        BigDecimal amount = BigDecimal.valueOf(0);
+
+        for (PurchaseOrderItem i : items) {
+            amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
+        }
+        return amount;
     }
 }
