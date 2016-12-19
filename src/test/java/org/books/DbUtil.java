@@ -13,20 +13,20 @@ public final class DbUtil {
 
 	private final static String JDBC_DRIVER = "org.apache.derby.jdbc.ClientDriver";
 	private final static String DB_URL = "jdbc:derby://localhost:1527/bookstore";
-        
-        private final static String DBTEST_URL = "jdbc:derby://localhost:1527/bookstore-test";
-        
+
+	private final static String DBTEST_URL = "jdbc:derby:memory:bookstore";
+
 	private final static String USER = "app";
 	private final static String PASS = "app";
 
-	private DbUtil() {}
+	private DbUtil() {
+	}
 
 	public static void executeSql(String sql) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
 			Class.forName(JDBC_DRIVER);
-
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
 			stmt = conn.createStatement();
@@ -42,14 +42,13 @@ public final class DbUtil {
 			}
 		}
 	}
-        
-        public static void executeSqlTestDB(String sql) throws SQLException {
+
+	public static void executeSqlTestDB(String sql) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
 			Class.forName(JDBC_DRIVER);
-
-			conn = DriverManager.getConnection(DBTEST_URL, USER, PASS);
+			conn = DriverManager.getConnection(DBTEST_URL, null, null);
 
 			stmt = conn.createStatement();
 			stmt.execute(sql);
