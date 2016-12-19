@@ -13,6 +13,7 @@ import org.books.application.exception.*;
 import org.books.persistence.TestDataProvider;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.*;
+import org.books.persistence.enumeration.CreditCardType;
 import org.jboss.logging.Logger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -41,12 +42,18 @@ public class OrderServiceTestingIT {
 
     private SalesOrder salesOrder = null;
     
+    private static final int THREAD_COUNT = 100;
+    
    
     @BeforeClass
     public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
+        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDER");
+        
         DbUtil.executeSql("delete from Customer");
         DbUtil.executeSql("delete from UserLogin");
 
@@ -67,7 +74,6 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
     }
-
     @Test
     public void placeOrder() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException, NamingException {
 
@@ -80,11 +86,30 @@ public class OrderServiceTestingIT {
         salesOrder = orderService.placeOrder(purchaseOrder);
 // FIXME
         // Then
-        assertNotNull(salesOrder);
-        assertNotNull(salesOrder.getId());
-        //assertEquals(salesOrder, orderService.findOrder(salesOrder.getNumber()));
+        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
+        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
+        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
     }
 
+        
+    @Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+    public void placeOrderX() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
+        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        // Given
+        PurchaseOrder purchaseOrder = this.purchaseOrder;
+
+        // When
+        salesOrder = orderService.placeOrder(purchaseOrder);
+
+        // Then
+        assertNotNull(salesOrder);
+        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
+        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
+        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
+    }
+
+    
     @Test(expectedExceptions = PaymentFailedException.class)
     public void placeOrder_throwsPaymentFailedException() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException {
 
@@ -155,7 +180,9 @@ public class OrderServiceTestingIT {
         assertNotNull(cs);
 
         Registration registration = new Registration();
-        registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", new Address(), new CreditCard()));
+        Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
+        CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, "1234567890123456", 8, 2018);
+        registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", address, cc));
         registration.setPassword("md5");
         Long number = cs.registerCustomer(registration);
 
@@ -174,8 +201,8 @@ public class OrderServiceTestingIT {
         po.setItems(items);
 
         return po;
-    }
-
+    }    
+    
     private List<PurchaseOrderItem> getPOItems() throws NamingException {
         
         CatalogService catalogService = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);

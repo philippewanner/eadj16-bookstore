@@ -1,6 +1,12 @@
 package org.books.application.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.exception.*;
@@ -23,6 +29,7 @@ import java.util.Set;
 import org.books.application.dto.PurchaseOrder;
 import org.books.persistence.entity.SalesOrderItem;
 import java.util.List;
+import java.util.Random;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
@@ -92,12 +99,14 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
-        
-        SalesOrder order = createSalesOrder(purchaseOrder);
 
-        // TODO: how to save???
-        //orderRepository.persist(order);
-        
+        Date orderDate = new Date();
+
+        SalesOrder order = createSalesOrder(purchaseOrder, orderDate);
+
+        orderRepository.persist(order);
+
+        // TODO:
         //sendToQueue(order);
         return order;
     }
@@ -145,10 +154,16 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         }
     }
 
-    private SalesOrder createSalesOrder(PurchaseOrder po) {
+    private SalesOrder createSalesOrder(PurchaseOrder po, Date orderDate) {
         SalesOrder so = new SalesOrder();
 
         Customer c = customerRepository.find(po.getCustomerNr());
+
+        Long orderNumber = getNewOrderNumber();
+        logInfo("new order " + orderNumber);
+
+        so.setNumber(orderNumber);
+        so.setDate(orderDate);
 
         so.setCustomer(c);
         so.setAddress(c.getAddress());
@@ -214,5 +229,11 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
         }
         return amount;
+    }
+
+    private Long getNewOrderNumber() {        
+        Long on = (new Random()).nextLong();
+
+        return on;
     }
 }
