@@ -30,6 +30,10 @@ import org.books.application.dto.PurchaseOrder;
 import org.books.persistence.entity.SalesOrderItem;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.ejb.TransactionManagementType.BEAN;
+import static javax.ejb.TransactionManagementType.CONTAINER;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
@@ -63,7 +67,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Resource(lookup = "jms/orderQueue")
     private Queue queue;
 
-    //@Res//ource
+    //@Re//source
     //private UserTransaction userTransaction;
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
@@ -100,14 +104,19 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
 
+        SalesOrder order = null;
+
         Date orderDate = new Date();
 
-        SalesOrder order = createSalesOrder(purchaseOrder, orderDate);
+        order = createSalesOrder(purchaseOrder, orderDate);
 
         orderRepository.persist(order);
+        orderRepository.flush();
 
-        // TODO:
-        //sendToQueue(order);
+        if (order != null) {
+            sendToQueue(order);
+        }
+
         return order;
     }
 
@@ -170,7 +179,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         so.setAmount(getAmount(po.getItems()));
         so.setCreditCard(c.getCreditCard());
         so.setSalesOrderItems(getSoItems(po.getItems()));
-        so.setStatus(OrderStatus.PROCESSING);
+        so.setStatus(OrderStatus.ACCEPTED);
 
         return so;
     }
@@ -231,7 +240,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         return amount;
     }
 
-    private Long getNewOrderNumber() {        
+    private Long getNewOrderNumber() {
         Long on = (new Random()).nextLong();
 
         return on;

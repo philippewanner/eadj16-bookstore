@@ -37,6 +37,8 @@ public class OrderProcessor implements MessageListener {
 			if (message instanceof MapMessage) {
 				MapMessage mapMessage = (MapMessage) message;
 				long orderId = mapMessage.getLong("orderId");
+                                
+                                logger.info("onMessage, orderId: " + orderId);
 
 				userTransaction.begin();
 				SalesOrder order = repository.find(orderId, LockModeType.PESSIMISTIC_WRITE);
