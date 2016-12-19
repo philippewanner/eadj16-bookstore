@@ -155,7 +155,7 @@ public class OrderServiceTestingIT {
         SalesOrder salesOrderFound = orderService.findOrder(salesOrderNumberToFind);
 
         // Then
-        assertEquals(salesOrder, salesOrderFound);
+        assertEquals(salesOrder.getId(), salesOrderFound.getId());
 
     }
 
