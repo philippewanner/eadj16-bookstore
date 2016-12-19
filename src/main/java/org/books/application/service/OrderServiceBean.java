@@ -2,6 +2,7 @@ package org.books.application.service;
 
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
+import org.books.application.enumeration.OrderProcessorType;
 import org.books.application.exception.*;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.OrderInfo;
@@ -52,8 +53,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Resource(lookup = "jms/orderQueue")
     private Queue queue;
 
-    //@Re//source
-    //private UserTransaction userTransaction;
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
 
@@ -93,9 +92,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         orderRepository.persist(order);
         orderRepository.flush();
 
-        if (order != null) {
-            sendToQueue(order);
-        }
+        sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 
         return order;
     }
@@ -118,24 +115,22 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
         for (SalesOrder order : orders) {
             try {
-                //userTransaction.begin();
                 orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
                 order.setStatus(OrderStatus.SHIPPED);
-                //userTransaction.commit();
 
-                mailService.sendEmail(order.getCustomer().getEmail(), "Order " + order.getNumber(),
-                        "Order set to state shipped");
+                sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.severe(e.toString());
             }
         }
     }
 
-    private void sendToQueue(SalesOrder order) {
+    private void sendToQueue(long orderNumber, OrderProcessorType type) {
         try {
             JMSProducer producer = jmsContext.createProducer();
             MapMessage msg = jmsContext.createMapMessage();
-            msg.setLong("orderNr", order.getNumber());
+            msg.setObject("type", type);
+            msg.setLong("orderNr", orderNumber);
             producer.send(queue, msg);
         } catch (JMSException e) {
             logError(e.toString());
