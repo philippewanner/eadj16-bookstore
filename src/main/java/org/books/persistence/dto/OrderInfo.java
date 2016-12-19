@@ -16,7 +16,6 @@ import java.util.Date;
  */
 public class OrderInfo implements Serializable {
 
-	private Long id;
 	private Long number;
 	private Date date;
 	private BigDecimal amount;
@@ -28,15 +27,7 @@ public class OrderInfo implements Serializable {
 	public OrderInfo() {
 	}
 
-	/*
-	* Constructor for Fischlin Unit Tests
-	 */
 	public OrderInfo(Long number, Date date, BigDecimal amount, OrderStatus orderStatus) {
-		this(null, number, date, amount, orderStatus);
-	}
-
-	public OrderInfo(Long id, Long number, Date date, BigDecimal amount, OrderStatus orderStatus) {
-		this.id = id;
 		this.number = number;
 		this.date = date;
 		this.amount = amount;
@@ -73,13 +64,5 @@ public class OrderInfo implements Serializable {
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }

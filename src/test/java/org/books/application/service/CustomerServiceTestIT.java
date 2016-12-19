@@ -90,7 +90,7 @@ public class CustomerServiceTestIT {
 		List<CustomerInfo> customers = service.searchCustomers("kalt");
 		assertNotNull(customers);
 		assertFalse(customers.isEmpty());
-		assertEquals("lukas@kalt.ch", customers.get(0).getEmail());
+		assertEquals(customers.get(0).getEmail(), "lukas@kalt.ch");
 	}
 
 	@Test(dependsOnMethods = "register")

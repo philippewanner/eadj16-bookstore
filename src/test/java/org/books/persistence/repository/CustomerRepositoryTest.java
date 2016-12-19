@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.Random;
 
 import static org.testng.Assert.*;
 
@@ -46,7 +45,6 @@ public class CustomerRepositoryTest extends AbstractTest {
 		customer.setLastName("RepoCustomer");
 		customer.setFirstName("a");
 		customer.setEmail("a");
-		customer.setNumber(new Random().nextLong());
 
 		repository.persist(customer);
 

@@ -36,12 +36,12 @@ public class OrderProcessor implements MessageListener {
 		try {
 			if (message instanceof MapMessage) {
 				MapMessage mapMessage = (MapMessage) message;
-				long orderId = mapMessage.getLong("orderId");
-                                
-                                logger.info("onMessage, orderId: " + orderId);
+				long orderNr = mapMessage.getLong("orderNr");
+
+				logger.info("onMessage, orderNr: " + orderNr);
 
 				userTransaction.begin();
-				SalesOrder order = repository.find(orderId, LockModeType.PESSIMISTIC_WRITE);
+				SalesOrder order = repository.find(orderNr, LockModeType.PESSIMISTIC_WRITE);
 				order.setStatus(OrderStatus.PROCESSING);
 				userTransaction.commit();
 

@@ -81,7 +81,7 @@
     <named-query name="SalesOrder.searchByCustomerAndYear">
         <query>
             <![CDATA[
-            SELECT NEW org.books.persistence.dto.OrderInfo(o.id, o.number, o.date, o.amount, o.status)
+            SELECT NEW org.books.persistence.dto.OrderInfo(o.number, o.date, o.amount, o.status)
             FROM SalesOrder o
             WHERE o.customer = :customer AND EXTRACT(YEAR from o.date) = :year
         ]]>

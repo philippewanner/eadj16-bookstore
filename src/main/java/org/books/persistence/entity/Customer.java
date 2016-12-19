@@ -23,6 +23,9 @@ public class Customer implements Serializable {
 	@Embedded
 	private CreditCard creditCard;
 
+	@Version
+	private Long version;
+
 	public Customer() {
 	}
 

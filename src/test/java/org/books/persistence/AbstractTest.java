@@ -8,6 +8,7 @@ import org.books.persistence.enumeration.UserGroup;
 import org.jboss.logging.Logger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Parameters()
 public abstract class AbstractTest {
 
 	protected final static Logger LOGGER = Logger.getLogger(AbstractTest.class.getName());
@@ -24,12 +26,11 @@ public abstract class AbstractTest {
 	protected static EntityManagerFactory emf;
 	protected static EntityManager em;
 
-	private Long userId;
 	private Long customerId;
 
 	private List<Long> bookIds;
 
-	private Long salesOrderId;
+	private Long salesOrderNumber;
 
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception {
@@ -74,10 +75,9 @@ public abstract class AbstractTest {
 
 			fillBooks();
 
-			userId = login.getId();
 			customerId = customer.getNumber();
 
-			this.salesOrderId = this.getNewPersistedSalesOrder().getId();
+			salesOrderNumber = this.getNewPersistedSalesOrder().getNumber();
 
 			em.clear();
 			emf.getCache().evictAll();
@@ -105,7 +105,7 @@ public abstract class AbstractTest {
 
 	protected SalesOrder getPersistedSalesOrder() {
 
-		return em.find(SalesOrder.class, salesOrderId);
+		return em.find(SalesOrder.class, salesOrderNumber);
 	}
 
 	private void fillBooks() {
@@ -121,17 +121,9 @@ public abstract class AbstractTest {
 		}
 	}
 
-	private void removeBooks() {
-		for (Long id : bookIds) {
-			Book book = em.find(Book.class, id);
-			em.remove(book);
-		}
-	}
-
 	protected SalesOrder getUnpersitedSalesOrder() {
 
 		SalesOrder salesOrder = new SalesOrder();
-		salesOrder.setNumber(2L);
 		salesOrder.setAddress(new Address("street", "city", "postalCode", "state", "country"));
 		salesOrder.setAmount(new BigDecimal(10.5));
 		salesOrder.setCreditCard(new CreditCard());

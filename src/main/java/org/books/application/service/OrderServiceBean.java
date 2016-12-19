@@ -136,7 +136,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         try {
             JMSProducer producer = jmsContext.createProducer();
             MapMessage msg = jmsContext.createMapMessage();
-            msg.setLong("orderId", order.getId());
+            msg.setLong("orderNr", order.getNumber());
             producer.send(queue, msg);
         } catch (JMSException e) {
             logError(e.toString());
@@ -147,12 +147,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         SalesOrder so = new SalesOrder();
 
         Customer c = customerRepository.find(po.getCustomerNr());
-
-        // TODO: Ausbau: es muss garantiert sein, dass Order-Nr. noch nicht existiert. Keien Base-Klasse? -> eigener PK
-        Long orderNumber = getNewOrderNumber();
-        logInfo("new order " + orderNumber);
-
-        so.setNumber(orderNumber);
         so.setDate(new Date());
 
         so.setCustomer(c);
@@ -166,7 +160,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     }
 
     private Set<SalesOrderItem> getSoItems(List<PurchaseOrderItem> items) {
-        Set<SalesOrderItem> soItems = new HashSet<SalesOrderItem>();
+        Set<SalesOrderItem> soItems = new HashSet<>();
 
         for (PurchaseOrderItem poi : items) {
             boolean added = false;
@@ -219,9 +213,5 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
         }
         return amount;
-    }
-
-    private Long getNewOrderNumber() {
-        return (new Random()).nextLong();
     }
 }

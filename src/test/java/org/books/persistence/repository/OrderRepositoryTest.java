@@ -49,7 +49,6 @@ public class OrderRepositoryTest extends AbstractTest {
         // Given
         SalesOrder salesOrder = getUnpersitedSalesOrder();
         em.getTransaction().begin();
-        salesOrder.setNumber(4L);
         orderRepository.persist(salesOrder);
         em.getTransaction().commit();
         assertNotNull(salesOrder);
@@ -70,7 +69,6 @@ public class OrderRepositoryTest extends AbstractTest {
 
 		// Given
 		SalesOrder salesOrder = getUnpersitedSalesOrder();
-		salesOrder.setNumber(3L);
 
 		// When
         em.getTransaction().begin();
@@ -79,7 +77,7 @@ public class OrderRepositoryTest extends AbstractTest {
 
 		// Then
 		assertNotNull(salesOrder);
-		assertNotNull(salesOrder.getId());
+		assertNotNull(salesOrder.getNumber());
 	}
 
 	@Test
@@ -89,7 +87,7 @@ public class OrderRepositoryTest extends AbstractTest {
 		SalesOrder salesOrder = getPersistedSalesOrder();
 
 		// When
-		SalesOrder actualSalesOrder = orderRepository.findByNumber(2L);
+		SalesOrder actualSalesOrder = orderRepository.findByNumber(salesOrder.getNumber());
 
 		// Then
 		assertNotNull(actualSalesOrder);
