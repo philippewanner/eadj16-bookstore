@@ -40,6 +40,9 @@ public class SalesOrder implements Serializable {
 
 	@NotNull
 	private OrderStatus status;
+        
+        @Version
+        private Long version;
 
 	public Set<SalesOrderItem> getSalesOrderItems() {
 		return salesOrderItems;

@@ -114,7 +114,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     }
 
     @Schedule(hour = "*", minute = "15")
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void shipOrders(Timer timer) {
         List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
         for (SalesOrder order : orders) {
