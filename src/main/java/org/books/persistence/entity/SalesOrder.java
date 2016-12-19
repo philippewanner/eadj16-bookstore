@@ -39,6 +39,9 @@ public class SalesOrder extends BaseEntity {
 
 	@NotNull
 	private OrderStatus status;
+        
+        @Version
+        private Long version;
 
 	public Set<SalesOrderItem> getSalesOrderItems() {
 		return salesOrderItems;
