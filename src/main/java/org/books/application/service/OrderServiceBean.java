@@ -107,7 +107,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         orderRepository.persist(order);
 
         // TODO:
-        //sendToQueue(order);
+        sendToQueue(order);
         return order;
     }
 
