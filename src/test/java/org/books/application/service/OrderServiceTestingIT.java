@@ -17,7 +17,6 @@ import org.jboss.logging.Logger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import org.junit.Ignore;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -45,7 +44,8 @@ public class OrderServiceTestingIT {
    
     @BeforeClass
     public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         DbUtil.executeSql("delete from Customer");
         DbUtil.executeSql("delete from UserLogin");
@@ -63,30 +63,32 @@ public class OrderServiceTestingIT {
 
     @AfterClass
     public void tearDown() throws SQLException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
     }
 
-    //@Ignore
     @Test
-    public void placeOrder() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+    public void placeOrder() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException, NamingException {
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-        PurchaseOrder purchaseOrder = this.purchaseOrder;
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder();
 
         // When
         salesOrder = orderService.placeOrder(purchaseOrder);
 // FIXME
         // Then
-//        assertNotNull(salesOrder);
-//        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
-//        assertEquals(salesOrder, orderService.findOrder(salesOrder.getNumber()));
+        assertNotNull(salesOrder);
+        assertNotNull(salesOrder.getId());
+        //assertEquals(salesOrder, orderService.findOrder(salesOrder.getNumber()));
     }
 
     @Test(expectedExceptions = PaymentFailedException.class)
     public void placeOrder_throwsPaymentFailedException() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
         PurchaseOrder purchaseOrder = this.createPurchaseOrder();
@@ -100,7 +102,8 @@ public class OrderServiceTestingIT {
 
     @Test(expectedExceptions = OrderNotFoundException.class, dependsOnMethods = "placeOrder")
     public void findOrder_throwsOrderNotFoundException() throws OrderNotFoundException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
         Long orderNumberToFind = null;
@@ -113,12 +116,14 @@ public class OrderServiceTestingIT {
 
     }
 
-    @Ignore
     @Test(dependsOnMethods = "placeOrder")
-    public void findOrder() throws OrderNotFoundException, PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+    public void findOrder() throws OrderNotFoundException, PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException {
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder();
+        SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
         Long salesOrderNumberToFind = salesOrder.getNumber();
 
         // When
@@ -131,16 +136,19 @@ public class OrderServiceTestingIT {
 
     @Test(dependsOnMethods = "placeOrder")
     public void searchForOrdersByCustomerAndYear() {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
     }
 
     @Test(dependsOnMethods = "findOrder")
     public void cancelAnOrder() {
-        LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
+
+        logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
     }
 
     private void createCustomer() throws NamingException, CustomerAlreadyExistsException {
+
         final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
 
         CustomerService cs = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
@@ -201,5 +209,13 @@ public class OrderServiceTestingIT {
                 LOGGER.warn("book not added " + b.getTitle());
             }
         }
+    }
+
+    private void logInfoClassAndMethodName(StackTraceElement[] stackTraceElements) {
+
+        final String methodName = stackTraceElements[1].getMethodName();
+        final String className = stackTraceElements[1].getClassName();
+
+        LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> \n  Class name \t: " + className + " \n  Method name \t: " + methodName + "()\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     }
 }
