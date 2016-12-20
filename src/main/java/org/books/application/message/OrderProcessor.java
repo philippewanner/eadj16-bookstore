@@ -34,7 +34,7 @@ public class OrderProcessor implements MessageListener {
 			if (message instanceof MapMessage) {
 				MapMessage mapMessage = (MapMessage) message;
 
-				OrderProcessorType type = (OrderProcessorType) mapMessage.getObject("type");
+				OrderProcessorType type = OrderProcessorType.valueOf(mapMessage.getString("type"));
 				long orderNr = mapMessage.getLong("orderNr");
 
 				logger.info("onMessage, orderNr: " + orderNr + ", type: " + type);

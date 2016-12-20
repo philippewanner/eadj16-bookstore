@@ -129,7 +129,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         try {
             JMSProducer producer = jmsContext.createProducer();
             MapMessage msg = jmsContext.createMapMessage();
-            msg.setObject("type", type);
+            msg.setString("type", type.toString());
             msg.setLong("orderNr", orderNumber);
             producer.send(queue, msg);
         } catch (JMSException e) {
