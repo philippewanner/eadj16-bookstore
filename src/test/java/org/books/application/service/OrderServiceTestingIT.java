@@ -51,7 +51,12 @@ public class OrderServiceTestingIT {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
+        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDER");
         
+        DbUtil.executeSql("delete from Customer");
+        DbUtil.executeSql("delete from UserLogin");
 
         deleteBooks();
 
