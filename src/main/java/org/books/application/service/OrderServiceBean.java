@@ -150,7 +150,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Schedule(minute="*", hour="*")
     public void shipOrders(Timer timer) {
         
-        logInfo("********* Ship timer (Schedule="+timer.getSchedule()+") *********");
+        logInfo("********* Ship timer *********");
         
         List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
         for (SalesOrder order : orders) {

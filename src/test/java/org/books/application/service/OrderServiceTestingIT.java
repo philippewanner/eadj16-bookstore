@@ -395,22 +395,6 @@ public class OrderServiceTestingIT {
       orderService.cancelOrder(orderNr);
    }
 
-   @Test
-   public void shipOrders() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
-
-      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
-
-      // Given
-      Customer newCustomer = this.createNewCustomer();
-      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
-      SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
-
-      // When
-
-      // Then
-
-   }
-
     private Customer createNewCustomer(CreditCard creditCard){
 
        Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
