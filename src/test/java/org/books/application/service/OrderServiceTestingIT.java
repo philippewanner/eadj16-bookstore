@@ -53,8 +53,6 @@ public class OrderServiceTestingIT {
    private CustomerService customerService;
    private CatalogService catalogService;
 
-    //private PurchaseOrder purchaseOrder;
-    private SalesOrder salesOrder = null;
    private static int counter;
 
    @BeforeClass
@@ -69,7 +67,8 @@ public class OrderServiceTestingIT {
         DbUtil.executeSql("delete from Customer");
         DbUtil.executeSql("delete from UserLogin");
 
-        deleteBooks();
+        // Delete books
+         DbUtil.executeSql("delete from BOOK");
 
       InitialContext initialContext = new InitialContext();
       orderService = (OrderService) initialContext.lookup(ORDER_SERVICE_NAME);
@@ -101,59 +100,152 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-       Long customerNr = this.getNewPersistedCustomerNumber();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
+       Customer newCustomer = this.createNewCustomer();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
 
         // When
-        salesOrder = orderService.placeOrder(purchaseOrder);
-// FIXME
+        SalesOrder salesOrderPersisted = orderService.placeOrder(purchaseOrder);
+
         // Then
-        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
-        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
-        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
+       SalesOrder salesOrderFound = orderService.findOrder(salesOrderPersisted.getNumber());
+       assertNotNull(salesOrderFound);
+        assertEquals(salesOrderPersisted.getNumber(), salesOrderFound.getNumber());
     }
 
         
-    @Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+    @Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT, dependsOnMethods = "placeOrder")
     public void placeOrderX() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
 
         // Given
-       Long customerNr = this.getNewPersistedCustomerNumber();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
+       Customer newCustomer = this.createNewCustomer();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
 
         // When
-        salesOrder = orderService.placeOrder(purchaseOrder);
+       SalesOrder salesOrderPersisted = orderService.placeOrder(purchaseOrder);
 
         // Then
-        assertNotNull(salesOrder);
-        assertEquals(salesOrder.getCustomer().getNumber(), purchaseOrder.getCustomerNr());
-        assertEquals(salesOrder.getNumber(), orderService.findOrder(salesOrder.getNumber()).getNumber());
-        assertEquals(salesOrder.getCustomer().getEmail(), orderService.findOrder(salesOrder.getNumber()).getCustomer().getEmail());
+        assertNotNull(salesOrderPersisted);
+        assertEquals(salesOrderPersisted.getNumber(), orderService.findOrder(salesOrderPersisted.getNumber())
+                                                                   .getNumber());
     }
 
     
     @Test(expectedExceptions = PaymentFailedException.class)
-    public void placeOrder_throwsPaymentFailedException()
+    public void placeOrder_invalidMasterCard()
           throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
           CustomerAlreadyExistsException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-       Long customerNr = this.getNewPersistedCustomerNumber();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
-       CreditCard invalidMasterCard = new CreditCard(CreditCardType.MASTER_CARD, "00", 2020, 01);
-       Customer customer = customerService.findCustomer(purchaseOrder.getCustomerNr());
-       customer.setCreditCard(invalidMasterCard);
-       customerService.updateCustomer(customer);
+       CreditCard invalidMasterCard = new CreditCard(CreditCardType.MASTER_CARD, "00", 1, 2020);
+       Customer newCustomer = this.createNewCustomer(invalidMasterCard);
+       assertNotNull(newCustomer);
+       PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
 
         // When
         orderService.placeOrder(purchaseOrder);
-
-        // Then
-        assert(false); // should never get there
     }
+
+   @Test
+   public void placeOrder_validMasterCard()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+         CustomerAlreadyExistsException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard validMasterCard = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 1,
+                                                  2020);
+      Customer newCustomer = this.createNewCustomer(validMasterCard);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
+
+      // Then
+      assertNotNull(salesOrder);
+      assertNotNull(salesOrder.getNumber());
+   }
+
+   @Test(expectedExceptions = PaymentFailedException.class)
+   public void placeOrder_invalidVisa()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+         CustomerAlreadyExistsException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard invalidVisa = new CreditCard(CreditCardType.VISA, "00", 1, 2020);
+      Customer newCustomer = this.createNewCustomer(invalidVisa);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      orderService.placeOrder(purchaseOrder);
+   }
+
+   @Test
+   public void placeOrder_validVisa()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+         CustomerAlreadyExistsException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard validVisa = new CreditCard(CreditCardType.VISA, VISA_VALID_ACCOUNT_NUMBER, 1, 2020);
+      Customer newCustomer = this.createNewCustomer(validVisa);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
+
+      // Then
+      assertNotNull(salesOrder);
+      assertNotNull(salesOrder.getNumber());
+   }
+
+   @Test(expectedExceptions = PaymentFailedException.class)
+   public void placeOrder_invalidAmericanExpress()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+         CustomerAlreadyExistsException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard invalidAmericanExpress = new CreditCard(CreditCardType.AMERICAN_EXPRESS, "00", 1, 2020);
+      Customer newCustomer = this.createNewCustomer(invalidAmericanExpress);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      orderService.placeOrder(purchaseOrder);
+   }
+
+   @Test
+   public void placeOrder_validAmericanExpress()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+         CustomerAlreadyExistsException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard validAmericanExpress = new CreditCard(CreditCardType.AMERICAN_EXPRESS,
+                                                       AMERICANEXPRESS_VALID_ACCOUNT_NUMBER, 1, 2020);
+      Customer newCustomer = this.createNewCustomer(validAmericanExpress);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
+
+      // Then
+      assertNotNull(salesOrder);
+      assertNotNull(salesOrder.getNumber());
+   }
 
     @Test(expectedExceptions = OrderNotFoundException.class, dependsOnMethods = "placeOrder")
     public void findOrder_throwsOrderNotFoundException() throws OrderNotFoundException {
@@ -161,14 +253,9 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-        Long orderNumberToFind = null;
 
         // When
-        orderService.findOrder(orderNumberToFind);
-
-        // Then (should never get here, since throw exception)
-        assert(false);
-
+        orderService.findOrder(null);
     }
 
     @Test(dependsOnMethods = "placeOrder")
@@ -177,8 +264,8 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-       Long customerNr = this.getNewPersistedCustomerNumber();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
+       Customer newCustomer = this.createNewCustomer();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
         SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
         Long salesOrderNumberToFind = salesOrder.getNumber();
 
@@ -202,23 +289,29 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
     }
 
-    private Long getNewPersistedCustomerNumber() {
+    private Customer createNewCustomer(CreditCard creditCard){
 
-        Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
-       CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 8, 2018);
-
-       Customer customer = new Customer("Donald", "Trump", "Donald"+counter+"@Trump.org", address, cc);
+       Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
+       Customer customer = new Customer("Donald", "Trump", "Donald"+counter+"@Trump.org", address, creditCard);
        counter++;
 
        final String password = "md5";
-        Registration registration = new Registration(customer, password);
+       Registration registration = new Registration(customer, password);
 
        try {
-          return customerService.registerCustomer(registration);
+          customer.setNumber(customerService.registerCustomer(registration));
+          return customer;
        } catch (CustomerAlreadyExistsException e) {
           e.printStackTrace();
           return null;
        }
+    }
+
+    private Customer createNewCustomer() {
+
+       CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 8, 2018);
+
+       return this.createNewCustomer(cc);
     }
 
     private PurchaseOrder createPurchaseOrder(Long customerNumber) {
@@ -235,7 +328,7 @@ public class OrderServiceTestingIT {
     
     private List<PurchaseOrderItem> getPOItems() {
         
-        List<PurchaseOrderItem> items = new ArrayList();
+        List<PurchaseOrderItem> items = new ArrayList<>();
 
         List<BookInfo> books = catalogService.searchBooks("*");
         for (BookInfo b : books) {
@@ -244,10 +337,6 @@ public class OrderServiceTestingIT {
         }
 
         return items;
-    }
-
-    private void deleteBooks() throws SQLException {
-        DbUtil.executeSql("delete from BOOK");
     }
 
     private void addBooks() throws NamingException {
