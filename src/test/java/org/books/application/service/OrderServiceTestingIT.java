@@ -25,6 +25,7 @@ import org.testng.annotations.Test;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -220,6 +221,23 @@ public class OrderServiceTestingIT {
       Customer newCustomer = this.createNewCustomer(invalidAmericanExpress);
       assertNotNull(newCustomer);
       PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      orderService.placeOrder(purchaseOrder);
+   }
+
+   @Test(expectedExceptions = PaymentFailedException.class)
+   public void placeOrder_exceedLimitAmount()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      Customer newCustomer = this.createNewCustomer();
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      BookInfo bookInfo = new BookInfo("isbn", "title", new BigDecimal(20000));
+      purchaseOrder.getItems().add(new PurchaseOrderItem(bookInfo, 4));
 
       // When
       orderService.placeOrder(purchaseOrder);
