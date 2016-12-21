@@ -4,10 +4,19 @@ import org.books.DbUtil;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.dto.Registration;
-import org.books.application.exception.*;
+import org.books.application.exception.BookAlreadyExistsException;
+import org.books.application.exception.BookNotFoundException;
+import org.books.application.exception.CustomerAlreadyExistsException;
+import org.books.application.exception.CustomerNotFoundException;
+import org.books.application.exception.OrderNotFoundException;
+import org.books.application.exception.PaymentFailedException;
 import org.books.persistence.TestDataProvider;
 import org.books.persistence.dto.BookInfo;
-import org.books.persistence.entity.*;
+import org.books.persistence.entity.Address;
+import org.books.persistence.entity.Book;
+import org.books.persistence.entity.CreditCard;
+import org.books.persistence.entity.Customer;
+import org.books.persistence.entity.SalesOrder;
 import org.books.persistence.enumeration.CreditCardType;
 import org.jboss.logging.Logger;
 import org.testng.annotations.AfterClass;
@@ -34,19 +43,16 @@ public class OrderServiceTestingIT {
     private static final String CATALOG_SERVICE_NAME = "java:global/bookstore/CatalogService";
 
     private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
-
+   private static final int THREAD_COUNT = 100;
+   private static final String MASTERCARD_VALID_ACCOUNT_NUMBER = "5105105105105100";
+   private static final String VISA_VALID_ACCOUNT_NUMBER = "4111111111111111";
+   private static final String AMERICANEXPRESS_VALID_ACCOUNT_NUMBER = "378734493671000";
     private OrderService orderService;
-
     private Long customerNumber;
-
     private PurchaseOrder purchaseOrder;
-
     private SalesOrder salesOrder = null;
-    
-    private static final int THREAD_COUNT = 100;
-    
-   
-    @BeforeClass
+
+   @BeforeClass
     public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
@@ -190,7 +196,7 @@ public class OrderServiceTestingIT {
 
         Registration registration = new Registration();
         Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
-        CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, "1234567890123456", 8, 2018);
+       CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 8, 2018);
         registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", address, cc));
         registration.setPassword("md5");
         Long number = cs.registerCustomer(registration);

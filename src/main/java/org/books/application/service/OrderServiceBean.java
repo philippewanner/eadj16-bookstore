@@ -3,24 +3,44 @@ package org.books.application.service;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.enumeration.OrderProcessorType;
-import org.books.application.exception.*;
+import org.books.application.exception.BookNotFoundException;
+import org.books.application.exception.CustomerNotFoundException;
+import org.books.application.exception.OrderAlreadyShippedException;
+import org.books.application.exception.OrderNotFoundException;
+import org.books.application.exception.PaymentFailedException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.OrderInfo;
-import org.books.persistence.entity.*;
+import org.books.persistence.entity.Book;
+import org.books.persistence.entity.CreditCard;
+import org.books.persistence.entity.Customer;
+import org.books.persistence.entity.SalesOrder;
+import org.books.persistence.entity.SalesOrderItem;
+import org.books.persistence.enumeration.CreditCardType;
 import org.books.persistence.enumeration.OrderStatus;
 import org.books.persistence.repository.BookRepository;
 import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.OrderRepository;
 
 import javax.annotation.Resource;
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Schedule;
+import javax.ejb.Stateless;
 import javax.ejb.Timer;
 import javax.inject.Inject;
-import javax.jms.*;
+import javax.jms.JMSConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.JMSProducer;
+import javax.jms.MapMessage;
 import javax.jms.Queue;
 import javax.persistence.LockModeType;
 import java.math.BigDecimal;
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.books.application.exception.PaymentFailedException.Code;
 
@@ -52,6 +72,9 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
     @Resource(lookup = "jms/orderQueue")
     private Queue queue;
+
+   @Resource(name = "limitAmount")
+   private Float limitAmount;
 
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
@@ -88,30 +111,80 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
 
-        // Check if the customer exist
+       // Check if the customer exist
         Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
         if(customer == null){
             throw new CustomerNotFoundException();
         }
 
-        CreditCard creditCard = customer.getCreditCard();
-        if(creditCard == null) {
-            throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-        }
+       CreditCard creditCard = customer.getCreditCard();
+       validateCreditCard(creditCard);
 
-        Date orderDate = new Date();
+       SalesOrder salesOrder = createSalesOrder(purchaseOrder);
+       float totalAmount = salesOrder.getAmount().floatValue();
 
-        SalesOrder order = createSalesOrder(purchaseOrder);
+       if (totalAmount > limitAmount) {
+          throw new PaymentFailedException(Code.PAYMENT_LIMIT_EXCEEDED);
+       }
 
-        orderRepository.persist(order);
+       orderRepository.persist(salesOrder);
         orderRepository.flush();
 
-        sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
+       sendToQueue(salesOrder.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 
         // TODO:
         //sendToQueue(order);
-        return order;
+       return salesOrder;
     }
+
+   private void validateCreditCard(CreditCard creditCard) throws PaymentFailedException {
+
+      final String VISA_REGEX = "^4[0-9]{12}(?:[0-9]{3})?$";
+      final String MASTERCARD_REGEX =
+            "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)" + "[0-9]{12}$";
+      final String AMERICAN_EXPRESS_REGEX = "^3[47][0-9]{13}$";
+
+      if (creditCard == null) {
+         throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+      }
+
+      CreditCardType creditCardType = creditCard.getType();
+      switch (creditCardType) {
+         case AMERICAN_EXPRESS:
+            if (!creditCard.getNumber().matches(AMERICAN_EXPRESS_REGEX)) {
+               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+            }
+            break;
+         case MASTER_CARD:
+            if (!creditCard.getNumber().matches(MASTERCARD_REGEX)) {
+               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+            }
+            break;
+         case VISA:
+            if (!creditCard.getNumber().matches(VISA_REGEX)) {
+               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+            }
+            break;
+         default:
+            throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+      }
+
+      Date now = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String expirationString = String.format("%4d-%2d-%2d", creditCard.getExpirationYear(),
+                                              creditCard.getExpirationMonth(), 1);
+
+      try {
+         Date expirationDate = sdf.parse(expirationString);
+         if (expirationDate.before(now)) {
+            throw new PaymentFailedException(Code.CREDIT_CARD_EXPIRED);
+         }
+      } catch (ParseException e) {
+         logError("Cannot parse the credit card date");
+      }
+
+      // If comes here, the credit card is valid
+   }
 
     @Override
     public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
