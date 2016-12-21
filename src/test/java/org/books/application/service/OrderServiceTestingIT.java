@@ -107,7 +107,7 @@ public class OrderServiceTestingIT {
 
         // Given
        Customer newCustomer = this.createNewCustomer();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+        PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
         // When
         SalesOrder salesOrderPersisted = orderService.placeOrder(purchaseOrder);
@@ -125,7 +125,7 @@ public class OrderServiceTestingIT {
 
         // Given
        Customer newCustomer = this.createNewCustomer();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+        PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
         // When
        SalesOrder salesOrderPersisted = orderService.placeOrder(purchaseOrder);
@@ -148,7 +148,7 @@ public class OrderServiceTestingIT {
        CreditCard invalidMasterCard = new CreditCard(CreditCardType.MASTER_CARD, "00", 1, 2020);
        Customer newCustomer = this.createNewCustomer(invalidMasterCard);
        assertNotNull(newCustomer);
-       PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+       PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
         // When
         orderService.placeOrder(purchaseOrder);
@@ -166,7 +166,7 @@ public class OrderServiceTestingIT {
                                                   2020);
       Customer newCustomer = this.createNewCustomer(validMasterCard);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
@@ -187,7 +187,7 @@ public class OrderServiceTestingIT {
                                                     AMERICANEXPRESS_VALID_ACCOUNT_NUMBER, 1, 2000);
       Customer newCustomer = this.createNewCustomer(expiredCreditCard);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       orderService.placeOrder(purchaseOrder);
@@ -200,9 +200,7 @@ public class OrderServiceTestingIT {
       logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
       // Given
-      Customer customerNotInDb = new Customer();
-      customerNotInDb.setNumber(9999999L);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNotInDb.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(9999999L, getPOItems());
 
       // When
       orderService.placeOrder(purchaseOrder);
@@ -219,7 +217,7 @@ public class OrderServiceTestingIT {
       CreditCard invalidVisa = new CreditCard(CreditCardType.VISA, "00", 1, 2020);
       Customer newCustomer = this.createNewCustomer(invalidVisa);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       orderService.placeOrder(purchaseOrder);
@@ -236,7 +234,7 @@ public class OrderServiceTestingIT {
       CreditCard validVisa = new CreditCard(CreditCardType.VISA, VISA_VALID_ACCOUNT_NUMBER, 1, 2020);
       Customer newCustomer = this.createNewCustomer(validVisa);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
@@ -257,7 +255,7 @@ public class OrderServiceTestingIT {
       CreditCard invalidAmericanExpress = new CreditCard(CreditCardType.AMERICAN_EXPRESS, "00", 1, 2020);
       Customer newCustomer = this.createNewCustomer(invalidAmericanExpress);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       orderService.placeOrder(purchaseOrder);
@@ -272,7 +270,7 @@ public class OrderServiceTestingIT {
       // Given
       Customer newCustomer = this.createNewCustomer();
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
       BookInfo bookInfo = new BookInfo("isbn", "title", new BigDecimal(20000));
       purchaseOrder.getItems().add(new PurchaseOrderItem(bookInfo, 4));
 
@@ -292,7 +290,7 @@ public class OrderServiceTestingIT {
                                                        AMERICANEXPRESS_VALID_ACCOUNT_NUMBER, 1, 2020);
       Customer newCustomer = this.createNewCustomer(validAmericanExpress);
       assertNotNull(newCustomer);
-      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
 
       // When
       SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
@@ -320,7 +318,7 @@ public class OrderServiceTestingIT {
 
         // Given
        Customer newCustomer = this.createNewCustomer();
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+        PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
         SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
         Long salesOrderNumberToFind = salesOrder.getNumber();
 
@@ -340,7 +338,7 @@ public class OrderServiceTestingIT {
        Customer newCustomer = this.createNewCustomer();
        final int NB_PURCHASE = 5;
        for(int i=0; i<NB_PURCHASE; i++) {
-          PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+          PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
           orderService.placeOrder(purchaseOrder);
        }
 
@@ -372,7 +370,7 @@ public class OrderServiceTestingIT {
 
         // Given
        Customer newCustomer = this.createNewCustomer();
-       PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+       PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
        SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
 
        // When
@@ -395,6 +393,22 @@ public class OrderServiceTestingIT {
 
       // When
       orderService.cancelOrder(orderNr);
+   }
+
+   @Test
+   public void shipOrders() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      Customer newCustomer = this.createNewCustomer();
+      PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
+      SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
+
+      // When
+
+      // Then
+
    }
 
     private Customer createNewCustomer(CreditCard creditCard){
@@ -421,18 +435,6 @@ public class OrderServiceTestingIT {
 
        return this.createNewCustomer(cc);
     }
-
-    private PurchaseOrder createPurchaseOrder(Long customerNumber) {
-        PurchaseOrder po = new PurchaseOrder();
-
-        po.setCustomerNr(customerNumber);
-
-        List<PurchaseOrderItem> items = getPOItems();
-
-        po.setItems(items);
-
-        return po;
-    }    
     
     private List<PurchaseOrderItem> getPOItems() {
         
