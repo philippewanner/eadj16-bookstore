@@ -112,18 +112,13 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException {
 
        // Check if the customer exist
-       Customer customer;
-       try {
-
-          customer = customerRepository.find(purchaseOrder.getCustomerNr());
-       } catch (RuntimeException e){
-
+       Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
+       if( customer == null) {
           throw new CustomerNotFoundException();
        }
 
        // Validates the credit card
-       CreditCard creditCard = customer.getCreditCard();
-       validateCreditCard(creditCard);
+       validateCreditCard(customer.getCreditCard());
 
        // Validates the limit amount allowed (defined in ejb-jar.xml)
        SalesOrder salesOrder = createSalesOrder(purchaseOrder);
@@ -131,9 +126,8 @@ public class OrderServiceBean extends AbstractService implements OrderService {
           throw new PaymentFailedException(Code.PAYMENT_LIMIT_EXCEEDED);
        }
 
-
        orderRepository.persist(salesOrder);
-        orderRepository.flush();
+       orderRepository.flush();
 
        sendToQueue(salesOrder.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 

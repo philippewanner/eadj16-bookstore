@@ -196,6 +196,7 @@ public class OrderServiceTestingIT {
 
       // Given
       Customer customerNotInDb = new Customer();
+      customerNotInDb.setNumber(9999999L);
       PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNotInDb.getNumber());
 
       // When
