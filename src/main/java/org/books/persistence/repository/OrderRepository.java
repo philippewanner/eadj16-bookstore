@@ -55,7 +55,7 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Long> {
      * @param year particular year search criteria.
      * @return a list of OrderInfo.
      */
-    public List<OrderInfo> searchByCustomerAndYear(@Valid Customer customer, @Past Integer year) {
+    public List<OrderInfo> searchByCustomerAndYear(@Valid Customer customer, Integer year) {
 
         Map<String, Object> parameters = new HashMap<>(2);
         parameters.put("customer", customer);
@@ -70,7 +70,7 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Long> {
      * all orders of all customers of a particular year group by customer
      *
      */
-    public List<Object> sumAmountNumberPositionsAvgAmountPerYear(@Past Integer year) {
+    public List<Object> sumAmountNumberPositionsAvgAmountPerYear(Integer year) {
 
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("year", year);

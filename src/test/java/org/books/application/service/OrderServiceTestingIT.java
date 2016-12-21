@@ -13,6 +13,7 @@ import org.books.application.exception.OrderNotFoundException;
 import org.books.application.exception.PaymentFailedException;
 import org.books.persistence.TestDataProvider;
 import org.books.persistence.dto.BookInfo;
+import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.Address;
 import org.books.persistence.entity.Book;
 import org.books.persistence.entity.CreditCard;
@@ -328,14 +329,39 @@ public class OrderServiceTestingIT {
 
         // Then
         assertEquals(salesOrder.getNumber(), salesOrderFound.getNumber());
-
     }
 
     @Test(dependsOnMethods = "placeOrder")
-    public void searchForOrdersByCustomerAndYear() {
+    public void searchOrders() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+       // Given
+       Customer newCustomer = this.createNewCustomer();
+       final int NB_PURCHASE = 5;
+       for(int i=0; i<NB_PURCHASE; i++) {
+          PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+          orderService.placeOrder(purchaseOrder);
+       }
+
+       // When
+       List<OrderInfo> orderInfosFound = orderService.searchOrders(newCustomer.getNumber(), 2016);
+
+       // Then
+       assertEquals(NB_PURCHASE, orderInfosFound.size());
     }
+
+   @Test(expectedExceptions = CustomerNotFoundException.class, dependsOnMethods = "placeOrder")
+   public void searchOrders_customerNotFound() throws CustomerNotFoundException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      Long customerNumber = 999999999L;
+
+      // When
+      List<OrderInfo> orderInfosFound = orderService.searchOrders(customerNumber, 2016);
+   }
 
     @Test(dependsOnMethods = "findOrder")
     public void cancelAnOrder()
