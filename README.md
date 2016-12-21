@@ -46,9 +46,7 @@ The objective of this task is to implement the customer service of the bookstore
 The objective of this task is to implement the persistence of books, customers and orders.
 
 1. Implement the Java entities Book, Customer and SalesOrder and their relationships.
-
 2. Implement the repositories BookRepository, CustomerRepository and OrderRepository which store and retrieve the entities.
-
 3. Define the persistence unit bookstore which maps the entities to the data source jdbc/bookstore.
 
 ###Order Service
