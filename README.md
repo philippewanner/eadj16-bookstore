@@ -19,7 +19,7 @@ The objective of this task is to implement the catalog service of the bookstore 
 
 1. Implement a stateless session bean specified by the remote interface CatalogService.
 
-    - The service allows to
+    The service allows to
     - add a book to the catalog
     - find a book by ISBN number
     - search for books by keywords
@@ -33,7 +33,6 @@ The objective of this task is to implement the customer service of the bookstore
 1. Implement a stateless session bean specified by the remote interface CustomerService.
 
     The service allows to
-    
     - register a customer
     - authenticate a customer
     - change the password of a customer
@@ -55,7 +54,6 @@ The objective of this task is to implement the order service of the bookstore ap
 1. Implement a stateless session bean specified by the remote interface OrderService.
     
     The service allows to
-    
     - place an order
     - find an order by number
     - search for orders by customer and year
