@@ -22,7 +22,8 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  *

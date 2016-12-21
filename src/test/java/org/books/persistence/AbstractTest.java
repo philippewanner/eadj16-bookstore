@@ -6,7 +6,6 @@ import org.books.persistence.enumeration.CreditCardType;
 import org.books.persistence.enumeration.OrderStatus;
 import org.books.persistence.enumeration.UserGroup;
 import org.jboss.logging.Logger;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 

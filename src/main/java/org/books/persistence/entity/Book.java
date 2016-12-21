@@ -3,9 +3,9 @@ package org.books.persistence.entity;
 import org.books.persistence.enumeration.BookBinding;
 
 import javax.persistence.Entity;
-import java.math.BigDecimal;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.math.BigDecimal;
 
 @Entity
 public class Book extends BaseEntity {

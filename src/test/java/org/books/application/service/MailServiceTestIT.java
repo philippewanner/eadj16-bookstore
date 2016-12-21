@@ -3,7 +3,6 @@ package org.books.application.service;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.jboss.logging.Logger;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

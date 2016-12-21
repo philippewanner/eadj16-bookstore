@@ -1,17 +1,19 @@
 package org.books.persistence.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.books.persistence.AbstractTest;
 import org.books.persistence.dto.OrderInfo;
-import org.books.persistence.entity.*;
+import org.books.persistence.entity.Address;
+import org.books.persistence.entity.CreditCard;
+import org.books.persistence.entity.Customer;
+import org.books.persistence.entity.SalesOrder;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 

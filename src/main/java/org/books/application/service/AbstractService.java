@@ -5,12 +5,12 @@
  */
 package org.books.application.service;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.PostActivate;
 import javax.ejb.PrePassivate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author jan

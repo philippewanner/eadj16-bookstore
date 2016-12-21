@@ -1,12 +1,12 @@
 package org.books.application.service;
 
+import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 
-import java.util.List;
 import javax.ejb.Remote;
-import org.books.application.exception.BookAlreadyExistsException;
+import java.util.List;
 
 /*
 Jan
