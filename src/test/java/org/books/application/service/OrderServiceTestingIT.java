@@ -39,6 +39,7 @@ import static org.testng.Assert.assertNotNull;
 public class OrderServiceTestingIT {
 
     private static final String ORDER_SERVICE_NAME = "java:global/bookstore/OrderService";
+   private static final String CUSTOMER_SERVICE_NAME = "java:global/bookstore/CustomerService";
     
     private static final String CATALOG_SERVICE_NAME = "java:global/bookstore/CatalogService";
 
@@ -47,10 +48,14 @@ public class OrderServiceTestingIT {
    private static final String MASTERCARD_VALID_ACCOUNT_NUMBER = "5105105105105100";
    private static final String VISA_VALID_ACCOUNT_NUMBER = "4111111111111111";
    private static final String AMERICANEXPRESS_VALID_ACCOUNT_NUMBER = "378734493671000";
-    private OrderService orderService;
-    private Long customerNumber;
-    private PurchaseOrder purchaseOrder;
+
+   private OrderService orderService;
+   private CustomerService customerService;
+   private CatalogService catalogService;
+
+    //private PurchaseOrder purchaseOrder;
     private SalesOrder salesOrder = null;
+   private static int counter;
 
    @BeforeClass
     public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
@@ -66,13 +71,15 @@ public class OrderServiceTestingIT {
 
         deleteBooks();
 
-        orderService = (OrderService) new InitialContext().lookup(ORDER_SERVICE_NAME);
+      InitialContext initialContext = new InitialContext();
+      orderService = (OrderService) initialContext.lookup(ORDER_SERVICE_NAME);
         assertNotNull(orderService);
+      customerService = (CustomerService) initialContext.lookup(CUSTOMER_SERVICE_NAME);
+      assertNotNull(customerService);
+      catalogService = (CatalogService) initialContext.lookup(CATALOG_SERVICE_NAME);
+      assertNotNull(catalogService);
 
         addBooks();
-
-        createCustomer();
-        purchaseOrder = createPurchaseOrder();
     }
 
     @AfterClass
@@ -94,7 +101,8 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder();
+       Long customerNr = this.getNewPersistedCustomerNumber();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
 
         // When
         salesOrder = orderService.placeOrder(purchaseOrder);
@@ -111,7 +119,8 @@ public class OrderServiceTestingIT {
         LOGGER.info(">>>>>> "+Thread.currentThread().getStackTrace()[1].getMethodName()+" <<<<<<");
 
         // Given
-        PurchaseOrder purchaseOrder = this.purchaseOrder;
+       Long customerNr = this.getNewPersistedCustomerNumber();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
 
         // When
         salesOrder = orderService.placeOrder(purchaseOrder);
@@ -125,13 +134,19 @@ public class OrderServiceTestingIT {
 
     
     @Test(expectedExceptions = PaymentFailedException.class)
-    public void placeOrder_throwsPaymentFailedException() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException {
+    public void placeOrder_throwsPaymentFailedException()
+          throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
+          CustomerAlreadyExistsException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder();
+       Long customerNr = this.getNewPersistedCustomerNumber();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
+       CreditCard invalidMasterCard = new CreditCard(CreditCardType.MASTER_CARD, "00", 2020, 01);
+       Customer customer = customerService.findCustomer(purchaseOrder.getCustomerNr());
+       customer.setCreditCard(invalidMasterCard);
+       customerService.updateCustomer(customer);
 
         // When
         orderService.placeOrder(purchaseOrder);
@@ -162,7 +177,8 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
-        PurchaseOrder purchaseOrder = this.createPurchaseOrder();
+       Long customerNr = this.getNewPersistedCustomerNumber();
+        PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNr);
         SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
         Long salesOrderNumberToFind = salesOrder.getNumber();
 
@@ -184,29 +200,28 @@ public class OrderServiceTestingIT {
     public void cancelAnOrder() {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
-
     }
 
-    private void createCustomer() throws NamingException, CustomerAlreadyExistsException {
+    private Long getNewPersistedCustomerNumber() {
 
-        final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
-
-        CustomerService cs = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
-        assertNotNull(cs);
-
-        Registration registration = new Registration();
         Address address=new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
        CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 8, 2018);
-        registration.setCustomer(new Customer("Donald", "Trump", "Donald@Trump.org", address, cc));
-        registration.setPassword("md5");
-        Long number = cs.registerCustomer(registration);
 
-        assertNotNull(number);
+       Customer customer = new Customer("Donald", "Trump", "Donald"+counter+"@Trump.org", address, cc);
+       counter++;
 
-        customerNumber = number;
+       final String password = "md5";
+        Registration registration = new Registration(customer, password);
+
+       try {
+          return customerService.registerCustomer(registration);
+       } catch (CustomerAlreadyExistsException e) {
+          e.printStackTrace();
+          return null;
+       }
     }
 
-    private PurchaseOrder createPurchaseOrder() throws NamingException {
+    private PurchaseOrder createPurchaseOrder(Long customerNumber) {
         PurchaseOrder po = new PurchaseOrder();
 
         po.setCustomerNr(customerNumber);
@@ -218,10 +233,7 @@ public class OrderServiceTestingIT {
         return po;
     }    
     
-    private List<PurchaseOrderItem> getPOItems() throws NamingException {
-        
-        CatalogService catalogService = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
-        assertNotNull(catalogService);
+    private List<PurchaseOrderItem> getPOItems() {
         
         List<PurchaseOrderItem> items = new ArrayList();
 
@@ -238,10 +250,7 @@ public class OrderServiceTestingIT {
         DbUtil.executeSql("delete from BOOK");
     }
 
-    private void addBooks() throws NamingException {        
-        
-        CatalogService catalogService = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
-        assertNotNull(catalogService);
+    private void addBooks() throws NamingException {
         
         List<Book> books = TestDataProvider.getBooks();
         for (Book b : books) {

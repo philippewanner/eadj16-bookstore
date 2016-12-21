@@ -117,15 +117,16 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             throw new CustomerNotFoundException();
         }
 
+       // Validates the credit card
        CreditCard creditCard = customer.getCreditCard();
        validateCreditCard(creditCard);
 
+       // Validates the limit amount allowed (defined in ejb-jar.xml)
        SalesOrder salesOrder = createSalesOrder(purchaseOrder);
-       float totalAmount = salesOrder.getAmount().floatValue();
-
-       if (totalAmount > limitAmount) {
+       if (salesOrder.getAmount().floatValue() > limitAmount) {
           throw new PaymentFailedException(Code.PAYMENT_LIMIT_EXCEEDED);
        }
+
 
        orderRepository.persist(salesOrder);
         orderRepository.flush();
