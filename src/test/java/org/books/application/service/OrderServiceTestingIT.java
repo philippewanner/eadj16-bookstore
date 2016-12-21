@@ -172,6 +172,37 @@ public class OrderServiceTestingIT {
    }
 
    @Test(expectedExceptions = PaymentFailedException.class)
+   public void placeOrder_creditCardExpired()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      CreditCard expiredCreditCard = new CreditCard(CreditCardType.AMERICAN_EXPRESS,
+                                                    AMERICANEXPRESS_VALID_ACCOUNT_NUMBER, 1, 2000);
+      Customer newCustomer = this.createNewCustomer(expiredCreditCard);
+      assertNotNull(newCustomer);
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+
+      // When
+      orderService.placeOrder(purchaseOrder);
+   }
+
+   @Test(expectedExceptions = CustomerNotFoundException.class)
+   public void placeOrder_customerNotFound()
+         throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      Customer customerNotInDb = new Customer();
+      PurchaseOrder purchaseOrder = this.createPurchaseOrder(customerNotInDb.getNumber());
+
+      // When
+      orderService.placeOrder(purchaseOrder);
+   }
+
+   @Test(expectedExceptions = PaymentFailedException.class)
    public void placeOrder_invalidVisa()
          throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
          CustomerAlreadyExistsException {

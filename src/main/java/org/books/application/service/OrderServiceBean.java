@@ -109,13 +109,17 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     }
 
     @Override
-    public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
+    public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException {
 
        // Check if the customer exist
-        Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
-        if(customer == null){
-            throw new CustomerNotFoundException();
-        }
+       Customer customer;
+       try {
+
+          customer = customerRepository.find(purchaseOrder.getCustomerNr());
+       } catch (RuntimeException e){
+
+          throw new CustomerNotFoundException();
+       }
 
        // Validates the credit card
        CreditCard creditCard = customer.getCreditCard();
