@@ -360,7 +360,7 @@ public class OrderServiceTestingIT {
       Long customerNumber = 999999999L;
 
       // When
-      List<OrderInfo> orderInfosFound = orderService.searchOrders(customerNumber, 2016);
+      orderService.searchOrders(customerNumber, 2016);
    }
 
     @Test(dependsOnMethods = "findOrder")
