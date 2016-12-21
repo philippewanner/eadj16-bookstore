@@ -34,17 +34,17 @@ public abstract class AbstractTest {
 
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception {
+		LOGGER.info("--------------- setUpBeforeClass --------------------");
+
+		emf = Persistence.createEntityManagerFactory("bookstore-test");
+		em = emf.createEntityManager();
+
 		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER_SALESORDERITEM");
 		DbUtil.executeSqlTestDB("DELETE FROM SALESORDERITEM");
 		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER");
 		DbUtil.executeSqlTestDB("DELETE FROM USERLOGIN");
 		DbUtil.executeSqlTestDB("DELETE FROM CUSTOMER");
 		DbUtil.executeSqlTestDB("DELETE FROM BOOK");
-
-		LOGGER.info("--------------- setUpBeforeClass --------------------");
-
-		emf = Persistence.createEntityManagerFactory("bookstore-test");
-		em = emf.createEntityManager();
 
 		try {
 			em.getTransaction().begin();
