@@ -49,7 +49,7 @@ public class OrderServiceIT {
 	private static int counter;
 
 	@BeforeClass
-	public void setup() throws NamingException, SQLException, CustomerAlreadyExistsException {
+	public void setup() throws NamingException, SQLException {
 
 		logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 		DbUtil.clearDatabase();
@@ -74,8 +74,7 @@ public class OrderServiceIT {
 
 	@Test
 	public void placeOrder()
-			throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException,
-			NamingException {
+			throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
 
 		logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
@@ -408,7 +407,7 @@ public class OrderServiceIT {
 		return items;
 	}
 
-	private void addBooks() throws NamingException {
+	private void addBooks() {
 
 		List<Book> books = TestDataProvider.getBooks();
 		for (Book b : books) {

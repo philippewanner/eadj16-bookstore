@@ -60,8 +60,7 @@ public class OrderRepository extends AbstractRepository<SalesOrder, Long> {
         parameters.put("customer", customer);
         parameters.put("year", year);
 
-        List<OrderInfo> orderInfos = findByNamedQuery(OrderInfo.class, "SalesOrder.searchByCustomerAndYear", parameters);
-        return orderInfos;
+        return findByNamedQuery(OrderInfo.class, "SalesOrder.searchByCustomerAndYear", parameters);
     }
 
    /**

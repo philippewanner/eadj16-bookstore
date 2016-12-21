@@ -2,9 +2,9 @@ package org.books.application.message;
 
 import org.books.application.enumeration.OrderProcessorType;
 import org.books.application.service.MailService;
+import org.books.application.service.OrderService;
 import org.books.persistence.entity.SalesOrder;
 import org.books.persistence.enumeration.OrderStatus;
-import org.books.persistence.repository.OrderRepository;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
@@ -12,7 +12,6 @@ import javax.ejb.MessageDriven;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.persistence.LockModeType;
 import java.util.logging.Logger;
 
 @MessageDriven(activationConfig = {
@@ -23,7 +22,7 @@ public class OrderProcessor implements MessageListener {
 	private Logger logger = Logger.getLogger(OrderProcessor.class.getSimpleName());
 
 	@EJB
-	private OrderRepository repository;
+	private OrderService service;
 
 	@EJB
 	private MailService mailService;
@@ -40,7 +39,7 @@ public class OrderProcessor implements MessageListener {
 				logger.info("onMessage, orderNr: " + orderNr + ", type: " + type);
 				String text = null;
 
-				SalesOrder order = repository.find(orderNr, LockModeType.PESSIMISTIC_WRITE);
+				SalesOrder order = service.findOrder(orderNr);
 				switch (type) {
 					case STATE_TO_SHIPPED:
 						text = "Order set to state shipped";
@@ -60,5 +59,13 @@ public class OrderProcessor implements MessageListener {
 		} catch (Exception e) {
 			logger.severe(e.toString());
 		}
+	}
+
+	void setMailService(MailService mailService) {
+		this.mailService = mailService;
+	}
+
+	void setOrderService(OrderService service) {
+		this.service = service;
 	}
 }

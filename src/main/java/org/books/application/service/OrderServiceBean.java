@@ -34,7 +34,6 @@ import java.util.Set;
 
 import static org.books.application.exception.PaymentFailedException.Code;
 
-
 /**
  * @author Philippe
  *
@@ -44,247 +43,254 @@ import static org.books.application.exception.PaymentFailedException.Code;
 @Stateless(name = "OrderService")
 public class OrderServiceBean extends AbstractService implements OrderService {
 
-    @EJB
-    private OrderRepository orderRepository;
+	@EJB
+	private OrderRepository orderRepository;
 
-    @EJB
-    private CustomerRepository customerRepository;
+	@EJB
+	private CustomerRepository customerRepository;
 
-    @EJB
-    private BookRepository bookRepository;
+	@EJB
+	private BookRepository bookRepository;
 
-    @EJB
-    private MailService mailService;
+	@EJB
+	private MailService mailService;
 
-    @Inject
-    @JMSConnectionFactory("jms/connectionFactory")
-    private JMSContext jmsContext;
+	@Inject
+	@JMSConnectionFactory("jms/connectionFactory")
+	private JMSContext jmsContext;
 
-    @Resource(lookup = "jms/orderQueue")
-    private Queue queue;
+	@Resource(lookup = "jms/orderQueue")
+	private Queue queue;
 
-   @Resource(name = "limitAmount")
-   private Float limitAmount;
+	@Resource(name = "limitAmount")
+	private Float limitAmount;
 
-    @Override
-    public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
+	@Override
+	public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
 
-        SalesOrder orderFound = orderRepository.findByNumber(orderNr);
-        if (orderFound == null) {
+		SalesOrder orderFound = orderRepository.findByNumber(orderNr);
+		if (orderFound == null) {
 
-            logInfo("Order nr " + orderNr + " not found");
-            throw new OrderNotFoundException();
-        }
-        if (orderFound.getStatus().equals(OrderStatus.SHIPPED)) {
+			logInfo("Order nr " + orderNr + " not found");
+			throw new OrderNotFoundException();
+		}
+		if (orderFound.getStatus().equals(OrderStatus.SHIPPED)) {
 
-            logInfo("Order nr " + orderNr + " already shipped");
-            throw new OrderAlreadyShippedException();
-        }
+			logInfo("Order nr " + orderNr + " already shipped");
+			throw new OrderAlreadyShippedException();
+		}
 
-        orderFound.setStatus(OrderStatus.CANCELED);
-        orderRepository.update(orderFound);
-    }
+		orderFound.setStatus(OrderStatus.CANCELED);
+		orderRepository.update(orderFound);
+	}
 
-    @Override
-    public SalesOrder findOrder(Long orderNr) throws OrderNotFoundException {
+	@Override
+	public SalesOrder findOrder(Long orderNr) throws OrderNotFoundException {
 
-        SalesOrder orderFound = orderRepository.findByNumber(orderNr);
-        if (orderFound == null) {
+		SalesOrder orderFound = orderRepository.findByNumber(orderNr);
+		if (orderFound == null) {
 
-            logInfo("Order nr " + orderNr + " not found");
-            throw new OrderNotFoundException();
-        }
+			logInfo("Order nr " + orderNr + " not found");
+			throw new OrderNotFoundException();
+		}
 
-        return orderFound;
-    }
+		return orderFound;
+	}
 
-    @Override
-    public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException {
+	@Override
+	public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException {
 
-       // Check if the customer exist
-       Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
-       if( customer == null) {
-          throw new CustomerNotFoundException();
-       }
+		// Check if the customer exist
+		Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
+		if (customer == null) {
+			throw new CustomerNotFoundException();
+		}
 
-       // Validates the credit card
-       validateCreditCard(customer.getCreditCard());
+		// Validates the credit card
+		validateCreditCard(customer.getCreditCard());
 
-       // Validates the limit amount allowed (defined in ejb-jar.xml)
-       SalesOrder salesOrder = createSalesOrder(purchaseOrder);
-       if (salesOrder.getAmount().floatValue() > limitAmount) {
-          throw new PaymentFailedException(Code.PAYMENT_LIMIT_EXCEEDED);
-       }
+		// Validates the limit amount allowed (defined in ejb-jar.xml)
+		SalesOrder salesOrder = createSalesOrder(purchaseOrder);
+		if (salesOrder.getAmount().floatValue() > limitAmount) {
+			throw new PaymentFailedException(Code.PAYMENT_LIMIT_EXCEEDED);
+		}
 
-       orderRepository.persist(salesOrder);
-       orderRepository.flush();
+		orderRepository.persist(salesOrder);
+		orderRepository.flush();
 
-       sendToQueue(salesOrder.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
+		sendToQueue(salesOrder.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 
-       return salesOrder;
-    }
+		return salesOrder;
+	}
 
-    @Override
-    public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
+	@Override
+	public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
 
-        Customer customer = customerRepository.find(customerNr);
-        if (customer == null) {
+		Customer customer = customerRepository.find(customerNr);
+		if (customer == null) {
 
-            logInfo("Customer nr " + customerNr + " not found");
-            throw new CustomerNotFoundException();
-        }
+			logInfo("Customer nr " + customerNr + " not found");
+			throw new CustomerNotFoundException();
+		}
 
-        return orderRepository.searchByCustomerAndYear(customer, year);
-    }
+		return orderRepository.searchByCustomerAndYear(customer, year);
+	}
 
-    @Schedule(minute="*", hour="*")
-    public void shipOrders(Timer timer) {
-        
-        logInfo("********* Ship timer *********");
-        
-        List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
-        for (SalesOrder order : orders) {
-            try {
-                orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
-                order.setStatus(OrderStatus.SHIPPED);
+	@Schedule(minute = "*", hour = "*")
+	public void shipOrders(Timer timer) {
 
-                sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
-            } catch (Exception e) {
-                logger.severe(e.toString());
-            }
-        }
-    }
+		logInfo("********* Ship timer *********");
 
-   private void validateCreditCard(CreditCard creditCard) throws PaymentFailedException {
+		List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
+		for (SalesOrder order : orders) {
+			try {
+				orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
+				order.setStatus(OrderStatus.SHIPPED);
 
-      final String VISA_REGEX = "^4[0-9]{12}(?:[0-9]{3})?$";
-      final String MASTERCARD_REGEX =
-            "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)" + "[0-9]{12}$";
-      final String AMERICAN_EXPRESS_REGEX = "^3[47][0-9]{13}$";
+				sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
+			} catch (Exception e) {
+				logger.severe(e.toString());
+			}
+		}
+	}
 
-      if (creditCard == null) {
-         throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-      }
+	private void validateCreditCard(CreditCard creditCard) throws PaymentFailedException {
 
-      CreditCardType creditCardType = creditCard.getType();
-      switch (creditCardType) {
-         case AMERICAN_EXPRESS:
-            if (!creditCard.getNumber().matches(AMERICAN_EXPRESS_REGEX)) {
-               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-            }
-            break;
-         case MASTER_CARD:
-            if (!creditCard.getNumber().matches(MASTERCARD_REGEX)) {
-               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-            }
-            break;
-         case VISA:
-            if (!creditCard.getNumber().matches(VISA_REGEX)) {
-               throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-            }
-            break;
-         default:
-            throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
-      }
+		final String VISA_REGEX = "^4[0-9]{12}(?:[0-9]{3})?$";
+		final String MASTERCARD_REGEX =
+				"^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)" + "[0-9]{12}$";
+		final String AMERICAN_EXPRESS_REGEX = "^3[47][0-9]{13}$";
 
-      Date now = new Date();
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-      String expirationString = String.format("%4d-%2d-%2d", creditCard.getExpirationYear(),
-                                              creditCard.getExpirationMonth(), 1);
+		if (creditCard == null) {
+			throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+		}
 
-      try {
-         Date expirationDate = sdf.parse(expirationString);
-         if (expirationDate.before(now)) {
-            throw new PaymentFailedException(Code.CREDIT_CARD_EXPIRED);
-         }
-      } catch (ParseException e) {
-         logError("Cannot parse the credit card date");
-      }
+		CreditCardType creditCardType = creditCard.getType();
+		switch (creditCardType) {
+			case AMERICAN_EXPRESS:
+				if (!creditCard.getNumber().matches(AMERICAN_EXPRESS_REGEX)) {
+					throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+				}
+				break;
+			case MASTER_CARD:
+				if (!creditCard.getNumber().matches(MASTERCARD_REGEX)) {
+					throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+				}
+				break;
+			case VISA:
+				if (!creditCard.getNumber().matches(VISA_REGEX)) {
+					throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+				}
+				break;
+			default:
+				throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+		}
 
-      // If comes here, the credit card is valid
-   }
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String expirationString = String.format("%4d-%2d-%2d", creditCard.getExpirationYear(),
+				creditCard.getExpirationMonth(), 1);
 
-    private void sendToQueue(long orderNumber, OrderProcessorType type) {
-        try {
-            JMSProducer producer = jmsContext.createProducer();
-            MapMessage msg = jmsContext.createMapMessage();
-            msg.setString("type", type.toString());
-            msg.setLong("orderNr", orderNumber);
-            producer.send(queue, msg);
-        } catch (JMSException e) {
-            logError(e.toString());
-        }
-    }
+		try {
+			Date expirationDate = sdf.parse(expirationString);
+			if (expirationDate.before(now)) {
+				throw new PaymentFailedException(Code.CREDIT_CARD_EXPIRED);
+			}
+		} catch (ParseException e) {
+			logError("Cannot parse the credit card date");
+		}
 
-    private SalesOrder createSalesOrder(PurchaseOrder po) {
-        SalesOrder so = new SalesOrder();
+		// If comes here, the credit card is valid
+	}
 
-        Customer c = customerRepository.find(po.getCustomerNr());
-        so.setDate(new Date());
+	private void sendToQueue(long orderNumber, OrderProcessorType type) {
+		try {
+			JMSProducer producer = jmsContext.createProducer();
+			MapMessage msg = jmsContext.createMapMessage();
+			msg.setString("type", type.toString());
+			msg.setLong("orderNr", orderNumber);
+			producer.send(queue, msg);
+		} catch (JMSException e) {
+			logError(e.toString());
+		}
+	}
 
-        so.setCustomer(c);
-        so.setAddress(c.getAddress());
-        so.setAmount(getAmount(po.getItems()));
-        so.setCreditCard(c.getCreditCard());
-        so.setSalesOrderItems(getSoItems(po.getItems()));
-        so.setStatus(OrderStatus.ACCEPTED);
+	private SalesOrder createSalesOrder(PurchaseOrder po) {
+		SalesOrder so = new SalesOrder();
 
-        return so;
-    }
+		Customer c = customerRepository.find(po.getCustomerNr());
+		so.setDate(new Date());
 
-    private Set<SalesOrderItem> getSoItems(List<PurchaseOrderItem> items) {
-        Set<SalesOrderItem> soItems = new HashSet<>();
+		so.setCustomer(c);
+		so.setAddress(c.getAddress());
+		so.setAmount(getAmount(po.getItems()));
+		so.setCreditCard(c.getCreditCard());
+		so.setSalesOrderItems(getSoItems(po.getItems()));
+		so.setStatus(OrderStatus.ACCEPTED);
 
-        for (PurchaseOrderItem poi : items) {
-            boolean added = false;
-            for (SalesOrderItem soi : soItems) {
+		return so;
+	}
 
-                if (soi.getBook().getIsbn().equals(poi.getBookInfo().getIsbn())) {
-                    Integer newQuantity = soi.getQuantity() + poi.getQuantity();
-                    BigDecimal newPrice
-                            = soi.getPrice().add(
-                                    poi.getBookInfo().getPrice().multiply(BigDecimal.valueOf(poi.getQuantity())));
+	private Set<SalesOrderItem> getSoItems(List<PurchaseOrderItem> items) {
+		Set<SalesOrderItem> soItems = new HashSet<>();
 
-                    soi.setPrice(newPrice);
-                    soi.setQuantity(newQuantity);
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                SalesOrderItem newSoi = new SalesOrderItem();
-                Book book = getBook(poi.getBookInfo());
-                if (book != null) {
-                    newSoi.setBook(book);
-                    BigDecimal price = book.getPrice().multiply(BigDecimal.valueOf(poi.getQuantity()));
-                    newSoi.setPrice(price);
-                    newSoi.setQuantity(poi.getQuantity());
+		for (PurchaseOrderItem poi : items) {
+			boolean added = false;
+			for (SalesOrderItem soi : soItems) {
 
-                    soItems.add(newSoi);
-                }
-            }
+				if (soi.getBook().getIsbn().equals(poi.getBookInfo().getIsbn())) {
+					Integer newQuantity = soi.getQuantity() + poi.getQuantity();
+					BigDecimal newPrice
+							= soi.getPrice().add(
+							poi.getBookInfo().getPrice().multiply(BigDecimal.valueOf(poi.getQuantity())));
 
-        }
+					soi.setPrice(newPrice);
+					soi.setQuantity(newQuantity);
+					added = true;
+					break;
+				}
+			}
+			if (!added) {
+				SalesOrderItem newSoi = new SalesOrderItem();
+				Book book = getBook(poi.getBookInfo());
+				if (book != null) {
+					newSoi.setBook(book);
+					BigDecimal price = book.getPrice().multiply(BigDecimal.valueOf(poi.getQuantity()));
+					newSoi.setPrice(price);
+					newSoi.setQuantity(poi.getQuantity());
 
-        return soItems;
-    }
+					soItems.add(newSoi);
+				}
+			}
 
-    private Book getBook(BookInfo bi) {
-        List<Book> books = bookRepository.findByISBN(bi.getIsbn());
+		}
 
-        if (books.size() > 0) {
-            return books.get(0);
-        }
+		return soItems;
+	}
 
-        return null;
-    }
+	private Book getBook(BookInfo bi) {
+		List<Book> books = bookRepository.findByISBN(bi.getIsbn());
 
-    private BigDecimal getAmount(List<PurchaseOrderItem> items) {
-        BigDecimal amount = BigDecimal.valueOf(0);
+		if (books.size() > 0) {
+			return books.get(0);
+		}
 
-        for (PurchaseOrderItem i : items) {
-            amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
-        }
-        return amount;
-    }
+		return null;
+	}
+
+	private BigDecimal getAmount(List<PurchaseOrderItem> items) {
+		BigDecimal amount = BigDecimal.valueOf(0);
+
+		for (PurchaseOrderItem i : items) {
+			amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
+		}
+		return amount;
+	}
+
+	/*
+	Unit Tests
+	 */
+	OrderRepository getOrderRepository() {
+		return orderRepository;
+	}
 }
