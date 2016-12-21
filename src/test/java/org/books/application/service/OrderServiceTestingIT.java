@@ -1,10 +1,5 @@
 package org.books.application.service;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.books.DbUtil;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
@@ -15,12 +10,18 @@ import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.*;
 import org.books.persistence.enumeration.CreditCardType;
 import org.jboss.logging.Logger;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  *
@@ -36,9 +37,9 @@ public class OrderServiceTestingIT {
 
     private OrderService orderService;
 
-    private Long customerNumber = 0L;
+    private Long customerNumber;
 
-    private PurchaseOrder purchaseOrder = null;
+    private PurchaseOrder purchaseOrder;
 
     private SalesOrder salesOrder = null;
     
@@ -73,6 +74,13 @@ public class OrderServiceTestingIT {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
+        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDER");
+        
+        DbUtil.executeSql("delete from Customer");
+        DbUtil.executeSql("delete from UserLogin");
+        
     }
     @Test
     public void placeOrder() throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException, NamingException {
@@ -156,7 +164,7 @@ public class OrderServiceTestingIT {
         SalesOrder salesOrderFound = orderService.findOrder(salesOrderNumberToFind);
 
         // Then
-        assertEquals(salesOrder.getId(), salesOrderFound.getId());
+        assertEquals(salesOrder.getNumber(), salesOrderFound.getNumber());
 
     }
 

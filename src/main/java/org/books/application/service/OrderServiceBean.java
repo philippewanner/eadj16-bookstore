@@ -2,6 +2,7 @@ package org.books.application.service;
 
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
+import org.books.application.enumeration.OrderProcessorType;
 import org.books.application.exception.*;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.OrderInfo;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static org.books.application.exception.PaymentFailedException.Code;
+
 
 /**
  * @author Philippe
@@ -99,9 +101,12 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
         Date orderDate = new Date();
 
-        SalesOrder order = createSalesOrder(purchaseOrder, orderDate);
+        SalesOrder order = createSalesOrder(purchaseOrder);
 
         orderRepository.persist(order);
+        orderRepository.flush();
+
+        sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 
         // TODO:
         //sendToQueue(order);
@@ -121,59 +126,54 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         return orderRepository.searchByCustomerAndYear(customer, year);
     }
 
-    @Schedule(hour = "*", minute = "15")
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Schedule(second="0", minute="*", hour="*")
     public void shipOrders(Timer timer) {
+        
+        logInfo("********* Ship timer *********");
+        
         List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
         for (SalesOrder order : orders) {
             try {
-                //userTransaction.begin();
                 orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
                 order.setStatus(OrderStatus.SHIPPED);
-                //userTransaction.commit();
 
-                mailService.sendEmail(order.getCustomer().getEmail(), "Order " + order.getNumber(),
-                        "Order set to state shipped");
+                sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.severe(e.toString());
             }
         }
     }
 
-    private void sendToQueue(SalesOrder order) {
+    private void sendToQueue(long orderNumber, OrderProcessorType type) {
         try {
             JMSProducer producer = jmsContext.createProducer();
             MapMessage msg = jmsContext.createMapMessage();
-            msg.setLong("orderId", order.getId());
+            msg.setString("type", type.toString());
+            msg.setLong("orderNr", orderNumber);
             producer.send(queue, msg);
         } catch (JMSException e) {
             logError(e.toString());
         }
     }
 
-    private SalesOrder createSalesOrder(PurchaseOrder po, Date orderDate) {
+    private SalesOrder createSalesOrder(PurchaseOrder po) {
         SalesOrder so = new SalesOrder();
 
         Customer c = customerRepository.find(po.getCustomerNr());
-
-        Long orderNumber = getNewOrderNumber();
-        logInfo("new order " + orderNumber);
-
-        so.setNumber(orderNumber);
-        so.setDate(orderDate);
+        so.setDate(new Date());
 
         so.setCustomer(c);
         so.setAddress(c.getAddress());
         so.setAmount(getAmount(po.getItems()));
         so.setCreditCard(c.getCreditCard());
         so.setSalesOrderItems(getSoItems(po.getItems()));
-        so.setStatus(OrderStatus.PROCESSING);
+        so.setStatus(OrderStatus.ACCEPTED);
 
         return so;
     }
 
     private Set<SalesOrderItem> getSoItems(List<PurchaseOrderItem> items) {
-        Set<SalesOrderItem> soItems = new HashSet<SalesOrderItem>();
+        Set<SalesOrderItem> soItems = new HashSet<>();
 
         for (PurchaseOrderItem poi : items) {
             boolean added = false;
@@ -226,11 +226,5 @@ public class OrderServiceBean extends AbstractService implements OrderService {
             amount = amount.add(BigDecimal.valueOf(i.getQuantity()).multiply(i.getBookInfo().getPrice()));
         }
         return amount;
-    }
-
-    private Long getNewOrderNumber() {        
-        Long on = (new Random()).nextLong();
-
-        return on;
     }
 }

@@ -1,23 +1,23 @@
 package org.books.persistence.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-
-import java.util.Date;
-import java.util.Set;
-
 import org.books.persistence.enumeration.OrderStatus;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"number"})})
-public class SalesOrder extends BaseEntity {
+public class SalesOrder implements Serializable {
 
 	/**
 	 * Type of "Set" because unique required but not ordered
 	 */
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<SalesOrderItem> salesOrderItems;
+	private Set<SalesOrderItem> salesOrderItems = new HashSet<>();
 
 	@Embedded
 	private Address address;
@@ -28,7 +28,8 @@ public class SalesOrder extends BaseEntity {
 	@ManyToOne(optional = false)
 	private Customer customer;
 
-	@NotNull
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long number;
 
 	@Temporal(TemporalType.DATE)
@@ -39,6 +40,9 @@ public class SalesOrder extends BaseEntity {
 
 	@NotNull
 	private OrderStatus status;
+        
+        @Version
+        private Long version;
 
 	public Set<SalesOrderItem> getSalesOrderItems() {
 		return salesOrderItems;

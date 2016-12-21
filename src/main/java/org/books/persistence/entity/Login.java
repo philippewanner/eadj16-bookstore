@@ -18,6 +18,9 @@ public class Login extends BaseEntity {
 	@Column(name = "USERGROUP")
 	private UserGroup group;
 
+	@Version
+	private Long version;
+
 	public String getUserName() {
 		return userName;
 	}

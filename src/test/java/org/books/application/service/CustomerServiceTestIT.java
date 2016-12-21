@@ -25,163 +25,169 @@ import static org.testng.Assert.*;
 
 public class CustomerServiceTestIT {
 
-	private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
+    private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
 
-	private final static Logger LOGGER = Logger.getLogger(CustomerServiceTestIT.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(CustomerServiceTestIT.class.getName());
 
-	private CustomerService service;
+    private CustomerService service;
 
-	@BeforeClass
-	public void lookup() throws NamingException {
-		service = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
-		assertNotNull(service);
-	}
+    @BeforeClass
+    public void lookup() throws NamingException {
+        service = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
+        assertNotNull(service);
+    }
 
-	@AfterClass
-	public void tearDown() throws SQLException {
-		DbUtil.executeSql("delete from Customer where email = 'lukas@kalt.ch'");
-		DbUtil.executeSql("delete from UserLogin where userName = 'lukas@kalt.ch'");
-	}
+    @AfterClass
+    public void tearDown() throws SQLException {
 
-	@Test
-	public void register() throws CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register <<<<<<<<<<<<<<<<<<<<");
+        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDERITEM");
+        DbUtil.executeSql("delete from SALESORDER");
 
-		Registration registration = new Registration();
-		registration.setCustomer(new Customer("Lukas", "Kalt", "lukas@kalt.ch", new Address(), new CreditCard()));
-		registration.setPassword("md5");
-		Long number = service.registerCustomer(registration);
+        DbUtil.executeSql("delete from Customer");
+        DbUtil.executeSql("delete from UserLogin");
 
-		assertNotNull(number);
-	}
+    }
 
-	@Test(dependsOnMethods = "register", expectedExceptions = CustomerAlreadyExistsException.class)
-	public void register_nok() throws CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register_nok <<<<<<<<<<<<<<<<<<<<");
+    @Test
+    public void register() throws CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register <<<<<<<<<<<<<<<<<<<<");
 
-		Registration registration = new Registration();
-		registration.setCustomer(new Customer("Lukas", "Kalt", "lukas@kalt.ch", new Address(), new CreditCard()));
-		registration.setPassword("md5");
-		service.registerCustomer(registration);
-	}
+        Registration registration = new Registration();
+        registration.setCustomer(new Customer("Lukas", "Kalt", "lukas@kalt.ch", new Address(), new CreditCard()));
+        registration.setPassword("md5");
+        Long number = service.registerCustomer(registration);
 
-	@Test(dependsOnMethods = "register")
-	public void find() throws CustomerNotFoundException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer find <<<<<<<<<<<<<<<<<<<<");
+        assertNotNull(number);
+    }
 
-		Customer customer = service.findCustomer("lukas@kalt.ch");
-		assertNotNull(customer);
+    @Test(dependsOnMethods = "register", expectedExceptions = CustomerAlreadyExistsException.class)
+    public void register_nok() throws CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register_nok <<<<<<<<<<<<<<<<<<<<");
 
-		customer = service.findCustomer(customer.getNumber());
-		assertNotNull(customer);
-	}
+        Registration registration = new Registration();
+        registration.setCustomer(new Customer("Lukas", "Kalt", "lukas@kalt.ch", new Address(), new CreditCard()));
+        registration.setPassword("md5");
+        service.registerCustomer(registration);
+    }
 
-	@Test(expectedExceptions = CustomerNotFoundException.class)
-	public void find_notFound() throws CustomerNotFoundException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer find_notFound <<<<<<<<<<<<<<<<<<<<");
+    @Test(dependsOnMethods = "register")
+    public void find() throws CustomerNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer find <<<<<<<<<<<<<<<<<<<<");
 
-		service.findCustomer("notfound");
-	}
+        Customer customer = service.findCustomer("lukas@kalt.ch");
+        assertNotNull(customer);
 
-	@Test(dependsOnMethods = "register")
-	public void search() throws CustomerNotFoundException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer search <<<<<<<<<<<<<<<<<<<<");
+        customer = service.findCustomer(customer.getNumber());
+        assertNotNull(customer);
+    }
 
-		List<CustomerInfo> customers = service.searchCustomers("kalt");
-		assertNotNull(customers);
-		assertFalse(customers.isEmpty());
-		assertEquals("lukas@kalt.ch", customers.get(0).getEmail());
-	}
+    @Test(expectedExceptions = CustomerNotFoundException.class)
+    public void find_notFound() throws CustomerNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer find_notFound <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(dependsOnMethods = "register")
-	public void authenticate_ok() throws CustomerNotFoundException, InvalidPasswordException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_ok <<<<<<<<<<<<<<<<<<<<");
+        service.findCustomer("notfound");
+    }
 
-		service.authenticateCustomer("lukas@kalt.ch", "md5");
-	}
+    @Test(dependsOnMethods = "register")
+    public void search() throws CustomerNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer search <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(dependsOnMethods = "register", expectedExceptions = InvalidPasswordException.class)
-	public void authenticate_wrongPassword() throws CustomerNotFoundException, InvalidPasswordException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_wrongPassword <<<<<<<<<<<<<<<<<<<<");
+        List<CustomerInfo> customers = service.searchCustomers("kalt");
+        assertNotNull(customers);
+        assertFalse(customers.isEmpty());
+        assertEquals(customers.get(0).getEmail(), "lukas@kalt.ch");
+    }
 
-		service.authenticateCustomer("lukas@kalt.ch", "md6");
-	}
+    @Test(dependsOnMethods = "register")
+    public void authenticate_ok() throws CustomerNotFoundException, InvalidPasswordException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_ok <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(expectedExceptions = CustomerNotFoundException.class)
-	public void authenticate_notFound() throws CustomerNotFoundException, InvalidPasswordException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_notFound <<<<<<<<<<<<<<<<<<<<");
+        service.authenticateCustomer("lukas@kalt.ch", "md5");
+    }
 
-		service.authenticateCustomer("notfound", "md5");
-	}
+    @Test(dependsOnMethods = "register", expectedExceptions = InvalidPasswordException.class)
+    public void authenticate_wrongPassword() throws CustomerNotFoundException, InvalidPasswordException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_wrongPassword <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(dependsOnMethods = "register")
-	public void changePassword() throws CustomerNotFoundException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer changePassword <<<<<<<<<<<<<<<<<<<<");
+        service.authenticateCustomer("lukas@kalt.ch", "md6");
+    }
 
-		service.changePassword("lukas@kalt.ch", "md6");
-		service.changePassword("lukas@kalt.ch", "md5");
-	}
+    @Test(expectedExceptions = CustomerNotFoundException.class)
+    public void authenticate_notFound() throws CustomerNotFoundException, InvalidPasswordException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer authenticate_notFound <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(expectedExceptions = CustomerNotFoundException.class)
-	public void changePassword_notFound() throws CustomerNotFoundException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer changePassword_notFound <<<<<<<<<<<<<<<<<<<<");
+        service.authenticateCustomer("notfound", "md5");
+    }
 
-		service.changePassword("notfound", "md6");
-	}
+    @Test(dependsOnMethods = "register")
+    public void changePassword() throws CustomerNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer changePassword <<<<<<<<<<<<<<<<<<<<");
 
-	@Test(dependsOnMethods = "register")
-	public void update() throws CustomerNotFoundException, CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update <<<<<<<<<<<<<<<<<<<<");
+        service.changePassword("lukas@kalt.ch", "md6");
+        service.changePassword("lukas@kalt.ch", "md5");
+    }
 
-		Customer customer = service.findCustomer("lukas@kalt.ch");
-		assertNotNull(customer);
+    @Test(expectedExceptions = CustomerNotFoundException.class)
+    public void changePassword_notFound() throws CustomerNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer changePassword_notFound <<<<<<<<<<<<<<<<<<<<");
 
-		CreditCard creditCard = new CreditCard();
-		creditCard.setExpirationMonth(12);
-		creditCard.setExpirationYear(2016);
-		creditCard.setNumber("5555 5555 5555 5555");
-		creditCard.setType(CreditCardType.MASTER_CARD);
-		customer.setCreditCard(creditCard);
+        service.changePassword("notfound", "md6");
+    }
 
-		service.updateCustomer(customer);
+    @Test(dependsOnMethods = "register")
+    public void update() throws CustomerNotFoundException, CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update <<<<<<<<<<<<<<<<<<<<");
 
-		customer = service.findCustomer("lukas@kalt.ch");
-		assertNotNull(customer);
-		assertNotNull(customer.getCreditCard());
-		assertEquals(CreditCardType.MASTER_CARD, customer.getCreditCard().getType());
-	}
+        Customer customer = service.findCustomer("lukas@kalt.ch");
+        assertNotNull(customer);
 
-	@Test(dependsOnMethods = "register")
-	public void update_email() throws CustomerNotFoundException, CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_email <<<<<<<<<<<<<<<<<<<<");
+        CreditCard creditCard = new CreditCard();
+        creditCard.setExpirationMonth(12);
+        creditCard.setExpirationYear(2016);
+        creditCard.setNumber("5555 5555 5555 5555");
+        creditCard.setType(CreditCardType.MASTER_CARD);
+        customer.setCreditCard(creditCard);
 
-		Customer customer = service.findCustomer("lukas@kalt.ch");
-		assertNotNull(customer);
+        service.updateCustomer(customer);
 
-		customer.setEmail("kalt@lukas.ch");
-		service.updateCustomer(customer);
+        customer = service.findCustomer("lukas@kalt.ch");
+        assertNotNull(customer);
+        assertNotNull(customer.getCreditCard());
+        assertEquals(CreditCardType.MASTER_CARD, customer.getCreditCard().getType());
+    }
 
-		customer = service.findCustomer("kalt@lukas.ch");
-		assertNotNull(customer);
+    @Test(dependsOnMethods = "register")
+    public void update_email() throws CustomerNotFoundException, CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_email <<<<<<<<<<<<<<<<<<<<");
 
-		customer.setEmail("lukas@kalt.ch");
-		service.updateCustomer(customer);
+        Customer customer = service.findCustomer("lukas@kalt.ch");
+        assertNotNull(customer);
 
-	}
+        customer.setEmail("kalt@lukas.ch");
+        service.updateCustomer(customer);
 
-	@Test(expectedExceptions = EJBException.class)
-	public void update_noNumber() throws CustomerNotFoundException, CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_noNumber <<<<<<<<<<<<<<<<<<<<");
+        customer = service.findCustomer("kalt@lukas.ch");
+        assertNotNull(customer);
 
-		service.updateCustomer(new Customer());
-	}
+        customer.setEmail("lukas@kalt.ch");
+        service.updateCustomer(customer);
 
-	@Test(expectedExceptions = CustomerNotFoundException.class)
-	public void update_notFound() throws CustomerNotFoundException, CustomerAlreadyExistsException {
-		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_notFound <<<<<<<<<<<<<<<<<<<<");
+    }
 
-		Customer customer = new Customer();
-		customer.setNumber(-1L);
-		service.updateCustomer(customer);
-	}
+    @Test(expectedExceptions = EJBException.class)
+    public void update_noNumber() throws CustomerNotFoundException, CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_noNumber <<<<<<<<<<<<<<<<<<<<");
+
+        service.updateCustomer(new Customer());
+    }
+
+    @Test(expectedExceptions = CustomerNotFoundException.class)
+    public void update_notFound() throws CustomerNotFoundException, CustomerAlreadyExistsException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer update_notFound <<<<<<<<<<<<<<<<<<<<");
+
+        Customer customer = new Customer();
+        customer.setNumber(-1L);
+        service.updateCustomer(customer);
+    }
 }
