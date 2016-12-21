@@ -22,6 +22,16 @@ public final class DbUtil {
 	private DbUtil() {
 	}
 
+	public static void clearDatabase() throws SQLException {
+		DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
+		DbUtil.executeSql("delete from SALESORDERITEM");
+		DbUtil.executeSql("delete from SALESORDER");
+		DbUtil.executeSql("delete from BOOK");
+
+		DbUtil.executeSql("delete from Customer");
+		DbUtil.executeSql("delete from UserLogin");
+	}
+
 	public static void executeSql(String sql) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;

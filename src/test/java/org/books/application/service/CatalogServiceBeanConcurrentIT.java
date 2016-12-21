@@ -26,127 +26,126 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- *
  * @author jlue4
  */
 public class CatalogServiceBeanConcurrentIT {
 
-    private static final String CATALOG_SERVICE_NAME = "java:global/bookstore/CatalogService";
+	private static final String CATALOG_SERVICE_NAME = "java:global/bookstore/CatalogService";
 
-    private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
 
-    private final static BigDecimal NEW_PRICE = BigDecimal.valueOf(1000);
-    
-    private static final int THREAD_COUNT = 100;
+	private final static BigDecimal NEW_PRICE = BigDecimal.valueOf(1000);
 
-    private CatalogService service;
+	private static final int THREAD_COUNT = 100;
 
-    private String foundISBN;
-    private Book foundBook;
+	private CatalogService service;
 
-    @BeforeClass
-    public void setup() throws NamingException, SQLException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
+	private String foundISBN;
+	private Book foundBook;
 
-        service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
-        assertNotNull(service);
+	@BeforeClass
+	public void setup() throws NamingException, SQLException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog setup <<<<<<<<<<<<<<<<<<<<");
 
-        deleteBooks();
-    }
+		service = (CatalogService) new InitialContext().lookup(CATALOG_SERVICE_NAME);
+		assertNotNull(service);
 
-    @AfterClass
-    public void tearDown() throws SQLException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog tearDown <<<<<<<<<<<<<<<<<<<<");
-        deleteBooks();
-    }
+		deleteBooks();
+	}
 
-    @Test
-    public void addBooks() {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooks <<<<<<<<<<<<<<<<<<<<");
+	@AfterClass
+	public void tearDown() throws SQLException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog tearDown <<<<<<<<<<<<<<<<<<<<");
+		deleteBooks();
+	}
 
-        List<Book> books = TestDataProvider.getBooks();
-        for (Book b : books) {
-            try {
-                service.addBook(b);
-            } catch (BookAlreadyExistsException ex) {
-                LOGGER.warn("book not added " + b.getTitle());
-            }
-        }
-    }
+	@Test
+	public void addBooks() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooks <<<<<<<<<<<<<<<<<<<<");
 
-    @Test(dependsOnMethods = "addBooks", expectedExceptions = BookAlreadyExistsException.class)
-    public void addBooksExists() throws BookAlreadyExistsException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooksExists <<<<<<<<<<<<<<<<<<<<");
+		List<Book> books = TestDataProvider.getBooks();
+		for (Book b : books) {
+			try {
+				service.addBook(b);
+			} catch (BookAlreadyExistsException ex) {
+				LOGGER.warn("book not added " + b.getTitle());
+			}
+		}
+	}
 
-        List<Book> books = TestDataProvider.getBooks();
+	@Test(dependsOnMethods = "addBooks", expectedExceptions = BookAlreadyExistsException.class)
+	public void addBooksExists() throws BookAlreadyExistsException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog addBooksExists <<<<<<<<<<<<<<<<<<<<");
 
-        Book b = books.get(0);
+		List<Book> books = TestDataProvider.getBooks();
 
-        service.addBook(b);
-    }
+		Book b = books.get(0);
 
-    @Test(dependsOnMethods = "addBooks", threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
-    public void searchBook() {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBook <<<<<<<<<<<<<<<<<<<<");
+		service.addBook(b);
+	}
 
-        List<BookInfo> books = service.searchBooks("Nachtigall Hannah");
+	@Test(dependsOnMethods = "addBooks", threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+	public void searchBook() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBook <<<<<<<<<<<<<<<<<<<<");
 
-        assertNotNull(books);
-        assertEquals(books.size(), 1);
-        assertEquals(books.get(0).getIsbn(), "978-3-352-00885-6");
+		List<BookInfo> books = service.searchBooks("Nachtigall Hannah");
 
-        foundISBN = books.get(0).getIsbn();
-    }
+		assertNotNull(books);
+		assertEquals(books.size(), 1);
+		assertEquals(books.get(0).getIsbn(), "978-3-352-00885-6");
 
-    @Test(dependsOnMethods = "addBooks")
-    public void searchBookNothingFound() {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBookNothingFound <<<<<<<<<<<<<<<<<<<<");
+		foundISBN = books.get(0).getIsbn();
+	}
 
-        List<BookInfo> books = service.searchBooks("unbekanntes Buch King");
+	@Test(dependsOnMethods = "addBooks")
+	public void searchBookNothingFound() {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBookNothingFound <<<<<<<<<<<<<<<<<<<<");
 
-        assertNotNull(books);
-        assertEquals(books.size(), 0);
-    }
+		List<BookInfo> books = service.searchBooks("unbekanntes Buch King");
 
-    @Test(dependsOnMethods = "searchBook", threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
-    public void searchISBN() throws BookNotFoundException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchISBN <<<<<<<<<<<<<<<<<<<<");
+		assertNotNull(books);
+		assertEquals(books.size(), 0);
+	}
 
-        foundBook = service.findBook(foundISBN);
+	@Test(dependsOnMethods = "searchBook", threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+	public void searchISBN() throws BookNotFoundException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchISBN <<<<<<<<<<<<<<<<<<<<");
 
-        assertNotNull(foundBook);
-        assertEquals(foundBook.getIsbn(), "978-3-352-00885-6");
-    }
+		foundBook = service.findBook(foundISBN);
 
-    @Test(dependsOnMethods = "searchISBN")
-    public void updateBook() throws BookNotFoundException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog updateBook <<<<<<<<<<<<<<<<<<<<");
+		assertNotNull(foundBook);
+		assertEquals(foundBook.getIsbn(), "978-3-352-00885-6");
+	}
 
-        foundBook.setPrice(NEW_PRICE);
+	@Test(dependsOnMethods = "searchISBN")
+	public void updateBook() throws BookNotFoundException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog updateBook <<<<<<<<<<<<<<<<<<<<");
 
-        service.updateBook(foundBook);
-    }
+		foundBook.setPrice(NEW_PRICE);
 
-    @Test(dependsOnMethods = "updateBook")
-    public void searchUpdatedBook() throws BookNotFoundException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchUpdatedBook <<<<<<<<<<<<<<<<<<<<");
+		service.updateBook(foundBook);
+	}
 
-        Book b = service.findBook(foundISBN);
+	@Test(dependsOnMethods = "updateBook")
+	public void searchUpdatedBook() throws BookNotFoundException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchUpdatedBook <<<<<<<<<<<<<<<<<<<<");
 
-        assertNotNull(b);
-        assertEquals(b.getPrice(), NEW_PRICE);
-    }
+		Book b = service.findBook(foundISBN);
 
-    @Test(dependsOnMethods = "searchISBN", expectedExceptions = BookNotFoundException.class)
-    public void searchBookNotFound() throws BookNotFoundException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBook <<<<<<<<<<<<<<<<<<<<");
+		assertNotNull(b);
+		assertEquals(b.getPrice(), NEW_PRICE);
+	}
 
-        service.findBook("000-0-000-00000-0");
-    }
+	@Test(dependsOnMethods = "searchISBN", expectedExceptions = BookNotFoundException.class)
+	public void searchBookNotFound() throws BookNotFoundException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog searchBook <<<<<<<<<<<<<<<<<<<<");
 
-    private void deleteBooks() throws SQLException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog deleteBooks <<<<<<<<<<<<<<<<<<<<");
+		service.findBook("000-0-000-00000-0");
+	}
 
-        DbUtil.executeSql("delete from BOOK");
-    }
+	private void deleteBooks() throws SQLException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Catalog deleteBooks <<<<<<<<<<<<<<<<<<<<");
+
+		DbUtil.executeSql("delete from BOOK");
+	}
 }

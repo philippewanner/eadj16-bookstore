@@ -20,46 +20,39 @@ import static org.testng.Assert.assertNotNull;
 
 public class CustomerServiceConcurrentIT {
 
-    private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
+	private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
 
-    private final static Logger LOGGER = Logger.getLogger(CustomerServiceIT.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(CustomerServiceIT.class.getName());
 
-    private static final int THREAD_COUNT = 100;
+	private static final int THREAD_COUNT = 100;
 
-    private static AtomicInteger nextID = new AtomicInteger(0);
+	private static AtomicInteger nextID = new AtomicInteger(0);
 
-    private CustomerService service;
+	private CustomerService service;
 
-    @BeforeClass
-    public void lookup() throws NamingException, SQLException {
-        service = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
-        assertNotNull(service);
+	@BeforeClass
+	public void lookup() throws NamingException, SQLException {
+		service = (CustomerService) new InitialContext().lookup(ACCOUNT_SERVICE_NAME);
+		assertNotNull(service);
 
+	}
 
-        
-    }
+	@AfterClass
+	public void tearDown() throws SQLException {
+		DbUtil.clearDatabase();
+	}
 
-    @AfterClass
-    public void tearDown() throws SQLException {
-        DbUtil.executeSql("delete from SALESORDER_SALESORDERITEM");
-        DbUtil.executeSql("delete from SALESORDERITEM");
-        DbUtil.executeSql("delete from SALESORDER");
-        
-        DbUtil.executeSql("delete from Customer");
-        DbUtil.executeSql("delete from UserLogin");
-    }
+	@Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
+	public void register() throws CustomerAlreadyExistsException {
+		LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register <<<<<<<<<<<<<<<<<<<<");
 
-    @Test(threadPoolSize = THREAD_COUNT, invocationCount = THREAD_COUNT)
-    public void register() throws CustomerAlreadyExistsException {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>> Customer register <<<<<<<<<<<<<<<<<<<<");
+		Registration registration = new Registration();
+		registration.setCustomer(new Customer("Lukas"
+				+ Integer.toString(nextID.incrementAndGet()), "Kalt",
+				"lukas" + Integer.toString(nextID.incrementAndGet()) + "@kalt.ch", new Address(), new CreditCard()));
+		registration.setPassword("md5");
+		Long number = service.registerCustomer(registration);
 
-        Registration registration = new Registration();
-        registration.setCustomer(new Customer("Lukas"
-                + Integer.toString(nextID.incrementAndGet()), "Kalt",
-                "lukas" + Integer.toString(nextID.incrementAndGet()) + "@kalt.ch", new Address(), new CreditCard()));
-        registration.setPassword("md5");
-        Long number = service.registerCustomer(registration);
-
-        assertNotNull(number);
-    }
+		assertNotNull(number);
+	}
 }
