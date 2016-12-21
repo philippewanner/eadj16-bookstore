@@ -39,6 +39,13 @@ public abstract class AbstractTest {
 		emf = Persistence.createEntityManagerFactory("bookstore-test");
 		em = emf.createEntityManager();
 
+		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER_SALESORDERITEM");
+		DbUtil.executeSqlTestDB("DELETE FROM SALESORDERITEM");
+		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER");
+		DbUtil.executeSqlTestDB("DELETE FROM USERLOGIN");
+		DbUtil.executeSqlTestDB("DELETE FROM CUSTOMER");
+		DbUtil.executeSqlTestDB("DELETE FROM BOOK");
+
 		try {
 			em.getTransaction().begin();
 
@@ -86,16 +93,6 @@ public abstract class AbstractTest {
 			e.printStackTrace();
 			em.getTransaction().rollback();
 		}
-	}
-
-	@AfterClass
-	public void tearDownAfterClass() throws Exception {
-		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER_SALESORDERITEM");
-		DbUtil.executeSqlTestDB("DELETE FROM SALESORDERITEM");
-		DbUtil.executeSqlTestDB("DELETE FROM SALESORDER");
-		DbUtil.executeSqlTestDB("DELETE FROM USERLOGIN");
-		DbUtil.executeSqlTestDB("DELETE FROM CUSTOMER");
-		DbUtil.executeSqlTestDB("DELETE FROM BOOK");
 	}
 
 	protected Customer getPersistedCustomer() {
