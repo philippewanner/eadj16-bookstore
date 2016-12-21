@@ -1,39 +1,27 @@
 package org.books.application.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
 import org.books.application.dto.PurchaseOrder;
+import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.exception.*;
+import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.OrderInfo;
-import org.books.persistence.entity.Customer;
-import org.books.persistence.entity.SalesOrder;
+import org.books.persistence.entity.*;
 import org.books.persistence.enumeration.OrderStatus;
+import org.books.persistence.repository.BookRepository;
 import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.OrderRepository;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
+import javax.ejb.Timer;
 import javax.inject.Inject;
 import javax.jms.*;
+import javax.jms.Queue;
 import javax.persistence.LockModeType;
-import javax.transaction.*;
-import org.books.application.dto.PurchaseOrderItem;
-import java.util.List;
-import java.util.Set;
-import org.books.application.dto.PurchaseOrder;
-import org.books.persistence.entity.SalesOrderItem;
-import java.util.List;
-import java.util.Random;
-import org.books.application.dto.PurchaseOrderItem;
-import org.books.persistence.dto.BookInfo;
-import org.books.persistence.entity.Book;
-import org.books.persistence.repository.BookRepository;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.books.application.exception.PaymentFailedException.Code;
 
 /**
  * @author Philippe
@@ -63,8 +51,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Resource(lookup = "jms/orderQueue")
     private Queue queue;
 
-    //@Res//ource
-    //private UserTransaction userTransaction;
     @Override
     public void cancelOrder(Long orderNr) throws OrderNotFoundException, OrderAlreadyShippedException {
 
@@ -100,6 +86,17 @@ public class OrderServiceBean extends AbstractService implements OrderService {
     @Override
     public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, BookNotFoundException, PaymentFailedException {
 
+        // Check if the customer exist
+        Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
+        if(customer == null){
+            throw new CustomerNotFoundException();
+        }
+
+        CreditCard creditCard = customer.getCreditCard();
+        if(creditCard == null) {
+            throw new PaymentFailedException(Code.INVALID_CREDIT_CARD);
+        }
+
         Date orderDate = new Date();
 
         SalesOrder order = createSalesOrder(purchaseOrder, orderDate);
@@ -107,7 +104,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
         orderRepository.persist(order);
 
         // TODO:
-        sendToQueue(order);
+        //sendToQueue(order);
         return order;
     }
 

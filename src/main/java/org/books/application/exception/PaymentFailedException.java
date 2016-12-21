@@ -4,16 +4,20 @@ public class PaymentFailedException extends BookstoreException {
 
     private final Code code;
 
-    public PaymentFailedException(Code code) {
+    public PaymentFailedException(PaymentFailedException.Code code) {
 
         this.code = code;
     }
 
-    public Code getCode() {
+    public PaymentFailedException.Code getCode() {
         return code;
     }
 
-    private static class Code {
+    public enum Code {
+
+        CREDIT_CARD_EXPIRED,
+        INVALID_CREDIT_CARD,
+        PAYMENT_LIMIT_EXCEEDED
 
     }
 }

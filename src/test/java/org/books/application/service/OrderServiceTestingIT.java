@@ -116,6 +116,7 @@ public class OrderServiceTestingIT {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
         // Given
+
         PurchaseOrder purchaseOrder = this.createPurchaseOrder();
 
         // When
