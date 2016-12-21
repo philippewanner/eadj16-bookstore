@@ -131,8 +131,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
        sendToQueue(salesOrder.getNumber(), OrderProcessorType.STATE_TO_PROCESSING);
 
-        // TODO:
-        //sendToQueue(order);
        return salesOrder;
     }
 
