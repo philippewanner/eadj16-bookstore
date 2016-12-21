@@ -8,6 +8,7 @@ import org.books.application.exception.BookAlreadyExistsException;
 import org.books.application.exception.BookNotFoundException;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
+import org.books.application.exception.OrderAlreadyShippedException;
 import org.books.application.exception.OrderNotFoundException;
 import org.books.application.exception.PaymentFailedException;
 import org.books.persistence.TestDataProvider;
@@ -18,7 +19,10 @@ import org.books.persistence.entity.CreditCard;
 import org.books.persistence.entity.Customer;
 import org.books.persistence.entity.SalesOrder;
 import org.books.persistence.enumeration.CreditCardType;
+import org.books.persistence.enumeration.OrderStatus;
+import org.books.persistence.repository.OrderRepository;
 import org.jboss.logging.Logger;
+import org.junit.Ignore;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -39,9 +43,9 @@ import static org.testng.Assert.assertNotNull;
  */
 public class OrderServiceTestingIT {
 
+   // JNDI names
     private static final String ORDER_SERVICE_NAME = "java:global/bookstore/OrderService";
    private static final String CUSTOMER_SERVICE_NAME = "java:global/bookstore/CustomerService";
-    
     private static final String CATALOG_SERVICE_NAME = "java:global/bookstore/CatalogService";
 
     private final static Logger LOGGER = Logger.getLogger(CatalogServiceBeanIT.class.getName());
@@ -334,10 +338,38 @@ public class OrderServiceTestingIT {
     }
 
     @Test(dependsOnMethods = "findOrder")
-    public void cancelAnOrder() {
+    public void cancelAnOrder()
+          throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException,
+          OrderAlreadyShippedException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+        // Given
+       Customer newCustomer = this.createNewCustomer();
+       PurchaseOrder purchaseOrder = this.createPurchaseOrder(newCustomer.getNumber());
+       SalesOrder salesOrder = orderService.placeOrder(purchaseOrder);
+
+       // When
+       orderService.cancelOrder(salesOrder.getNumber());
+
+       // Then
+       SalesOrder salesOrderActual = orderService.findOrder(salesOrder.getNumber());
+       assertNotNull(salesOrderActual);
+       assertNotNull(salesOrderActual.getNumber());
+       assertEquals(salesOrderActual.getStatus(), OrderStatus.CANCELED);
     }
+
+   @Test(expectedExceptions = OrderNotFoundException.class, dependsOnMethods = "findOrder")
+   public void cancelAnOrder_orderNotFoundException() throws OrderNotFoundException, OrderAlreadyShippedException {
+
+      logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+      // Given
+      Long orderNr = 99999999L;
+
+      // When
+      orderService.cancelOrder(orderNr);
+   }
 
     private Customer createNewCustomer(CreditCard creditCard){
 

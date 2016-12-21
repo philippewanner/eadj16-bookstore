@@ -136,6 +136,37 @@ public class OrderServiceBean extends AbstractService implements OrderService {
        return salesOrder;
     }
 
+    @Override
+    public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
+
+        Customer customer = customerRepository.find(customerNr);
+        if (customer == null) {
+
+            logInfo("Customer nr " + customerNr + " not found");
+            throw new CustomerNotFoundException();
+        }
+
+        return orderRepository.searchByCustomerAndYear(customer, year);
+    }
+
+    @Schedule(second="0", minute="*", hour="*")
+    public void shipOrders(Timer timer) {
+        
+        logInfo("********* Ship timer *********");
+        
+        List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
+        for (SalesOrder order : orders) {
+            try {
+                orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
+                order.setStatus(OrderStatus.SHIPPED);
+
+                sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
+            } catch (Exception e) {
+                logger.severe(e.toString());
+            }
+        }
+    }
+
    private void validateCreditCard(CreditCard creditCard) throws PaymentFailedException {
 
       final String VISA_REGEX = "^4[0-9]{12}(?:[0-9]{3})?$";
@@ -184,37 +215,6 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
       // If comes here, the credit card is valid
    }
-
-    @Override
-    public List<OrderInfo> searchOrders(Long customerNr, Integer year) throws CustomerNotFoundException {
-
-        Customer customer = customerRepository.find(customerNr);
-        if (customer == null) {
-
-            logInfo("Customer nr " + customerNr + " not found");
-            throw new CustomerNotFoundException();
-        }
-
-        return orderRepository.searchByCustomerAndYear(customer, year);
-    }
-
-    @Schedule(second="0", minute="*", hour="*")
-    public void shipOrders(Timer timer) {
-        
-        logInfo("********* Ship timer *********");
-        
-        List<SalesOrder> orders = orderRepository.findByStatus(OrderStatus.PROCESSING);
-        for (SalesOrder order : orders) {
-            try {
-                orderRepository.lock(order, LockModeType.PESSIMISTIC_WRITE);
-                order.setStatus(OrderStatus.SHIPPED);
-
-                sendToQueue(order.getNumber(), OrderProcessorType.STATE_TO_SHIPPED);
-            } catch (Exception e) {
-                logger.severe(e.toString());
-            }
-        }
-    }
 
     private void sendToQueue(long orderNumber, OrderProcessorType type) {
         try {
