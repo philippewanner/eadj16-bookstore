@@ -18,11 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.testng.Assert.assertNotNull;
 
-public class CustomerServiceTestConcurrentIT {
+public class CustomerServiceConcurrentIT {
 
     private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
 
-    private final static Logger LOGGER = Logger.getLogger(CustomerServiceTestIT.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(CustomerServiceIT.class.getName());
 
     private static final int THREAD_COUNT = 100;
 

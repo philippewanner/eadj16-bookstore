@@ -23,11 +23,11 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 
-public class CustomerServiceTestIT {
+public class CustomerServiceIT {
 
     private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/CustomerService";
 
-    private final static Logger LOGGER = Logger.getLogger(CustomerServiceTestIT.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(CustomerServiceIT.class.getName());
 
     private CustomerService service;
 

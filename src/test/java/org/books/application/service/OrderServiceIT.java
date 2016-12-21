@@ -30,7 +30,7 @@ import static org.testng.Assert.assertNotNull;
  *
  * @author Philippe & jlue4
  */
-public class OrderServiceTestingIT {
+public class OrderServiceIT {
 
    // JNDI names
     private static final String ORDER_SERVICE_NAME = "java:global/bookstore/OrderService";

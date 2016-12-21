@@ -9,11 +9,11 @@ import javax.naming.NamingException;
 
 import static org.testng.Assert.assertNotNull;
 
-public class MailServiceTestIT {
+public class MailServiceIT {
 
 	private static final String ACCOUNT_SERVICE_NAME = "java:global/bookstore/MailService";
 
-	private final static Logger LOGGER = Logger.getLogger(MailServiceTestIT.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(MailServiceIT.class.getName());
 
 	private MailService service;
 
