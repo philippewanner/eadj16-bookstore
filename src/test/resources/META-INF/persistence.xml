@@ -23,4 +23,24 @@
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="bookstore-db" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <mapping-file>META-INF/queries.xml</mapping-file>
+        <class>org.books.persistence.entity.Address</class>
+        <class>org.books.persistence.entity.BaseEntity</class>
+        <class>org.books.persistence.entity.Book</class>
+        <class>org.books.persistence.entity.CreditCard</class>
+        <class>org.books.persistence.entity.Customer</class>
+        <class>org.books.persistence.entity.Login</class>
+        <class>org.books.persistence.entity.SalesOrder</class>
+        <class>org.books.persistence.entity.SalesOrderItem</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/bookstore"/>
+            <property name="javax.persistence.jdbc.user" value="app"/>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+            <property name="javax.persistence.jdbc.password" value="app"/>
+            <property name="javax.persistence.validation.mode" value="AUTO"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+        </properties>
+    </persistence-unit>
 </persistence>

@@ -15,6 +15,7 @@ import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.*;
 import org.books.persistence.enumeration.CreditCardType;
 import org.books.persistence.enumeration.OrderStatus;
+import org.books.persistence.repository.OrderRepository;
 import org.jboss.logging.Logger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,6 +27,9 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +52,9 @@ public class OrderProcessorIT {
 
 	private static final String MASTERCARD_VALID_ACCOUNT_NUMBER = "5105105105105100";
 
+	protected static EntityManagerFactory emf;
+	protected static EntityManager em;
+
 	private OrderService orderService;
 	private CustomerService customerService;
 	private CatalogService catalogService;
@@ -61,6 +68,13 @@ public class OrderProcessorIT {
 	public void setup() throws SQLException, NamingException, PaymentFailedException, BookNotFoundException,
 			CustomerNotFoundException {
 		DbUtil.clearDatabase();
+
+		emf = Persistence.createEntityManagerFactory("bookstore-db");
+		em = emf.createEntityManager();
+
+
+		OrderRepository orderRepository = new OrderRepository();
+		orderRepository.setEntityManager(em);
 
 		InitialContext initialContext = new InitialContext();
 		orderService = (OrderService) initialContext.lookup(ORDER_SERVICE_NAME);
@@ -77,7 +91,7 @@ public class OrderProcessorIT {
 
 		orderProcessor = new OrderProcessor();
 		orderProcessor.setMailService(mailService);
-		orderProcessor.setOrderService(orderService);
+		orderProcessor.setOrderRepository(orderRepository);
 
 		addBooks();
 		placeOrder();

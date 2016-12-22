@@ -23,7 +23,7 @@ public abstract class AbstractRepository<T, PK> {
 		this.entityClass = entityClass;
 	}
 
-	void setEntityManager(EntityManager em) {
+	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
 
