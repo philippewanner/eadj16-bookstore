@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.books.application.exception.BookNotFoundException;
 
 import static org.books.application.exception.PaymentFailedException.Code;
 
@@ -98,7 +99,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 	}
 
 	@Override
-	public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException {
+	public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException, BookNotFoundException {
 
 		// Check if the customer exist
 		Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
@@ -215,7 +216,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 		}
 	}
 
-	private SalesOrder createSalesOrder(PurchaseOrder po) {
+	private SalesOrder createSalesOrder(PurchaseOrder po) throws BookNotFoundException {
 		SalesOrder so = new SalesOrder();
 
 		Customer c = customerRepository.find(po.getCustomerNr());
@@ -225,6 +226,16 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 		so.setAddress(c.getAddress());
 		so.setAmount(getAmount(po.getItems()));
 		so.setCreditCard(c.getCreditCard());
+                
+                for (PurchaseOrderItem i : po.getItems()) {
+                    String isbnToSearch = i.getBookInfo().getIsbn();
+                    List<Book> foundBook = bookRepository.findByISBN(isbnToSearch);
+
+                    if ((foundBook == null) || (foundBook.size() == 0)) {
+                        throw new BookNotFoundException();
+                    }
+                }
+                
 		so.setSalesOrderItems(getSoItems(po.getItems()));
 		so.setStatus(OrderStatus.ACCEPTED);
 

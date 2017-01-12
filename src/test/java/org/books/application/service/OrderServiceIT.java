@@ -243,13 +243,32 @@ public class OrderServiceIT {
 		Customer newCustomer = this.createNewCustomer();
 		assertNotNull(newCustomer);
 		PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItems());
-		BookInfo bookInfo = new BookInfo("isbn", "title", new BigDecimal(20000));
+		BookInfo bookInfo = new BookInfo("978-3-455-65045-7", "title", new BigDecimal(20000));
 		purchaseOrder.getItems().add(new PurchaseOrderItem(bookInfo, 4));
 
 		// When
 		orderService.placeOrder(purchaseOrder);
 	}
 
+        @Test(expectedExceptions = BookNotFoundException.class)
+	public void placeOrder_invalidIsbn()
+			throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, OrderNotFoundException {
+
+		logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
+
+		// Given
+		Customer newCustomer = this.createNewCustomer();
+		PurchaseOrder purchaseOrder = new PurchaseOrder(newCustomer.getNumber(), getPOItemInvalid());
+
+		// When
+		SalesOrder salesOrderPersisted = orderService.placeOrder(purchaseOrder);
+
+		// Then
+		SalesOrder salesOrderFound = orderService.findOrder(salesOrderPersisted.getNumber());
+		assertNotNull(salesOrderFound);
+		assertEquals(salesOrderPersisted.getNumber(), salesOrderFound.getNumber());
+	}        
+        
 	@Test
 	public void placeOrder_validAmericanExpress()
 			throws PaymentFailedException, BookNotFoundException, CustomerNotFoundException, NamingException,
@@ -387,6 +406,20 @@ public class OrderServiceIT {
 		}
 	}
 
+        private List<PurchaseOrderItem> getPOItemInvalid() {
+
+		List<PurchaseOrderItem> items = new ArrayList<>();
+
+                String isbn="123-4-567-89098-7";
+                String title="not existing";
+                BigDecimal price=BigDecimal.valueOf(0);
+                
+                PurchaseOrderItem poi = new PurchaseOrderItem(new BookInfo(isbn, title, price), 1);
+                items.add(poi);
+                		
+		return items;
+	}
+        
 	private Customer createNewCustomer() {
 
 		CreditCard cc = new CreditCard(CreditCardType.MASTER_CARD, MASTERCARD_VALID_ACCOUNT_NUMBER, 8, 2018);
