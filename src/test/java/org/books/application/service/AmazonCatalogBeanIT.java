@@ -38,5 +38,8 @@ public class AmazonCatalogBeanIT {
 
         assertNotNull(b);
         assertEquals(b.getIsbn(), "1338099132");
+        assertEquals(b.getTitle().substring(0, 16), "Harry Potter and");
+        Integer y = 2016;
+        assertEquals(b.getPublicationYear(), y);
     }
 }

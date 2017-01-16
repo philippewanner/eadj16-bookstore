@@ -6,6 +6,7 @@
 package org.books.application.service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
 import org.books.application.exception.BookNotFoundException;
@@ -18,6 +19,7 @@ import org.books.integration.amazon.ItemLookupResponse;
 import org.books.integration.amazon.Items;
 import org.books.integration.amazon.SignatureProvider;
 import org.books.persistence.entity.Book;
+import org.books.persistence.enumeration.BookBinding;
 
 /**
  *
@@ -71,30 +73,74 @@ public class AmazonCatalogBean extends AbstractService {
 
                 if (items.getItem().size() > 0) {
                     Book b = convertToBook(items.getItem().get(0).getItemAttributes());
-                    
-                    return b;
+
+                    if (b != null) {
+                        return b;
+                    }
                 }
             }
+        }
+        else{
+            logger.log(Level.WARNING, "no items found");
         }
 
         throw new BookNotFoundException();
     }
 
     private Book convertToBook(ItemAttributes itemAttributes) {
-        Book b = new Book();
+        Book b = null;
 
-        String isbn = itemAttributes.getISBN();
-        
-        String authors = "";
-        for (String author : itemAttributes.getAuthor()) {
-            authors = authors + ", " + author;
-        }        
-        authors=authors.substring(2, authors.length());
-        
-        b.setIsbn(isbn);
-        b.setAuthors(authors);
-        b.setPrice(BigDecimal.valueOf(0));
-        
+        try {
+            String isbn = itemAttributes.getISBN();
+
+            String authors = "";
+            for (String author : itemAttributes.getAuthor()) {
+                authors = authors + ", " + author;
+            }
+            authors = authors.substring(2, authors.length());
+
+            BookBinding bb = BookBinding.UNKNOWN;
+            switch (itemAttributes.getBinding().toLowerCase()) {
+                case "hardcover":
+                    bb = BookBinding.HARDCOVER;
+                    break;
+                case "paperback":
+                    bb = BookBinding.PAPERBACK;
+                    break;
+                case "ebook":
+                    bb = BookBinding.EBOOK;
+                    break;
+            }
+
+            BigInteger numberOfPages = itemAttributes.getNumberOfPages();
+
+            String year = itemAttributes.getPublicationDate().substring(0, 4);
+
+            String publisher = itemAttributes.getPublisher();
+
+            String title = itemAttributes.getTitle();
+
+            if (isbn.length() > 0
+                    && authors.length() > 0
+                    && bb != BookBinding.UNKNOWN
+                    && numberOfPages != null
+                    && year.length() > 0
+                    && publisher.length() > 0
+                    && title.length() > 0) {
+                b = new Book();
+                b.setIsbn(isbn);
+                b.setAuthors(authors);
+                b.setPrice(BigDecimal.valueOf(0)); // TODO: price
+                b.setBinding(bb);
+                b.setNumberOfPages(numberOfPages.intValue());
+                b.setPublicationYear(Integer.parseInt(year));
+                b.setPublisher(publisher);
+                b.setTitle(title);
+            }
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "incomplete book");
+        }
+
         return b;
     }
 
