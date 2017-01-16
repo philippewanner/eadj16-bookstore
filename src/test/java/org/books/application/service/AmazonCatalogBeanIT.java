@@ -5,6 +5,7 @@
  */
 package org.books.application.service;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -41,5 +42,6 @@ public class AmazonCatalogBeanIT {
         assertEquals(b.getTitle().substring(0, 16), "Harry Potter and");
         Integer y = 2016;
         assertEquals(b.getPublicationYear(), y);
+        assertEquals(b.getPrice().doubleValue(), 29.99);
     }
 }

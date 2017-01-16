@@ -79,8 +79,7 @@ public class AmazonCatalogBean extends AbstractService {
                     }
                 }
             }
-        }
-        else{
+        } else {
             logger.log(Level.WARNING, "no items found");
         }
 
@@ -120,17 +119,22 @@ public class AmazonCatalogBean extends AbstractService {
 
             String title = itemAttributes.getTitle();
 
+            String price = itemAttributes.getListPrice().getFormattedPrice().substring(1, itemAttributes.getListPrice().getFormattedPrice().length());
+
+            Double dprice =Double.valueOf(price);
+            
             if (isbn.length() > 0
                     && authors.length() > 0
                     && bb != BookBinding.UNKNOWN
                     && numberOfPages != null
                     && year.length() > 0
                     && publisher.length() > 0
-                    && title.length() > 0) {
+                    && title.length() > 0
+                    && price != null) {
                 b = new Book();
                 b.setIsbn(isbn);
                 b.setAuthors(authors);
-                b.setPrice(BigDecimal.valueOf(0)); // TODO: price
+                b.setPrice(BigDecimal.valueOf(dprice));
                 b.setBinding(bb);
                 b.setNumberOfPages(numberOfPages.intValue());
                 b.setPublicationYear(Integer.parseInt(year));

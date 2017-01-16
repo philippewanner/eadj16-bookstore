@@ -33,11 +33,11 @@ public class SignatureProvider {
     private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String MAC_ALGORITHM = "HmacSHA256";
 
-    private static String itemLookupSignature;
-    private static String itemSearchSignature;
-    private static String timestamp;
+    private String itemLookupSignature;
+    private String itemSearchSignature;
+    private String timestamp;
 
-    public static void Update() throws NoSuchAlgorithmException, InvalidKeyException {
+    public void Update() throws NoSuchAlgorithmException, InvalidKeyException {
         DateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
         timestamp = dateFormat.format(Calendar.getInstance().getTime());
 
@@ -45,7 +45,7 @@ public class SignatureProvider {
         itemSearchSignature = getSignature("ItemSearch", timestamp);
     }
 
-    private static String getSignature(String method, String timestamp) throws NoSuchAlgorithmException, InvalidKeyException {
+    private String getSignature(String method, String timestamp) throws NoSuchAlgorithmException, InvalidKeyException {
 
         Mac mac = Mac.getInstance(MAC_ALGORITHM);
         SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(), MAC_ALGORITHM);
@@ -75,21 +75,21 @@ public class SignatureProvider {
     /**
      * @return the itemLookupSignature
      */
-    public static String getItemLookupSignature() {
+    public String getItemLookupSignature() {
         return itemLookupSignature;
     }
 
     /**
      * @return the itemSearchSignature
      */
-    public static String getItemSearchSignature() {
+    public String getItemSearchSignature() {
         return itemSearchSignature;
     }
 
     /**
      * @return the timestamp
      */
-    public static String getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 }
