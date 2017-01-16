@@ -25,6 +25,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
  * @author jl
  */
 public class AmazonSecurityHandler implements SOAPHandler<SOAPMessageContext> {
+    
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public Set<QName> getHeaders() {
@@ -34,6 +36,8 @@ public class AmazonSecurityHandler implements SOAPHandler<SOAPMessageContext> {
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
         SOAPMessage message = context.getMessage();
+        
+        logger.log(Level.INFO, "handleMessage: " + message);
 
         if ((Boolean) context.get(MESSAGE_OUTBOUND_PROPERTY)) {
             try {

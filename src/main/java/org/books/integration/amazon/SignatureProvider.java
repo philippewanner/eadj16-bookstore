@@ -52,12 +52,9 @@ public class SignatureProvider {
         mac.init(key);
         byte[] data = mac.doFinal((method + timestamp).getBytes());
         String signature = DatatypeConverter.printBase64Binary(data);
-
-        System.out.println("AssociateTag:   " + getASSOCIATE_TAG());
-        System.out.println("AWSAccessKeyId: " + getACCESS_KEY());
-        System.out.println("Timestamp:      " + timestamp);
-        System.out.println("Signature:      " + signature);
-
+        
+        System.out.println(method + "signature: timestamp " + timestamp + ", signature " + signature);
+        
         return signature;
     }
 

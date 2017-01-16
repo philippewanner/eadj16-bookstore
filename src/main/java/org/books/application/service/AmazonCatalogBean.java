@@ -5,13 +5,17 @@
  */
 package org.books.application.service;
 
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
+import org.books.application.exception.BookNotFoundException;
 import org.books.integration.amazon.AWSECommerceService;
 import org.books.integration.amazon.AWSECommerceServicePortType;
+import org.books.integration.amazon.ItemAttributes;
 import org.books.integration.amazon.ItemLookup;
 import org.books.integration.amazon.ItemLookupRequest;
 import org.books.integration.amazon.ItemLookupResponse;
+import org.books.integration.amazon.Items;
 import org.books.integration.amazon.SignatureProvider;
 import org.books.persistence.entity.Book;
 
@@ -29,7 +33,7 @@ public class AmazonCatalogBean extends AbstractService {
         awsecommerceServicePorttype = s.getAWSECommerceServicePort();
     }
 
-    public Book findBook(String isbn) {
+    public Book findBook(String isbn) throws BookNotFoundException {
         logger.log(Level.INFO, "SearchByIsbn");
 
         ItemLookupRequest itemLookupRequest = new ItemLookupRequest();
@@ -47,11 +51,51 @@ public class AmazonCatalogBean extends AbstractService {
 
         try {
             ItemLookupResponse response = awsecommerceServicePorttype.itemLookup(itemLookup);
+
+            logger.log(Level.INFO, "" + response);
+
+            return readBook(response);
+
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "SearchByIsbn error: " + ex);
         }
 
-        return null;
+        throw new BookNotFoundException();
+    }
+
+    private Book readBook(ItemLookupResponse response) throws BookNotFoundException {
+        if (response.getItems().size() > 0) {
+
+            Items items = response.getItems().get(0);
+            if ("true".equals(items.getRequest().getIsValid().toLowerCase())) {
+
+                if (items.getItem().size() > 0) {
+                    Book b = convertToBook(items.getItem().get(0).getItemAttributes());
+                    
+                    return b;
+                }
+            }
+        }
+
+        throw new BookNotFoundException();
+    }
+
+    private Book convertToBook(ItemAttributes itemAttributes) {
+        Book b = new Book();
+
+        String isbn = itemAttributes.getISBN();
+        
+        String authors = "";
+        for (String author : itemAttributes.getAuthor()) {
+            authors = authors + ", " + author;
+        }        
+        authors=authors.substring(2, authors.length());
+        
+        b.setIsbn(isbn);
+        b.setAuthors(authors);
+        b.setPrice(BigDecimal.valueOf(0));
+        
+        return b;
     }
 
 }
