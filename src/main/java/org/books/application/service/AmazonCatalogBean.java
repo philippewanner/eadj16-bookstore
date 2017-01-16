@@ -7,6 +7,7 @@ package org.books.application.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
 import org.books.application.exception.BookNotFoundException;
@@ -18,6 +19,7 @@ import org.books.integration.amazon.ItemLookupRequest;
 import org.books.integration.amazon.ItemLookupResponse;
 import org.books.integration.amazon.Items;
 import org.books.integration.amazon.SignatureProvider;
+import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 import org.books.persistence.enumeration.BookBinding;
 
@@ -33,6 +35,14 @@ public class AmazonCatalogBean extends AbstractService {
     public AmazonCatalogBean() {
         AWSECommerceService s = new AWSECommerceService();
         awsecommerceServicePorttype = s.getAWSECommerceServicePort();
+    }
+
+    public List<BookInfo> searchBooks(String keywords) {
+        logInfo("searchBooks");
+
+        // TODO: searchBooks
+        throw new UnsupportedOperationException("Not supported yet.");
+
     }
 
     public Book findBook(String isbn) throws BookNotFoundException {
@@ -121,8 +131,8 @@ public class AmazonCatalogBean extends AbstractService {
 
             String price = itemAttributes.getListPrice().getFormattedPrice().substring(1, itemAttributes.getListPrice().getFormattedPrice().length());
 
-            Double dprice =Double.valueOf(price);
-            
+            Double dprice = Double.valueOf(price);
+
             if (isbn.length() > 0
                     && authors.length() > 0
                     && bb != BookBinding.UNKNOWN
@@ -147,5 +157,4 @@ public class AmazonCatalogBean extends AbstractService {
 
         return b;
     }
-
 }

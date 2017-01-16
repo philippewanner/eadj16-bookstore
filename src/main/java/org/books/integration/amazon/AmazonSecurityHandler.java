@@ -25,14 +25,14 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
  * @author jl
  */
 public class AmazonSecurityHandler implements SOAPHandler<SOAPMessageContext> {
-    
+
     private Logger logger = Logger.getLogger(getClass().getName());
-    
+
     private SignatureProvider signatureProvider;
-            
-    public AmazonSecurityHandler(){
+
+    public AmazonSecurityHandler() {
         try {
-            signatureProvider=new SignatureProvider();
+            signatureProvider = new SignatureProvider();
             signatureProvider.Update();
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(AmazonSecurityHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -49,12 +49,18 @@ public class AmazonSecurityHandler implements SOAPHandler<SOAPMessageContext> {
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
         SOAPMessage message = context.getMessage();
-        
+
         logger.log(Level.INFO, "handleMessage: " + message);
 
         if ((Boolean) context.get(MESSAGE_OUTBOUND_PROPERTY)) {
             try {                
-                AddItemLookupSecurityHeader(context);
+                String bodyText = context.getMessage().getSOAPBody().getFirstChild().getNodeName();
+
+                if ("ItemLookup".equals(bodyText)) {
+                    AddItemLookupSecurityHeader(context);
+                } else if ("ItemSearch".equals(bodyText)) {
+                    AddItemSearchSecurityHeader(context);
+                }
 
                 System.out.println("handleMessage:");
                 message.writeTo(System.out);
@@ -94,6 +100,23 @@ public class AmazonSecurityHandler implements SOAPHandler<SOAPMessageContext> {
 
         SOAPElement signature = context.getMessage().getSOAPHeader().addChildElement("Signature", "aws", namespace);
         signature.addTextNode(signatureProvider.getItemLookupSignature());
+    }
+
+    private void AddItemSearchSecurityHeader(SOAPMessageContext context) throws SOAPException {
+        SOAPElement soapheader = context.getMessage().getSOAPHeader();
+
+        soapheader.setAttributeNS("xmlns", "aws", "http://security.amazonaws.com/doc/2007-01-01/");
+
+        String namespace = "http://security.amazonaws.com/doc/2007-01-01/";
+
+        SOAPElement keyId = context.getMessage().getSOAPHeader().addChildElement("AWSAccessKeyId", "aws", namespace);
+        keyId.addTextNode(SignatureProvider.getACCESS_KEY());
+
+        SOAPElement ts = context.getMessage().getSOAPHeader().addChildElement("Timestamp", "aws", namespace);
+        ts.addTextNode(signatureProvider.getTimestamp());
+
+        SOAPElement signature = context.getMessage().getSOAPHeader().addChildElement("Signature", "aws", namespace);
+        signature.addTextNode(signatureProvider.getItemSearchSignature());
     }
 
 }
