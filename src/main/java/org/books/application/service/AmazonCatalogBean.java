@@ -7,16 +7,22 @@ package org.books.application.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import org.books.application.exception.BookNotFoundException;
 import org.books.integration.amazon.AWSECommerceService;
 import org.books.integration.amazon.AWSECommerceServicePortType;
+import org.books.integration.amazon.Item;
 import org.books.integration.amazon.ItemAttributes;
 import org.books.integration.amazon.ItemLookup;
 import org.books.integration.amazon.ItemLookupRequest;
 import org.books.integration.amazon.ItemLookupResponse;
+import org.books.integration.amazon.ItemSearch;
+import org.books.integration.amazon.ItemSearchRequest;
+import org.books.integration.amazon.ItemSearchResponse;
 import org.books.integration.amazon.Items;
 import org.books.integration.amazon.SignatureProvider;
 import org.books.persistence.dto.BookInfo;
@@ -40,9 +46,58 @@ public class AmazonCatalogBean extends AbstractService {
     public List<BookInfo> searchBooks(String keywords) {
         logInfo("searchBooks");
 
-        // TODO: searchBooks
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<BookInfo> books = new ArrayList<>();
 
+        BigInteger itemPage = BigInteger.valueOf(1);
+        BigInteger totalPages = BigInteger.valueOf(10);
+
+        Integer retries = 0;
+
+        while (itemPage.intValue() <= totalPages.intValue() && (retries < 10)) {
+
+            ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+            itemSearchRequest.setKeywords(keywords);
+            itemSearchRequest.setSearchIndex("Books");
+            itemSearchRequest.setItemPage(itemPage);
+            itemSearchRequest.getResponseGroup().add("ItemAttributes");
+
+            ItemSearch itemSearch = new ItemSearch();
+            itemSearch.setAssociateTag(SignatureProvider.getASSOCIATE_TAG());
+
+            itemSearch.getRequest().add(itemSearchRequest);
+
+            ItemSearchResponse response = null;
+            try {
+                response = awsecommerceServicePorttype.itemSearch(itemSearch);
+            } catch (Exception ex) {
+                response = null;
+                retries++;
+                logWarn("Search error / retries: " + retries + " / " + ex);
+            }
+
+            if (response != null) {
+                itemPage = itemPage.add(BigInteger.ONE);
+
+                totalPages = addBooks(response, books);
+                if (totalPages.intValue() > 10) {
+                    totalPages = BigInteger.valueOf(10);
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    logWarn("Sleep error/" + ex);
+                }
+            } else {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    logWarn("Sleep error/" + ex);
+                }
+            }
+        }
+
+        return books;
     }
 
     public Book findBook(String isbn) throws BookNotFoundException {
@@ -156,5 +211,42 @@ public class AmazonCatalogBean extends AbstractService {
         }
 
         return b;
+    }
+
+    private BigInteger addBooks(ItemSearchResponse response, List<BookInfo> books) {
+        BigInteger totalPages = BigInteger.ZERO;
+
+        if (response.getItems().size() > 0) {
+            Items items = response.getItems().get(0);
+
+            if ("true".equalsIgnoreCase(items.getRequest().getIsValid())) {
+                totalPages = items.getTotalPages();
+
+                List<Item> itemitems = items.getItem();
+
+                for (Item itemitem : itemitems) {
+                    BookInfo bookInfo = getBookInfo(itemitem.getItemAttributes());
+
+                    if (bookInfo != null) {
+                        books.add(bookInfo);
+                    }
+                }
+            }
+        }
+
+        return totalPages;
+    }
+
+    private BookInfo getBookInfo(ItemAttributes itemAttributes) {
+        Book b = convertToBook(itemAttributes);
+        if (b != null) {
+            BookInfo bi = new BookInfo();
+            bi.setIsbn(b.getIsbn());
+            bi.setPrice(b.getPrice());
+            bi.setTitle(b.getTitle());
+
+            return bi;
+        }
+        return null;
     }
 }
