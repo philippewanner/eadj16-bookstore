@@ -52,8 +52,9 @@ public class AmazonCatalogBean extends AbstractService {
         BigInteger totalPages = BigInteger.valueOf(10);
 
         Integer retries = 0;
+        Integer maxretries = 10;
 
-        while (itemPage.intValue() <= totalPages.intValue() && (retries < 10)) {
+        while (itemPage.intValue() <= totalPages.intValue() && (retries < maxretries)) {
 
             ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
             itemSearchRequest.setKeywords(keywords);
@@ -79,11 +80,14 @@ public class AmazonCatalogBean extends AbstractService {
                 itemPage = itemPage.add(BigInteger.ONE);
 
                 totalPages = addBooks(response, books);
+                
+                // according to AmazonSpec only 10 pages allowed
                 if (totalPages.intValue() > 10) {
                     totalPages = BigInteger.valueOf(10);
                 }
 
                 try {
+                    // throtteling requests
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     logWarn("Sleep error/" + ex);
