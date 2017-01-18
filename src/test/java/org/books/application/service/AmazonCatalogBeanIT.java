@@ -13,6 +13,7 @@ import javax.naming.NamingException;
 import org.books.application.exception.BookNotFoundException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
+import org.books.persistence.enumeration.BookBinding;
 import org.jboss.logging.Logger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -45,6 +46,22 @@ public class AmazonCatalogBeanIT {
         Integer y = 2016;
         assertEquals(b.getPublicationYear(), y);
         assertEquals(b.getPrice().doubleValue(), 29.99);
+    }
+
+    @Test
+    public void searchISBN2Item() throws BookNotFoundException {
+        LOGGER.info(">>>>>>>>>>>>>>>>>>> AmazonCatalogBeanIT searchISBN2Item <<<<<<<<<<<<<<<<<<<<");
+
+        AmazonCatalogBean a = new AmazonCatalogBean();
+        Book b = a.findBook("0596009208");
+
+        assertNotNull(b);
+        assertEquals(b.getIsbn(), "0596009208");
+        assertEquals(b.getTitle().substring(0, 16), "Head First Java,");
+        Integer y = 2005;
+        assertEquals(b.getPublicationYear(), y);
+        assertEquals(b.getBinding(), BookBinding.PAPERBACK);
+        assertEquals(b.getPrice().doubleValue(), 44.95);
     }
 
     @Test(expectedExceptions = BookNotFoundException.class)

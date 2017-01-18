@@ -80,7 +80,7 @@ public class AmazonCatalogBean extends AbstractService {
                 itemPage = itemPage.add(BigInteger.ONE);
 
                 totalPages = addBooks(response, books);
-                
+
                 // according to AmazonSpec only 10 pages allowed
                 if (totalPages.intValue() > 10) {
                     totalPages = BigInteger.valueOf(10);
@@ -140,8 +140,8 @@ public class AmazonCatalogBean extends AbstractService {
             Items items = response.getItems().get(0);
             if ("true".equals(items.getRequest().getIsValid().toLowerCase())) {
 
-                if (items.getItem().size() > 0) {
-                    Book b = convertToBook(items.getItem().get(0).getItemAttributes());
+                for (Item item : items.getItem()) {
+                    Book b = convertToBook(item.getItemAttributes());
 
                     if (b != null) {
                         return b;
@@ -159,56 +159,59 @@ public class AmazonCatalogBean extends AbstractService {
         Book b = null;
 
         try {
-            String isbn = itemAttributes.getISBN();
+            if ("Book".equalsIgnoreCase(itemAttributes.getProductGroup())) {
 
-            String authors = "";
-            for (String author : itemAttributes.getAuthor()) {
-                authors = authors + ", " + author;
-            }
-            authors = authors.substring(2, authors.length());
+                String isbn = itemAttributes.getISBN();
 
-            BookBinding bb = BookBinding.UNKNOWN;
-            switch (itemAttributes.getBinding().toLowerCase()) {
-                case "hardcover":
-                    bb = BookBinding.HARDCOVER;
-                    break;
-                case "paperback":
-                    bb = BookBinding.PAPERBACK;
-                    break;
-                case "ebook":
-                    bb = BookBinding.EBOOK;
-                    break;
-            }
+                String authors = "";
+                for (String author : itemAttributes.getAuthor()) {
+                    authors = authors + ", " + author;
+                }
+                authors = authors.substring(2, authors.length());
 
-            BigInteger numberOfPages = itemAttributes.getNumberOfPages();
+                BookBinding bb = BookBinding.UNKNOWN;
+                switch (itemAttributes.getBinding().toLowerCase()) {
+                    case "hardcover":
+                        bb = BookBinding.HARDCOVER;
+                        break;
+                    case "paperback":
+                        bb = BookBinding.PAPERBACK;
+                        break;
+                    case "ebook":
+                        bb = BookBinding.EBOOK;
+                        break;
+                }
 
-            String year = itemAttributes.getPublicationDate().substring(0, 4);
+                BigInteger numberOfPages = itemAttributes.getNumberOfPages();
 
-            String publisher = itemAttributes.getPublisher();
+                String year = itemAttributes.getPublicationDate().substring(0, 4);
 
-            String title = itemAttributes.getTitle();
+                String publisher = itemAttributes.getPublisher();
 
-            String price = itemAttributes.getListPrice().getFormattedPrice().substring(1, itemAttributes.getListPrice().getFormattedPrice().length());
+                String title = itemAttributes.getTitle();
 
-            Double dprice = Double.valueOf(price);
+                String price = itemAttributes.getListPrice().getFormattedPrice().substring(1, itemAttributes.getListPrice().getFormattedPrice().length());
 
-            if (isbn.length() > 0
-                    && authors.length() > 0
-                    && bb != BookBinding.UNKNOWN
-                    && numberOfPages != null
-                    && year.length() > 0
-                    && publisher.length() > 0
-                    && title.length() > 0
-                    && price != null) {
-                b = new Book();
-                b.setIsbn(isbn);
-                b.setAuthors(authors);
-                b.setPrice(BigDecimal.valueOf(dprice));
-                b.setBinding(bb);
-                b.setNumberOfPages(numberOfPages.intValue());
-                b.setPublicationYear(Integer.parseInt(year));
-                b.setPublisher(publisher);
-                b.setTitle(title);
+                Double dprice = Double.valueOf(price);
+
+                if (isbn.length() > 0
+                        && authors.length() > 0
+                        && bb != BookBinding.UNKNOWN
+                        && numberOfPages != null
+                        && year.length() > 0
+                        && publisher.length() > 0
+                        && title.length() > 0
+                        && price != null) {
+                    b = new Book();
+                    b.setIsbn(isbn);
+                    b.setAuthors(authors);
+                    b.setPrice(BigDecimal.valueOf(dprice));
+                    b.setBinding(bb);
+                    b.setNumberOfPages(numberOfPages.intValue());
+                    b.setPublicationYear(Integer.parseInt(year));
+                    b.setPublisher(publisher);
+                    b.setTitle(title);
+                }
             }
         } catch (Exception ex) {
             logger.log(Level.WARNING, "incomplete book");
