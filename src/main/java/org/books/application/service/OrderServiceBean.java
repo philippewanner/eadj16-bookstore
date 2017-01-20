@@ -55,6 +55,9 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
 	@EJB
 	private MailService mailService;
+        
+        @EJB
+        private CatalogService catalogService;
 
 	@Inject
 	@JMSConnectionFactory("jms/connectionFactory")
@@ -232,7 +235,11 @@ public class OrderServiceBean extends AbstractService implements OrderService {
                     List<Book> foundBook = bookRepository.findByISBN(isbnToSearch);
 
                     if ((foundBook == null) || (foundBook.size() == 0)) {
-                        throw new BookNotFoundException();
+                        
+                        Book bookToAdd = catalogService.findBook(isbnToSearch);
+                        bookRepository.persist(bookToAdd);
+                        
+                        //throw new BookNotFoundException();
                     }
                 }
                 

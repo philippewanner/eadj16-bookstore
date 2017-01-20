@@ -24,11 +24,23 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
 
     @EJB
     private BookRepository bookRepository;
-    
+
+    @EJB
+    private AmazonCatalogBean amazonCatalog;
+
     @Override
     public Book findBook(String isbn) throws BookNotFoundException {
         logInfo("Book findBook(String isbn)");
 
+        Book book = amazonCatalog.findBook(isbn);
+
+        if (book == null) {
+            logInfo("book not found " + isbn);
+        } else {
+            return book;
+        }
+
+        /*
         List<Book> b = bookRepository.findByISBN(isbn);
 
         if (b == null) {
@@ -41,7 +53,7 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
         } else {
             return b.get(0);
         }
-
+         */
         throw new BookNotFoundException();
     }
 
@@ -49,11 +61,16 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
     public List<BookInfo> searchBooks(String keywords) {
         logInfo("List<BookInfo> searchBooks(String keywords)");
 
+        List<BookInfo> books = amazonCatalog.searchBooks(keywords);
+        return books;
+
+        /*
         String[] temp = ConvertToArray(keywords);
 
         List<BookInfo> books = bookRepository.findByKeywords(temp);
 
         return books;
+         */
     }
 
     @Override
@@ -72,7 +89,7 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
     public void addBook(Book book) throws BookAlreadyExistsException {
         List<Book> b = bookRepository.findByISBN(book.getIsbn());
 
-        if (b != null && b.size() > 0) { 
+        if (b != null && b.size() > 0) {
             throw new BookAlreadyExistsException();
         }
 

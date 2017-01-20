@@ -107,6 +107,12 @@ public class AmazonCatalogBean extends AbstractService {
     public Book findBook(String isbn) throws BookNotFoundException {
         logger.log(Level.INFO, "SearchByIsbn");
 
+        if (isbn == null) {
+            throw new BookNotFoundException();
+        }
+
+        isbn = isbn.replace("-", "");
+
         ItemLookupRequest itemLookupRequest = new ItemLookupRequest();
         itemLookupRequest.setIdType("ISBN");
         itemLookupRequest.getItemId().add(isbn);
@@ -122,6 +128,8 @@ public class AmazonCatalogBean extends AbstractService {
 
         try {
             ItemLookupResponse response = awsecommerceServicePorttype.itemLookup(itemLookup);
+            
+            Thread.sleep(1000);
 
             logger.log(Level.INFO, "" + response);
 
