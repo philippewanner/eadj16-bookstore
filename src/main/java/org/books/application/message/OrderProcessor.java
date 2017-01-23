@@ -2,7 +2,6 @@ package org.books.application.message;
 
 import org.books.application.enumeration.OrderProcessorType;
 import org.books.application.service.MailService;
-import org.books.application.service.OrderService;
 import org.books.persistence.entity.SalesOrder;
 import org.books.persistence.enumeration.OrderStatus;
 import org.books.persistence.repository.OrderRepository;

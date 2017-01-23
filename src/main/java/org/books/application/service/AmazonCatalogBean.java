@@ -5,29 +5,18 @@
  */
 package org.books.application.service;
 
+import org.books.application.exception.BookNotFoundException;
+import org.books.integration.amazon.*;
+import org.books.persistence.dto.BookInfo;
+import org.books.persistence.entity.Book;
+import org.books.persistence.enumeration.BookBinding;
+
+import javax.ejb.Stateless;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import org.books.application.exception.BookNotFoundException;
-import org.books.integration.amazon.AWSECommerceService;
-import org.books.integration.amazon.AWSECommerceServicePortType;
-import org.books.integration.amazon.Item;
-import org.books.integration.amazon.ItemAttributes;
-import org.books.integration.amazon.ItemLookup;
-import org.books.integration.amazon.ItemLookupRequest;
-import org.books.integration.amazon.ItemLookupResponse;
-import org.books.integration.amazon.ItemSearch;
-import org.books.integration.amazon.ItemSearchRequest;
-import org.books.integration.amazon.ItemSearchResponse;
-import org.books.integration.amazon.Items;
-import org.books.integration.amazon.SignatureProvider;
-import org.books.persistence.dto.BookInfo;
-import org.books.persistence.entity.Book;
-import org.books.persistence.enumeration.BookBinding;
 
 /**
  *

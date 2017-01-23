@@ -3,10 +3,7 @@ package org.books.application.service;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.enumeration.OrderProcessorType;
-import org.books.application.exception.CustomerNotFoundException;
-import org.books.application.exception.OrderAlreadyShippedException;
-import org.books.application.exception.OrderNotFoundException;
-import org.books.application.exception.PaymentFailedException;
+import org.books.application.exception.*;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.dto.OrderInfo;
 import org.books.persistence.entity.*;
@@ -31,7 +28,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.books.application.exception.BookNotFoundException;
 
 import static org.books.application.exception.PaymentFailedException.Code;
 
@@ -55,9 +51,9 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 
 	@EJB
 	private MailService mailService;
-        
-        @EJB
-        private CatalogService catalogService;
+
+	@EJB
+	private CatalogService catalogService;
 
 	@Inject
 	@JMSConnectionFactory("jms/connectionFactory")
@@ -102,7 +98,8 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 	}
 
 	@Override
-	public SalesOrder placeOrder(PurchaseOrder purchaseOrder) throws CustomerNotFoundException, PaymentFailedException, BookNotFoundException {
+	public SalesOrder placeOrder(PurchaseOrder purchaseOrder)
+			throws CustomerNotFoundException, PaymentFailedException, BookNotFoundException {
 
 		// Check if the customer exist
 		Customer customer = customerRepository.find(purchaseOrder.getCustomerNr());
@@ -229,20 +226,20 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 		so.setAddress(c.getAddress());
 		so.setAmount(getAmount(po.getItems()));
 		so.setCreditCard(c.getCreditCard());
-                
-                for (PurchaseOrderItem i : po.getItems()) {
-                    String isbnToSearch = i.getBookInfo().getIsbn();
-                    List<Book> foundBook = bookRepository.findByISBN(isbnToSearch);
 
-                    if ((foundBook == null) || (foundBook.size() == 0)) {
-                        
-                        Book bookToAdd = catalogService.findBook(isbnToSearch);
-                        bookRepository.persist(bookToAdd);
-                        
-                        //throw new BookNotFoundException();
-                    }
-                }
-                
+		for (PurchaseOrderItem i : po.getItems()) {
+			String isbnToSearch = i.getBookInfo().getIsbn();
+			List<Book> foundBook = bookRepository.findByISBN(isbnToSearch);
+
+			if ((foundBook == null) || (foundBook.size() == 0)) {
+
+				Book bookToAdd = catalogService.findBook(isbnToSearch);
+				bookRepository.persist(bookToAdd);
+
+				//throw new BookNotFoundException();
+			}
+		}
+
 		so.setSalesOrderItems(getSoItems(po.getItems()));
 		so.setStatus(OrderStatus.ACCEPTED);
 

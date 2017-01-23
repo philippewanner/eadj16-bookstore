@@ -5,20 +5,20 @@
  */
 package org.books.application.service;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.List;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.books.application.exception.BookNotFoundException;
 import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 import org.books.persistence.enumeration.BookBinding;
 import org.jboss.logging.Logger;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.naming.NamingException;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  *
