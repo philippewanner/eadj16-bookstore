@@ -33,7 +33,7 @@ public class RegistrationResource {
 		}
 	}
 
-	@POST
+	@GET
 	@Produces(TEXT_PLAIN)
 	public Response authenticateCustomer(@HeaderParam("password") String password, @PathParam("email") String email) {
 		try {
