@@ -3,6 +3,7 @@ package org.books.application.rest;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.service.CustomerService;
+import org.books.application.service.CustomerServiceBean;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
 
@@ -20,7 +21,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 public class CustomerResource {
 
 	@EJB
-	private CustomerService service;
+	private CustomerServiceBean service;
 
 	@GET
 	@Produces({APPLICATION_JSON, APPLICATION_XML})

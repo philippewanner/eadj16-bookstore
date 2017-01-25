@@ -5,6 +5,7 @@ import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.exception.InvalidPasswordException;
 import org.books.application.service.CustomerService;
+import org.books.application.service.CustomerServiceBean;
 import org.books.persistence.entity.Customer;
 
 import javax.ejb.EJB;
@@ -19,7 +20,7 @@ import static javax.ws.rs.core.MediaType.*;
 public class RegistrationResource {
 
 	@EJB
-	private CustomerService service;
+	private CustomerServiceBean service;
 
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })

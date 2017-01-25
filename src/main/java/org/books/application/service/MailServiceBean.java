@@ -2,6 +2,7 @@ package org.books.application.service;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 @Stateless(name = "MailService")
+@LocalBean
 public class MailServiceBean implements MailService {
 
 	private static final Logger logger = Logger.getLogger(MailServiceBean.class.getSimpleName());
