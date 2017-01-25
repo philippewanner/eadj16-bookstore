@@ -1,0 +1,30 @@
+{
+	"id": "b43daa27-c489-776a-bff7-afbb64ce4037",
+	"name": "bookstore",
+	"requests": [
+		{
+			"id": "d784c153-5526-7dc5-4150-2df7575d2795",
+			"headers": "",
+			"url": "http://localhost:8080/eadj16-bookstore/rest/books/0672337452",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "b43daa27-c489-776a-bff7-afbb64ce4037",
+			"data": null,
+			"dataMode": "params",
+			"name": "http://localhost:8080/eadj16-bookstore/rest/books/0672337452",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1485365598813,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	],
+	"order": [
+		"d784c153-5526-7dc5-4150-2df7575d2795"
+	],
+	"timestamp": 1485365598813
+}
