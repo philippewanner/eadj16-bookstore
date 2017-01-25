@@ -14,10 +14,7 @@ import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.OrderRepository;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Schedule;
-import javax.ejb.Stateless;
-import javax.ejb.Timer;
+import javax.ejb.*;
 import javax.inject.Inject;
 import javax.jms.*;
 import javax.persistence.LockModeType;
@@ -38,6 +35,7 @@ import static org.books.application.exception.PaymentFailedException.Code;
  * orders by customer and year cancel an order
  */
 @Stateless(name = "OrderService")
+@LocalBean
 public class OrderServiceBean extends AbstractService implements OrderService {
 
 	@EJB
@@ -50,7 +48,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 	private BookRepository bookRepository;
 
 	@EJB
-	private MailService mailService;
+	private MailServiceBean mailService;
 
 	@EJB
 	private CatalogService catalogService;

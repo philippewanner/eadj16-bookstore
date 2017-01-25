@@ -17,6 +17,7 @@ import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.UserRepository;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import java.util.List;
  * @author jan
  */
 @Stateless(name = "CustomerService")
+@LocalBean
 public class CustomerServiceBean extends AbstractService implements CustomerService {
 
 	@EJB

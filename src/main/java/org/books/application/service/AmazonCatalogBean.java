@@ -11,6 +11,7 @@ import org.books.persistence.dto.BookInfo;
 import org.books.persistence.entity.Book;
 import org.books.persistence.enumeration.BookBinding;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
  * @author jl
  */
 @Stateless
+@LocalBean
 public class AmazonCatalogBean extends AbstractService {
 
     private AWSECommerceServicePortType awsecommerceServicePorttype;

@@ -12,6 +12,7 @@ import org.books.persistence.entity.Book;
 import org.books.persistence.repository.BookRepository;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @author jan
  */
 @Stateless(name = "CatalogService")
+@LocalBean
 public class CatalogServiceBean extends AbstractService implements CatalogService {
 
     @EJB
