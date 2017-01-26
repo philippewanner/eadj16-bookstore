@@ -16,12 +16,11 @@ import java.util.List;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
-@Stateless
 @Path("customers")
 public class CustomerResource {
 
 	@EJB
-	private CustomerServiceBean service;
+	private CustomerService service;
 
 	@GET
 	@Produces({APPLICATION_JSON, APPLICATION_XML})
@@ -34,6 +33,7 @@ public class CustomerResource {
 	}
 
 	@GET
+        @Path("search")
 	@Produces({APPLICATION_JSON, APPLICATION_XML})
 	public List<CustomerInfo> findCustomersByName(@QueryParam("name") String name) {
 		return service.searchCustomers(name);
