@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -32,7 +33,6 @@ import org.books.persistence.entity.Book;
  *
  * @author jl
  */
-
 // Glassfish 4.1.0 workaround
 @RequestScoped
 @Path("books")
@@ -42,11 +42,11 @@ public class CatalogResource {
 
     @EJB
     private CatalogService service;
-    
-    public CatalogResource(){
+
+    public CatalogResource() {
         logger = Logger.getLogger(getClass().getName());
     }
-    
+
     @GET
     @Path("{isbn}")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
@@ -61,18 +61,28 @@ public class CatalogResource {
         }
     }
 
-    public List<BookInfo> searchBooks(String keywords){
-        return null;
+    @GET
+    @Produces({APPLICATION_JSON, APPLICATION_XML})
+    public List<BookInfo> searchBooks(@QueryParam("keywords") String keywords) {
+        
+        this.logInfo("searchBooks " + keywords);
+        
+        if (keywords == null || keywords.length() == 0) {
+            this.logWarn("keywords missing");
+            throw new WebApplicationException("keywords missing", Response.Status.BAD_REQUEST);
+        }
+        
+        List<BookInfo> books = service.searchBooks(keywords);
+        return books;
     }
-    
+
     //public void updateBook(Book book){}
     //public void addBook(Book book) {}
-    
-    private void logInfo(String msg){
+    private void logInfo(String msg) {
         logger.log(Level.INFO, "CatalogResource: " + msg);
     }
-    
-    private void logWarn(String msg){
+
+    private void logWarn(String msg) {
         logger.log(Level.WARNING, "CatalogResource: " + msg);
     }
 }

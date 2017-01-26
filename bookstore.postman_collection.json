@@ -1,30 +1,53 @@
 {
-	"id": "b43daa27-c489-776a-bff7-afbb64ce4037",
+	"id": "0989e930-dcb7-692b-8c04-74c0d6ead4d9",
 	"name": "bookstore",
+	"description": "",
+	"order": [
+		"26cd77bf-c09d-c454-0459-a83ef53934d4",
+		"fdc54f73-382e-23b9-5e8d-f23014fe0211"
+	],
+	"folders": [],
+	"timestamp": 1485410576423,
+	"owner": "",
+	"public": false,
 	"requests": [
 		{
-			"id": "d784c153-5526-7dc5-4150-2df7575d2795",
+			"id": "26cd77bf-c09d-c454-0459-a83ef53934d4",
+			"headers": "Accept: application/json\n",
+			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1485415999647,
+			"name": "http://localhost:8080/eadj16-bookstore/rest/books/0672337452",
+			"description": "",
+			"collectionId": "0989e930-dcb7-692b-8c04-74c0d6ead4d9",
+			"responses": []
+		},
+		{
+			"id": "fdc54f73-382e-23b9-5e8d-f23014fe0211",
 			"headers": "",
-			"url": "http://localhost:8080/eadj16-bookstore/rest/books/0672337452",
+			"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "GET",
-			"collectionId": "b43daa27-c489-776a-bff7-afbb64ce4037",
+			"collectionId": "0989e930-dcb7-692b-8c04-74c0d6ead4d9",
 			"data": null,
 			"dataMode": "params",
-			"name": "http://localhost:8080/eadj16-bookstore/rest/books/0672337452",
+			"name": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
 			"description": "",
 			"descriptionFormat": "html",
-			"time": 1485365598813,
+			"time": 1485415994299,
 			"version": 2,
 			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {}
 		}
-	],
-	"order": [
-		"d784c153-5526-7dc5-4150-2df7575d2795"
-	],
-	"timestamp": 1485365598813
+	]
 }
