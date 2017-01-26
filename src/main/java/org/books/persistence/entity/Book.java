@@ -6,8 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement
 public class Book extends BaseEntity {
 
 	private String isbn;
@@ -26,6 +28,8 @@ public class Book extends BaseEntity {
 	private Integer numberOfPages;
 
 	private BigDecimal price;
+        
+        public Book(){}
 
 	/**
 	 * @return the isbn
