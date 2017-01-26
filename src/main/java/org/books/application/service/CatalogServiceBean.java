@@ -84,6 +84,10 @@ public class CatalogServiceBean extends AbstractService implements CatalogServic
             throw new BookNotFoundException();
         }
 
+        Book dbBook = bookRepository.find(books.get(0).getId());
+                        
+        book.setId(dbBook.getId());
+        
         bookRepository.update(book);
     }
 
