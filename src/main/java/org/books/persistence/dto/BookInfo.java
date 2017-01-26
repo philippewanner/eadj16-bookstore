@@ -7,10 +7,12 @@ package org.books.persistence.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author jlue4
  */
+@XmlRootElement
 public class BookInfo implements Serializable {
 
 	private Long id;
