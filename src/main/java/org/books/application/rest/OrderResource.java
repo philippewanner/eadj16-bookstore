@@ -4,6 +4,8 @@ import org.books.application.service.CustomerServiceBean;
 import org.books.application.service.OrderService;
 
 import javax.ejb.EJB;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -53,6 +55,10 @@ public class OrderResource {
         Content-Length: {number-of-bytes}
         Body 	        order data (see XML schema)
      */
+    @GET
+    public Response findOrderByNummer(){
+        return null;
+    }
 
 
     /** Search Orders of Customer **
@@ -69,6 +75,10 @@ public class OrderResource {
                         Content-Length: {number-of-bytes}
         Body 	        list of order infos (see XML schema)
      */
+    @GET
+    public Response searchOrdersOfCustomer(){
+        return null;
+    }
 
     /** Cancel Order **
      Request
@@ -84,6 +94,10 @@ public class OrderResource {
         Headers 	    none
         Body 	        empty
      */
+    @DELETE
+    public Response cancelOrder(){
+        return null;
+    }
 
 }
 
