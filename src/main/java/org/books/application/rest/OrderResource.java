@@ -1,14 +1,19 @@
 package org.books.application.rest;
 
+import org.books.application.dto.PurchaseOrder;
+import org.books.application.exception.*;
 import org.books.application.service.CustomerServiceBean;
 import org.books.application.service.OrderService;
+import org.books.persistence.dto.OrderInfo;
 
 import javax.ejb.EJB;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.persistence.criteria.Order;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+
+import java.util.List;
+
+import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 /**
  * REST web service for orders resource
@@ -18,8 +23,7 @@ import javax.ws.rs.core.Response;
 public class OrderResource {
 
     @EJB
-    private OrderService service;
-
+    private OrderService orderService;
 
     /** Place Order **
      Request
@@ -30,17 +34,33 @@ public class OrderResource {
         Body 	        order request data (see XML schema)
      Response
         Status Codes 	201 Created
-        400             Bad Request (incomplete order data)
-        404             Not Found (customer or book not found)
-        402             Payment Required (payment error)
+                        400 Bad Request (incomplete order data)
+                        404 Not Found (customer or book not found)
+                        402 Payment Required (payment error)
         Headers 	    Content-Type: {mime-type},
                         Content-Length: {number-of-bytes}
         Body 	        order data (see XML schema)
      */
     @POST
-    public Response placeOrder(){
+    @Consumes({APPLICATION_XML})
+    @Produces({APPLICATION_XML})
+    // todo is it purchaseOrder or Order?
+    public Response placeOrder(PurchaseOrder purchaseOrder){
+
+        try {
+            //todo 400 Bad Request (incomplete order data)
+            Response.status(Response.Status.CREATED).entity(orderService.placeOrder(purchaseOrder)).build();
+
+        } catch (CustomerNotFoundException e) {
+            throw new WebApplicationException("Customer not found", Response.Status.NOT_FOUND);
+        } catch (BookNotFoundException e) {
+            throw new WebApplicationException("Book not found", Response.Status.NOT_FOUND);
+        } catch (PaymentFailedException e) {
+            throw new WebApplicationException("Payment error", Response.Status.PAYMENT_REQUIRED);
+        }
         return null;
     }
+
 
     /** Find Order by Number **
      Request
@@ -56,8 +76,16 @@ public class OrderResource {
         Body 	        order data (see XML schema)
      */
     @GET
-    public Response findOrderByNummer(){
-        return null;
+    @Path("{number}")
+    @Produces({APPLICATION_XML})
+    public Response findOrderByNumber(@PathParam("number") Long number){
+
+        try {
+            return Response.status(Response.Status.OK).entity(orderService.findOrder(number)).build();
+
+        } catch (OrderNotFoundException e) {
+            throw new WebApplicationException("Order not found", Response.Status.NOT_FOUND);
+        }
     }
 
 
@@ -76,9 +104,21 @@ public class OrderResource {
         Body 	        list of order infos (see XML schema)
      */
     @GET
-    public Response searchOrdersOfCustomer(){
-        return null;
+    @Produces({APPLICATION_XML})
+    public Response searchOrdersOfCustomer(@QueryParam("number") Long customerNr, @QueryParam("year") Integer year){
+
+        if(customerNr == null || year == null){
+            throw new WebApplicationException("Customer number or year missing", Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            return Response.status(Response.Status.OK).entity(orderService.searchOrders(customerNr, year)).build();
+
+        } catch (CustomerNotFoundException e) {
+            throw new WebApplicationException("Customer not found", Response.Status.NOT_FOUND);
+        }
     }
+
 
     /** Cancel Order **
      Request
@@ -95,8 +135,17 @@ public class OrderResource {
         Body 	        empty
      */
     @DELETE
-    public Response cancelOrder(){
-        return null;
+    @Path("{number}")
+    public Response cancelOrder(@PathParam("number") Long number){
+
+        try {
+            orderService.cancelOrder(number);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (OrderNotFoundException e) {
+            throw new WebApplicationException("Order not found", Response.Status.NOT_FOUND);
+        } catch (OrderAlreadyShippedException e) {
+            throw new WebApplicationException("Order not cancelable", Response.Status.FORBIDDEN);
+        }
     }
 
 }
