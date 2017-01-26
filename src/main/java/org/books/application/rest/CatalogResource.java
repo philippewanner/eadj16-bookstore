@@ -34,7 +34,6 @@ import org.books.persistence.entity.Book;
  * @author jl
  */
 // Glassfish 4.1.0 workaround
-@RequestScoped
 @Path("books")
 public class CatalogResource {
 
