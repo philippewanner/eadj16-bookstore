@@ -2,16 +2,11 @@ package org.books.application.rest;
 
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.exception.*;
-import org.books.application.service.CustomerServiceBean;
 import org.books.application.service.OrderService;
-import org.books.persistence.dto.OrderInfo;
 
 import javax.ejb.EJB;
-import javax.persistence.criteria.Order;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-
-import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
