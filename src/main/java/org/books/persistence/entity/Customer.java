@@ -89,4 +89,12 @@ public class Customer implements Serializable {
 	public void setCreditCard(CreditCard creditCard) {
 		this.creditCard = creditCard;
 	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 }

@@ -230,7 +230,7 @@
 		{
 			"id": "df68e25c-2fb6-7915-2fe5-f36936983b02",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/2",
+			"url": "http://localhost:8080/bookstore/rest/customers/1",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "PUT",
@@ -246,7 +246,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n\t\"firstName\": \"Hans\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\"\n}"
+			"rawModeData": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\",\n\t\"version\": 1\n}"
 		},
 		{
 			"id": "ee3cd5df-9933-d0a7-787c-492fcfaed9db",
