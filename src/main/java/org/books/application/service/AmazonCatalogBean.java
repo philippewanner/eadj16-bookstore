@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -77,15 +78,15 @@ public class AmazonCatalogBean extends AbstractService {
                     totalPages = BigInteger.valueOf(10);
                 }
 
-                try {
+                /*try {
                     // throtteling requests
-                    Thread.sleep(1000);
+                    ////Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     logWarn("Sleep error/" + ex);
-                }
+                }*/
             } else {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(retries * 1000 + 1000);
                 } catch (InterruptedException ex) {
                     logWarn("Sleep error/" + ex);
                 }
@@ -117,17 +118,30 @@ public class AmazonCatalogBean extends AbstractService {
         itemLookup.setAssociateTag(associateTag);
         itemLookup.getRequest().add(itemLookupRequest);
 
-        try {
-            ItemLookupResponse response = awsecommerceServicePorttype.itemLookup(itemLookup);
-            
-            Thread.sleep(1000);
+        ItemLookupResponse response = null;
 
-            logger.log(Level.INFO, "" + response);
+        Integer retries = 0;
+        while (response == null && retries < 3) {
+            try {
+                response = awsecommerceServicePorttype.itemLookup(itemLookup);
 
-            return readBook(response);
+                logger.log(Level.INFO, "" + response);
 
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "SearchByIsbn error: " + ex);
+                return readBook(response);
+
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "SearchByIsbn error: " + ex);
+                response = null;
+            }
+
+            if (response == null) {
+                retries++;
+                try {
+                    Thread.sleep(retries * 2000);
+                } catch (InterruptedException ex) {
+                    logger.log(Level.WARNING, null, ex);
+                }
+            }
         }
 
         throw new BookNotFoundException();

@@ -27,7 +27,8 @@
 		"d89c7668-788f-48e9-a208-1b352e52c4e9",
 		"adac147d-e74e-4b9d-e34b-944a9b659918",
 		"53b7c166-7b81-dfcf-f051-49c78405c55a",
-		"a2ee3069-c123-acfa-2aa4-3a4bbe87e120"
+		"a2ee3069-c123-acfa-2aa4-3a4bbe87e120",
+		"2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3"
 	],
 	"folders": [],
 	"timestamp": 1485410576423,
@@ -155,6 +156,24 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {}
+		},
+		{
+			"id": "2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3",
+			"headers": "Accept: application/json\n",
+			"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1485551213955,
+			"name": "find book by keywords output JSON",
+			"description": "",
+			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
+			"responses": []
 		},
 		{
 			"id": "4034c7d1-9a03-cb0f-43ea-421447210564",
