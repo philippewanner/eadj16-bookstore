@@ -28,7 +28,9 @@
 		"adac147d-e74e-4b9d-e34b-944a9b659918",
 		"53b7c166-7b81-dfcf-f051-49c78405c55a",
 		"a2ee3069-c123-acfa-2aa4-3a4bbe87e120",
-		"2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3"
+		"2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3",
+		"ef5f730e-1dbc-28f8-e71e-c66c5ea12db6",
+		"b2cae3fd-137c-cb79-9c78-812d36925180"
 	],
 	"folders": [],
 	"timestamp": 1485410576423,
@@ -241,7 +243,7 @@
 		{
 			"id": "53b7c166-7b81-dfcf-f051-49c78405c55a",
 			"headers": "Content-Type: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337000",
+			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -250,12 +252,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1485549564167,
+			"time": 1485553022645,
 			"name": "update book XML",
 			"description": "",
 			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
 			"responses": [],
-			"rawModeData": "<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"yes\\\"?>\\n<book>\\n    <authors>Hans Dampf</authors>\\n    <binding>PAPERBACK</binding>\\n    <isbn>0672337000</isbn>\\n    <numberOfPages>1000</numberOfPages>\\n    <price>34.99</price>\\n    <publicationYear>2015</publicationYear>\\n    <publisher>Sams Publishing</publisher>\\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\\n</book>"
+			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
 		},
 		{
 			"id": "5e88df60-1ebc-ea16-188f-1eaff9c1646e",
@@ -364,7 +366,7 @@
 		{
 			"id": "a2ee3069-c123-acfa-2aa4-3a4bbe87e120",
 			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
+			"url": "http://localhost:8080/bookstore/rest/books/0672337000",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -373,12 +375,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1485549676336,
+			"time": 1485552946344,
 			"name": "update book JSON",
 			"description": "",
 			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
 			"responses": [],
-			"rawModeData": "{\\n  \\\"type\\\": \\\"book\\\",\\n  \\\"authors\\\": \\\"James James\\\",\\n  \\\"binding\\\": \\\"PAPERBACK\\\",\\n  \\\"isbn\\\": \\\"0672337452\\\",\\n  \\\"numberOfPages\\\": 608,\\n  \\\"price\\\": 34.99,\\n  \\\"publicationYear\\\": 2015,\\n  \\\"publisher\\\": \\\"Sams Publishing\\\",\\n  \\\"title\\\": \\\"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\\\"\\n}"
+			"rawModeData": "{\n  \"type\": \"book\",\n  \"authors\": \"James James\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
 		},
 		{
 			"id": "adac147d-e74e-4b9d-e34b-944a9b659918",
@@ -400,6 +402,26 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"rawModeData": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"fritz@walter.ch\",\n\t\"version\": 1\n}"
+		},
+		{
+			"id": "b2cae3fd-137c-cb79-9c78-812d36925180",
+			"headers": "Content-Type: application/xml\n",
+			"url": "http://localhost:8080/bookstore/rest/books",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1485552862066,
+			"name": "add book XML",
+			"description": "",
+			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
+			"responses": [],
+			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
 		},
 		{
 			"id": "b77902ee-a02e-3d1f-5853-7f8262bad12a",
@@ -543,6 +565,26 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"rawModeData": "md5"
+		},
+		{
+			"id": "ef5f730e-1dbc-28f8-e71e-c66c5ea12db6",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:8080/bookstore/rest/books",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1485552874507,
+			"name": "add book JSON",
+			"description": "",
+			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
+			"responses": [],
+			"rawModeData": "{\n  \"type\": \"book\",\n  \"authors\": \"James Foxall\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
 		},
 		{
 			"id": "f9e2e529-57fa-7ab8-01c1-d9b18fec5171",
