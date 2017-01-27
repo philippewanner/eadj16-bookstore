@@ -42,7 +42,9 @@ public class CustomerResource {
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("{number}")
 	public Customer updateCustomer(@PathParam("number") long number, Customer customer) {
-		if (customer == null) {
+		if (customer == null || (customer.getFirstName() == null && customer.getLastName() == null
+				&& customer.getEmail() == null && customer.getAddress() == null && customer.getCreditCard() == null
+				&& customer.getVersion() == null)) {
 			throw new WebApplicationException(Response.Status.NO_CONTENT);
 		}
 

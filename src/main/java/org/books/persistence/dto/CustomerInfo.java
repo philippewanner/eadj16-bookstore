@@ -5,11 +5,13 @@
  */
 package org.books.persistence.dto;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * @author jlue4
  */
+@XmlRootElement
 public class CustomerInfo implements Serializable {
 
 	private Long number;

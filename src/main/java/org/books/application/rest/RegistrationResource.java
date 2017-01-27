@@ -58,7 +58,7 @@ public class RegistrationResource {
 	public Response changePassword(@PathParam("email") String email, String password) {
 		try {
 			Customer customer = service.findCustomer(email);
-			if (password == null) {
+			if (password == null || password.length() == 0) {
 				return Response.status(Response.Status.NO_CONTENT).build();
 			}
 

@@ -2,10 +2,12 @@ package org.books.persistence.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
+@XmlRootElement
 public class Customer implements Serializable {
 
 	@Id

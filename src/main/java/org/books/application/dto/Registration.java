@@ -2,8 +2,10 @@ package org.books.application.dto;
 
 import org.books.persistence.entity.Customer;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
+@XmlRootElement
 public class Registration implements Serializable {
 
 	private Customer customer;
