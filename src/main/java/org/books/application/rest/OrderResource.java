@@ -20,6 +20,12 @@ public class OrderResource {
     @EJB
     private OrderService orderService;
 
+    @GET
+    @Path("ping")
+    public Response ping(){
+        return Response.status(Response.Status.OK).build();
+    }
+
     /** Place Order **
      Request
         HTTP Method 	POST
@@ -44,7 +50,7 @@ public class OrderResource {
 
         try {
             //todo 400 Bad Request (incomplete order data)
-            Response.status(Response.Status.CREATED).entity(orderService.placeOrder(purchaseOrder)).build();
+            return Response.status(Response.Status.CREATED).entity(orderService.placeOrder(purchaseOrder)).build();
 
         } catch (CustomerNotFoundException e) {
             throw new WebApplicationException("Customer not found", Response.Status.NOT_FOUND);
@@ -53,7 +59,6 @@ public class OrderResource {
         } catch (PaymentFailedException e) {
             throw new WebApplicationException("Payment error", Response.Status.PAYMENT_REQUIRED);
         }
-        return null;
     }
 
 
