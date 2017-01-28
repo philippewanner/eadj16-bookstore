@@ -1,12 +1,18 @@
 package org.books.application.rest;
 
 import org.books.application.dto.PurchaseOrder;
+import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.exception.*;
 import org.books.application.service.OrderService;
+import org.books.persistence.dto.BookInfo;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
@@ -22,8 +28,21 @@ public class OrderResource {
 
     @GET
     @Path("ping")
+    @Produces({APPLICATION_XML})
     public Response ping(){
-        return Response.status(Response.Status.OK).build();
+
+        List<PurchaseOrderItem> items = new ArrayList<>();
+
+        String isbn = "123-4-567-89098-7";
+        String title = "not existing";
+        BigDecimal price = BigDecimal.valueOf(0);
+
+        PurchaseOrderItem poi = new PurchaseOrderItem(new BookInfo(isbn, title, price), 1);
+        items.add(poi);
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder(0001L, items);
+
+        return Response.status(Response.Status.OK).entity(purchaseOrder).build();
     }
 
     /** Place Order **
@@ -45,7 +64,6 @@ public class OrderResource {
     @POST
     @Consumes({APPLICATION_XML})
     @Produces({APPLICATION_XML})
-    // todo is it purchaseOrder or Order?
     public Response placeOrder(PurchaseOrder purchaseOrder){
 
         try {
