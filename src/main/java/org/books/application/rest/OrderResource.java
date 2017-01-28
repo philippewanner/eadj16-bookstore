@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 /**
- * REST web service for orders resource
+ * REST web service endpoint for orders resource
  */
 
 @Path("orders")
@@ -136,6 +136,7 @@ public class OrderResource {
         try {
             orderService.cancelOrder(number);
             return Response.status(Response.Status.NO_CONTENT).build();
+
         } catch (OrderNotFoundException e) {
             throw new WebApplicationException("Order not found", Response.Status.NOT_FOUND);
         } catch (OrderAlreadyShippedException e) {
