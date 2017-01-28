@@ -7,6 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.books.persistence.dto.BookInfo;
 
 @Entity
 @XmlRootElement
@@ -142,4 +143,9 @@ public class Book extends BaseEntity {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+
+    public BookInfo getBookInfo() {
+        BookInfo bi=new BookInfo(this.isbn, this.title, this.price);
+        return bi;
+    }
 }

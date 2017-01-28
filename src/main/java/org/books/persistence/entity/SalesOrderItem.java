@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @Entity
-@XmlRootElement
+@XmlRootElement(name="OrderItem")
 public class SalesOrderItem extends BaseEntity {
 
 	@ManyToOne(optional = false, cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)

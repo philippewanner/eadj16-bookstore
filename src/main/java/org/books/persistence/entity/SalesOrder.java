@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@XmlRootElement
+@XmlRootElement(name="order")
 public class SalesOrder implements Serializable {
 
 	/**

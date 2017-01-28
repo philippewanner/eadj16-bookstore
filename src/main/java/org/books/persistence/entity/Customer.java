@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import org.books.persistence.dto.CustomerInfo;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
@@ -99,4 +100,9 @@ public class Customer implements Serializable {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
+
+    public CustomerInfo getCustomerInfo() {
+        CustomerInfo ci = new CustomerInfo(this.number, this.firstName, this.lastName, this.email);        
+        return ci;
+    }
 }
