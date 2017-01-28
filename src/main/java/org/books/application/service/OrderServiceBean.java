@@ -35,7 +35,6 @@ import static org.books.application.exception.PaymentFailedException.Code;
  * orders by customer and year cancel an order
  */
 @Stateless(name = "OrderService")
-@LocalBean
 public class OrderServiceBean extends AbstractService implements OrderService {
 
 	@EJB
@@ -105,6 +104,13 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 			throw new CustomerNotFoundException();
 		}
 
+                
+                if (limitAmount==null){
+                    logWarn("Set hardcoded limitAmount");
+                    limitAmount=10000.0f;
+                }
+                
+                
 		// Validates the credit card
 		validateCreditCard(customer.getCreditCard());
 

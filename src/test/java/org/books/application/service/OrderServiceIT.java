@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -52,7 +53,7 @@ public class OrderServiceIT {
     public void setup() throws NamingException, SQLException {
 
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
-        DbUtil.clearDatabase();
+        //DbUtil.clearDatabase();
 
         InitialContext initialContext = new InitialContext();
         orderService = (OrderService) initialContext.lookup(ORDER_SERVICE_NAME);
@@ -62,14 +63,14 @@ public class OrderServiceIT {
         catalogService = (CatalogService) initialContext.lookup(CATALOG_SERVICE_NAME);
         assertNotNull(catalogService);
 
-        addBooks();
+        //addBooks();
     }
 
     @AfterClass
     public void tearDown() throws SQLException {
         logInfoClassAndMethodName(Thread.currentThread().getStackTrace());
 
-        DbUtil.clearDatabase();
+        //DbUtil.clearDatabase();
     }
 
     @Test
@@ -409,12 +410,24 @@ public class OrderServiceIT {
     private Customer createNewCustomer(CreditCard creditCard) {
 
         Address address = new Address("725 5th Avenue", "New York", "NY 10022", "NY", "United States");
-        Customer customer = new Customer("Donald", "Trump", "Donald" + counter + "@Trump.org", address, creditCard);
+        Customer customer = new Customer("Donald", "Trump", "japi@gmx.ch", address, creditCard);
         counter++;
 
         final String password = "md5";
         Registration registration = new Registration(customer, password);
 
+        Customer existingC=null;
+        
+        try {
+            existingC = customerService.findCustomer("japi@gmx.ch");
+        } catch (CustomerNotFoundException ex) {
+            existingC=null;
+        }
+        
+        if (existingC!=null){
+            return existingC;
+        }
+        
         try {
             customer.setNumber(customerService.registerCustomer(registration));
             return customer;

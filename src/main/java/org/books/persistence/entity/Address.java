@@ -2,8 +2,10 @@ package org.books.persistence.entity;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Embeddable
+@XmlRootElement
 public class Address implements Serializable {
 
 	private String street;

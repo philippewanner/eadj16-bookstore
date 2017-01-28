@@ -5,8 +5,10 @@ import org.books.persistence.enumeration.CreditCardType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Embeddable
+@XmlRootElement
 public class CreditCard implements Serializable {
 
 	private CreditCardType type;

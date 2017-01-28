@@ -9,14 +9,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement
 public class SalesOrder implements Serializable {
 
 	/**
 	 * Type of "Set" because unique required but not ordered
 	 */
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<SalesOrderItem> salesOrderItems = new HashSet<>();
 
 	@Embedded

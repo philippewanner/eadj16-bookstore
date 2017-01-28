@@ -25,7 +25,6 @@ import java.util.List;
  * @author jan
  */
 @Stateless(name = "CustomerService")
-@LocalBean
 public class CustomerServiceBean extends AbstractService implements CustomerService {
 
 	@EJB

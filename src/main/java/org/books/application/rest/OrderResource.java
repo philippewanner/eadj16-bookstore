@@ -13,8 +13,13 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import static org.books.application.rest.CatalogResource.logger;
+import org.books.persistence.entity.SalesOrder;
+import org.books.persistence.entity.SalesOrderItem;
 
 /**
  * REST web service endpoint for orders resource
@@ -23,26 +28,13 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 @Path("orders")
 public class OrderResource {
 
+    protected static Logger logger;
+    
     @EJB
     private OrderService orderService;
 
-    @GET
-    @Path("ping")
-    @Produces({APPLICATION_XML})
-    public Response ping(){
-
-        List<PurchaseOrderItem> items = new ArrayList<>();
-
-        String isbn = "123-4-567-89098-7";
-        String title = "not existing";
-        BigDecimal price = BigDecimal.valueOf(0);
-
-        PurchaseOrderItem poi = new PurchaseOrderItem(new BookInfo(isbn, title, price), 1);
-        items.add(poi);
-
-        PurchaseOrder purchaseOrder = new PurchaseOrder(0001L, items);
-
-        return Response.status(Response.Status.OK).entity(purchaseOrder).build();
+    public OrderResource(){
+        logger = Logger.getLogger(getClass().getName());
     }
 
     /** Place Order **
@@ -79,6 +71,9 @@ public class OrderResource {
         }
     }
 
+    
+    
+    
 
     /** Find Order by Number **
      Request
@@ -96,12 +91,36 @@ public class OrderResource {
     @GET
     @Path("{number}")
     @Produces({APPLICATION_XML})
-    public Response findOrderByNumber(@PathParam("number") Long number){
+    public SalesOrder findOrderByNumber(@PathParam("number") Long number){
 
+        logger.log(Level.INFO, "findOrderByNumber " + number);
+        
         try {
-            return Response.status(Response.Status.OK).entity(orderService.findOrder(number)).build();
+            SalesOrder so = orderService.findOrder(number);
+                                    
+            for(SalesOrderItem soi: so.getSalesOrderItems()){
+                soi.getBook();
+                soi.getPrice();
+                soi.getQuantity();
+            }
+                        
+            so.getCustomer();
+            so.getAddress();
+            so.getCreditCard();
+            so.getCustomer();
+            so.getNumber();
+            so.getDate();
+            so.getAmount();
+            so.getStatus();
+                
+            
+            
+            return so;
+            
+            ////return Response.status(Response.Status.OK).entity(orderService.findOrder(number)).build();
 
         } catch (OrderNotFoundException e) {
+            logger.log(Level.WARNING, "Order not found " + number);
             throw new WebApplicationException("Order not found", Response.Status.NOT_FOUND);
         }
     }
