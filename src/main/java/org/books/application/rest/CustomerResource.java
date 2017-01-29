@@ -13,12 +13,13 @@ import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import org.books.application.service.CustomerService;
 
 @Path("customers")
 public class CustomerResource {
 
 	@EJB
-	private CustomerServiceBean service;
+	private CustomerService service;
 
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })

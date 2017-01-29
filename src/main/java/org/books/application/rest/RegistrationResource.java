@@ -12,12 +12,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.*;
+import org.books.application.service.CustomerService;
 
 @Path("registrations")
 public class RegistrationResource {
 
 	@EJB
-	private CustomerServiceBean service;
+	private CustomerService service;
 
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
