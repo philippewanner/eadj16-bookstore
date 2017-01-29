@@ -1,19 +1,18 @@
 package org.books.application.rest;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.exception.*;
 import org.books.application.service.OrderService;
-import org.books.persistence.dto.Order;
-import org.books.persistence.dto.OrderInfo;
-import org.books.persistence.dto.OrderItem;
-import org.books.persistence.dto.OrderRequest;
+import org.books.persistence.dto.*;
 import org.books.persistence.entity.SalesOrder;
 import org.books.persistence.entity.SalesOrderItem;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +33,20 @@ public class OrderResource {
 
     public OrderResource() {
         logger = Logger.getLogger(getClass().getName());
+    }
+
+    @GET
+    @Path("ping")
+    public void ping(){
+
+        PurchaseOrder po = new PurchaseOrder();
+        po.setCustomerNr(1L);
+
+        PurchaseOrderItem poi = new PurchaseOrderItem(new BookInfo("0672337452", "Title", new BigDecimal(27.00)), 1);
+        List<PurchaseOrderItem> pois = new ArrayList<>();
+        pois.add(poi);
+        po.setItems(pois);
+
     }
 
     /** Place Order **
@@ -63,6 +76,14 @@ public class OrderResource {
 
         logger.log(Level.INFO, "placeOrder");
 
+        if(     orderRequest.getCustomerNr() == null ||
+                orderRequest.getItems() == null ||
+                orderRequest.getItems().size() == 0) {
+
+            logger.log(Level.WARNING, "placeOrder/BadRequestException/");
+            throw new WebApplicationException("Bad request", Response.Status.BAD_REQUEST);
+        }
+
         PurchaseOrder po = createPO(orderRequest);
 
         try {
@@ -73,8 +94,6 @@ public class OrderResource {
 
             return order;
 
-            //todo 400 Bad Request (incomplete order data)
-            //return Response.status(Response.Status.CREATED).entity(orderService.placeOrder(purchaseOrder)).build();
         } catch (CustomerNotFoundException e) {
             logger.log(Level.WARNING, "placeOrder/CustomerNotFoundException/" + e);
             throw new WebApplicationException("Customer not found", Response.Status.NOT_FOUND);

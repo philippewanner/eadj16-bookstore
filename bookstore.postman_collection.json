@@ -1,611 +1,610 @@
 {
-	"id": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-	"name": "bookstore",
-	"description": "",
-	"order": [
-		"80005af7-b5e7-3a48-b7ef-95a99e66d1a5",
-		"e20c3f24-4bab-7aaf-4f77-ad641588c8aa",
-		"0b6b11eb-1820-7fc5-0519-7aa6f3da4373",
-		"dacfb6ca-6dac-5b4b-ea4b-0291f688d0ae",
-		"26b7a06e-3241-45a6-0474-cfc2464c0f80",
-		"0d51700c-cce8-50e2-5b6a-09fb19f69d63",
-		"5e88df60-1ebc-ea16-188f-1eaff9c1646e",
-		"16cf3359-2b82-54f9-fd57-0c188d0efa4f",
-		"42f4de03-d34d-178c-5847-290693c5d7cd",
-		"f9e2e529-57fa-7ab8-01c1-d9b18fec5171",
-		"4034c7d1-9a03-cb0f-43ea-421447210564",
-		"8577e337-979c-52be-04dc-27aae50a8500",
-		"cbb70d41-1786-0b78-f431-65a202891ac4",
-		"0ecd0f8a-b45b-9cce-34ee-35a4db8c3992",
-		"13846b9c-f330-a4e9-e3fb-656b0e928743",
-		"eb8779e1-3dca-0be3-1ea3-055ec817f70d",
-		"4bdaa59e-667b-7348-b32e-728f1edca5f6",
-		"79ae0bbb-7a97-9cd7-77e9-165e3f87a6a7",
-		"b77902ee-a02e-3d1f-5853-7f8262bad12a",
-		"e45035e4-ac25-ece0-d5a4-4c14519bb661",
-		"8951bdca-c8df-bff6-52db-5543e2270321",
-		"d89c7668-788f-48e9-a208-1b352e52c4e9",
-		"adac147d-e74e-4b9d-e34b-944a9b659918",
-		"53b7c166-7b81-dfcf-f051-49c78405c55a",
-		"a2ee3069-c123-acfa-2aa4-3a4bbe87e120",
-		"2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3",
-		"ef5f730e-1dbc-28f8-e71e-c66c5ea12db6",
-		"b2cae3fd-137c-cb79-9c78-812d36925180"
-	],
-	"folders": [],
-	"timestamp": 1485410576423,
-	"owner": 0,
-	"public": false,
-	"requests": [
+	"variables": [],
+	"info": {
+		"name": "bookstore",
+		"_postman_id": "653545c7-762b-6152-4009-22072b80149d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
 		{
-			"id": "0b6b11eb-1820-7fc5-0519-7aa6f3da4373",
-			"headers": "Accept: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": null,
-			"dataMode": "params",
-			"name": "find book by ISBN, output XML",
+			"name": "books",
 			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485422850681,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
+			"item": [
+				{
+					"name": "find book by ISBN output JSON",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books/0672337452",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find book by keywords output XML",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find book by ISBN, output XML",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books/0672337452",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find book by unknown isbn",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books/0000000000",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find book by empty keywords",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books?keywords=",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"id": "0d51700c-cce8-50e2-5b6a-09fb19f69d63",
-			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485438588858,
-			"name": "Register Customer (JSON)",
+			"name": "customers",
 			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+			"item": [
+				{
+					"name": "Find Customer by Number (JSON)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Find Customer by Number (XML)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Find Customer by Name (JSON)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers?name=Muster",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Find Customer by Name (XML)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers?name=Muster",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer (JSON)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\",\n\t\"version\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer (XML)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/2",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<customer>\n    <email>fritz@walter.ch</email>\n    <firstName>Fritz H.</firstName>\n    <lastName>Walter</lastName>\n    <version>1</version>\n</customer>"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer (204)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer (404)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/3",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\",\n\t\"version\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer (409)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/customers/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"fritz@walter.ch\",\n\t\"version\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "update book XML",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books/0672337452",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "update book JSON",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books/0672337000",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"book\",\n  \"authors\": \"James James\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "find book by keywords output JSON",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "add book JSON",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"book\",\n  \"authors\": \"James Foxall\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "add book XML",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/books",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"id": "0ecd0f8a-b45b-9cce-34ee-35a4db8c3992",
-			"headers": "Content-Type: text/plain\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/donuld@trump.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "PUT",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Change Password (404)",
+			"name": "oders",
 			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536451710,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "md5"
+			"item": [
+				{
+					"name": "place order by orderRequest",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/orders",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<orderRequest xsi:noNamespaceSchemaLocation=\"orders.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\t<customerNr>1</customerNr>\n\t<items>\n\t\t<bookInfo>\n\t\t\t<isbn>0672337452</isbn>\n\t\t\t<title>Title</title>\n\t\t\t<price>27.00</price>\n\t\t</bookInfo>\n\t\t<quantity>1</quantity>\n\t</items>\n\t<items>\n\t\t<bookInfo>\n\t\t\t<isbn>0672337452</isbn>\n\t\t\t<title>Title</title>\n\t\t\t<price>27.00</price>\n\t\t</bookInfo>\n\t\t<quantity>1</quantity>\n\t</items>\n</orderRequest>"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"id": "13846b9c-f330-a4e9-e3fb-656b0e928743",
-			"headers": "Accept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/1",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "GET",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485535023373,
-			"name": "Find Customer by Number (JSON)",
+			"name": "registrations",
 			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "md5"
-		},
-		{
-			"id": "16cf3359-2b82-54f9-fd57-0c188d0efa4f",
-			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Register Customer (409)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536043661,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
-		},
-		{
-			"id": "26b7a06e-3241-45a6-0474-cfc2464c0f80",
-			"headers": "",
-			"url": "http://localhost:8080/bookstore/rest/books?keywords=",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": null,
-			"dataMode": "params",
-			"name": "find book by empty keywords",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485423110498,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
-		},
-		{
-			"id": "2e581f74-0a1d-7d8c-3ecc-f0f49aab2af3",
-			"headers": "Accept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485551213955,
-			"name": "find book by keywords output JSON",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": []
-		},
-		{
-			"id": "4034c7d1-9a03-cb0f-43ea-421447210564",
-			"headers": "password: md56\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/donald@trump.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Authenticate Customer (404)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536117896,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
-		},
-		{
-			"id": "42f4de03-d34d-178c-5847-290693c5d7cd",
-			"headers": "password: md5\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Authenticate Customer",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485438508390,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
-		},
-		{
-			"id": "4bdaa59e-667b-7348-b32e-728f1edca5f6",
-			"headers": "Accept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers?name=Muster",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Find Customer by Name (JSON)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485438845181,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "md5"
-		},
-		{
-			"id": "53b7c166-7b81-dfcf-f051-49c78405c55a",
-			"headers": "Content-Type: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "PUT",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485553022645,
-			"name": "update book XML",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
-		},
-		{
-			"id": "5e88df60-1ebc-ea16-188f-1eaff9c1646e",
-			"headers": "Content-Type: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Register Customer (XML)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485535370128,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<registration>\n\t<customer>\n\t    <email>fritz@walter.ch</email>\n\t    <firstName>Fritz</firstName>\n\t    <lastName>Walter</lastName>\n\t</customer>\n\t<password>md5</password>\n</registration>"
-		},
-		{
-			"id": "79ae0bbb-7a97-9cd7-77e9-165e3f87a6a7",
-			"headers": "Accept: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/customers?name=Muster",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Find Customer by Name (XML)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485438858481,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "md5"
-		},
-		{
-			"id": "80005af7-b5e7-3a48-b7ef-95a99e66d1a5",
-			"headers": "Accept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337452",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": null,
-			"dataMode": "params",
-			"name": "find book by ISBN output JSON",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485422778359,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
-		},
-		{
-			"id": "8577e337-979c-52be-04dc-27aae50a8500",
-			"headers": "Content-Type: text/plain\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "PUT",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Change Password",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485438706034,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "md5"
-		},
-		{
-			"id": "8951bdca-c8df-bff6-52db-5543e2270321",
-			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/1",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "PUT",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Update Customer (204)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536911555,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{}"
-		},
-		{
-			"id": "a2ee3069-c123-acfa-2aa4-3a4bbe87e120",
-			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/books/0672337000",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "PUT",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485552946344,
-			"name": "update book JSON",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "{\n  \"type\": \"book\",\n  \"authors\": \"James James\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
-		},
-		{
-			"id": "adac147d-e74e-4b9d-e34b-944a9b659918",
-			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/1",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "PUT",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Update Customer (409)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485535586200,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"fritz@walter.ch\",\n\t\"version\": 1\n}"
-		},
-		{
-			"id": "b2cae3fd-137c-cb79-9c78-812d36925180",
-			"headers": "Content-Type: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/books",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485552862066,
-			"name": "add book XML",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<book>\n    <authors>James Foxall</authors>\n    <binding>PAPERBACK</binding>\n    <isbn>0672337452</isbn>\n    <numberOfPages>608</numberOfPages>\n    <price>34.99</price>\n    <publicationYear>2015</publicationYear>\n    <publisher>Sams Publishing</publisher>\n    <title>Visual Basic 2015 in 24 Hours, Sams Teach Yourself</title>\n</book>"
-		},
-		{
-			"id": "b77902ee-a02e-3d1f-5853-7f8262bad12a",
-			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/1",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "PUT",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485535015117,
-			"name": "Update Customer (JSON)",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\",\n\t\"version\": 1\n}"
-		},
-		{
-			"id": "cbb70d41-1786-0b78-f431-65a202891ac4",
-			"headers": "Content-Type: text/plain\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "PUT",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Change Password (204)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536367419,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": "{}",
-			"rawModeData": "",
-			"folder": null
-		},
-		{
-			"id": "d89c7668-788f-48e9-a208-1b352e52c4e9",
-			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/3",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "PUT",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485536619564,
-			"name": "Update Customer (404)",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "{\n\t\"firstName\": \"Hans W.\",\n\t\"lastName\": \"Muster\",\n\t\"email\": \"hans@muster.ch\",\n\t\"version\": 1\n}"
-		},
-		{
-			"id": "dacfb6ca-6dac-5b4b-ea4b-0291f688d0ae",
-			"headers": "",
-			"url": "http://localhost:8080/bookstore/rest/books/0000000000",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": null,
-			"dataMode": "params",
-			"name": "find book by unknown isbn",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485422987562,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
-		},
-		{
-			"id": "e20c3f24-4bab-7aaf-4f77-ad641588c8aa",
-			"headers": "Accept: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/books?keywords=java+ee",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": null,
-			"dataMode": "params",
-			"name": "find book by keywords output XML",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485422823015,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
-		},
-		{
-			"id": "e45035e4-ac25-ece0-d5a4-4c14519bb661",
-			"headers": "Content-Type: application/xml\nAccept: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/2",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "PUT",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485535502039,
-			"name": "Update Customer (XML)",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<customer>\n    <email>fritz@walter.ch</email>\n    <firstName>Fritz H.</firstName>\n    <lastName>Walter</lastName>\n    <version>1</version>\n</customer>"
-		},
-		{
-			"id": "eb8779e1-3dca-0be3-1ea3-055ec817f70d",
-			"headers": "Accept: application/xml\n",
-			"url": "http://localhost:8080/bookstore/rest/customers/1",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Find Customer by Number (XML)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485438811725,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "md5"
-		},
-		{
-			"id": "ef5f730e-1dbc-28f8-e71e-c66c5ea12db6",
-			"headers": "Content-Type: application/json\n",
-			"url": "http://localhost:8080/bookstore/rest/books",
-			"preRequestScript": null,
-			"pathVariables": {},
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1485552874507,
-			"name": "add book JSON",
-			"description": "",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"responses": [],
-			"rawModeData": "{\n  \"type\": \"book\",\n  \"authors\": \"James Foxall\",\n  \"binding\": \"PAPERBACK\",\n  \"isbn\": \"0672337000\",\n  \"numberOfPages\": 608,\n  \"price\": 34.99,\n  \"publicationYear\": 2015,\n  \"publisher\": \"Sams Publishing\",\n  \"title\": \"Visual Basic 2015 in 24 Hours, Sams Teach Yourself\"\n}"
-		},
-		{
-			"id": "f9e2e529-57fa-7ab8-01c1-d9b18fec5171",
-			"headers": "password: md56\n",
-			"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
-			"pathVariables": {},
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "23a31e05-d717-e95e-593c-d6f9b61b79a4",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Authenticate Customer (401)",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1485536084698,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+			"item": [
+				{
+					"name": "Register Customer (JSON)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Register Customer (XML)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<registration>\n\t<customer>\n\t    <email>fritz@walter.ch</email>\n\t    <firstName>Fritz</firstName>\n\t    <lastName>Walter</lastName>\n\t</customer>\n\t<password>md5</password>\n</registration>"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Register Customer (409)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate Customer",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
+						"method": "GET",
+						"header": [
+							{
+								"key": "password",
+								"value": "md5",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate Customer (401)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
+						"method": "GET",
+						"header": [
+							{
+								"key": "password",
+								"value": "md56",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate Customer (404)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/donald@trump.ch",
+						"method": "GET",
+						"header": [
+							{
+								"key": "password",
+								"value": "md56",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"customer\": {\n\t\t\"firstName\": \"Hans\",\n\t\t\"lastName\": \"Muster\",\n\t\t\"email\": \"hans@muster.ch\"\n\t},\n\t\"password\": \"md5\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password (204)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/hans@muster.ch",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password (404)",
+					"request": {
+						"url": "http://localhost:8080/bookstore/rest/registrations/donuld@trump.ch",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "md5"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
