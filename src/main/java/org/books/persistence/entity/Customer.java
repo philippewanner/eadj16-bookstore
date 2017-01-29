@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+
 import org.books.persistence.dto.CustomerInfo;
 
 @Entity
@@ -32,7 +33,8 @@ public class Customer implements Serializable {
 	public Customer() {
 	}
 
-	public Customer(Long number, String firstName, String lastName, String email, Address address, CreditCard creditCard) {
+	public Customer(Long number, String firstName, String lastName, String email, Address address,
+			CreditCard creditCard) {
 		this.number = number;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -101,8 +103,7 @@ public class Customer implements Serializable {
 		this.version = version;
 	}
 
-    public CustomerInfo getCustomerInfo() {
-        CustomerInfo ci = new CustomerInfo(this.number, this.firstName, this.lastName, this.email);        
-        return ci;
-    }
+	public CustomerInfo getCustomerInfo() {
+		return new CustomerInfo(this.number, this.firstName, this.lastName, this.email);
+	}
 }

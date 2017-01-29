@@ -17,7 +17,6 @@ import org.books.persistence.repository.CustomerRepository;
 import org.books.persistence.repository.UserRepository;
 
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.List;
 

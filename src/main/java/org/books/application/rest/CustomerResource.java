@@ -2,7 +2,7 @@ package org.books.application.rest;
 
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
-import org.books.application.service.CustomerServiceBean;
+import org.books.application.service.CustomerService;
 import org.books.persistence.dto.CustomerInfo;
 import org.books.persistence.entity.Customer;
 
@@ -13,7 +13,6 @@ import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import org.books.application.service.CustomerService;
 
 @Path("customers")
 public class CustomerResource {

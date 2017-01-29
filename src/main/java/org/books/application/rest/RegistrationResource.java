@@ -4,7 +4,7 @@ import org.books.application.dto.Registration;
 import org.books.application.exception.CustomerAlreadyExistsException;
 import org.books.application.exception.CustomerNotFoundException;
 import org.books.application.exception.InvalidPasswordException;
-import org.books.application.service.CustomerServiceBean;
+import org.books.application.service.CustomerService;
 import org.books.persistence.entity.Customer;
 
 import javax.ejb.EJB;
@@ -12,7 +12,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.*;
-import org.books.application.service.CustomerService;
 
 @Path("registrations")
 public class RegistrationResource {
