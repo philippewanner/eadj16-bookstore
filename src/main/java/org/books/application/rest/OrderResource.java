@@ -204,7 +204,7 @@ public class OrderResource {
     private Order loadOrder(SalesOrder so) {
         Order order = new Order();
 
-        List<OrderItem> items = new ArrayList<OrderItem>();
+        List<OrderItem> items = new ArrayList<>();
 
         for (SalesOrderItem soi : so.getSalesOrderItems()) {
             OrderItem newItem = new OrderItem(soi.getBook().getBookInfo(), soi.getQuantity());
@@ -228,7 +228,7 @@ public class OrderResource {
 
         po.setCustomerNr(Long.parseLong(orderRequest.getCustomerNr()));
 
-        List<PurchaseOrderItem> items = new ArrayList<PurchaseOrderItem>();
+        List<PurchaseOrderItem> items = new ArrayList<>();
 
         for (OrderItem oi : orderRequest.getItems()) {
             PurchaseOrderItem poi = getPOI(oi);
