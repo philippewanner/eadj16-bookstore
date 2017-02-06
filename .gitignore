@@ -17,3 +17,4 @@ hs_err_pid*
 target/
 /nb-configuration.xml
 *.log
+/src/main/webapp/node_modules
