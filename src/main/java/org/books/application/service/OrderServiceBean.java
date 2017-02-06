@@ -141,7 +141,7 @@ public class OrderServiceBean extends AbstractService implements OrderService {
 		return orderRepository.searchByCustomerAndYear(customer, year);
 	}
 
-	@Schedule(minute = "*", hour = "*")
+	@Schedule(minute = "15", hour = "*")
 	public void shipOrders(Timer timer) {
 
 		logInfo("********* Ship timer *********");
