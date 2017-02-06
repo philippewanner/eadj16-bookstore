@@ -11,16 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
-var catalog_component_1 = require("./component/catalog.component");
-var book_details_component_1 = require("./component/book-details.component");
-var book_list_component_1 = require("./component/book-list.component");
-var CatalogService_1 = require("./service/CatalogService");
-var home_component_1 = require("./component/home.component");
 var router_1 = require("@angular/router");
-var app_omponent_1 = require("./component/app.omponent");
+var login_component_1 = require("./component/login.component");
+var app_component_1 = require("./component/app.component");
 var routes = [
-    { path: "catalog", component: catalog_component_1.CatalogComponent },
-    { path: "**", component: home_component_1.HomeComponent }
+    { path: "**", component: login_component_1.LoginComponent }
 ];
 var AppModule = (function () {
     function AppModule() {
@@ -28,9 +23,8 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(routes)],
-            declarations: [app_omponent_1.AppComponent, book_details_component_1.BookDetailsComponent, book_list_component_1.BookListComponent, catalog_component_1.CatalogComponent, home_component_1.HomeComponent],
-            providers: [CatalogService_1.CatalogService],
-            bootstrap: [app_omponent_1.AppComponent]
+            declarations: [app_component_1.AppComponent, login_component_1.LoginComponent],
+            bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);
