@@ -17,15 +17,16 @@ public class CreditCard implements Serializable {
 	private Integer expirationMonth;
 	private Integer expirationYear;
 
-        public CreditCard(){}
-        
-        public CreditCard(CreditCardType type, String number, Integer expirationMonth, Integer expirationYear){
-            this.type=type;
-            this.number=number;
-            this.expirationMonth=expirationMonth;
-            this.expirationYear=expirationYear;
-        }
-        
+	public CreditCard() {
+	}
+
+	public CreditCard(CreditCardType type, String number, Integer expirationMonth, Integer expirationYear) {
+		this.type = type;
+		this.number = number;
+		this.expirationMonth = expirationMonth;
+		this.expirationYear = expirationYear;
+	}
+
 	public CreditCardType getType() {
 		return type;
 	}

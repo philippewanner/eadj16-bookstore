@@ -12,10 +12,16 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var router_1 = require("@angular/router");
-var login_component_1 = require("./component/login.component");
+var login_component_1 = require("./component/user/login.component");
 var app_component_1 = require("./component/app.component");
+var user_service_1 = require("./service/user.service");
+var registration_component_1 = require("./component/user/registration.component");
+var user_edit_component_1 = require("./component/user/user-edit.component");
+var catalog_component_1 = require("./component/catalog/catalog.component");
 var routes = [
-    { path: "**", component: login_component_1.LoginComponent }
+    { path: "login", component: login_component_1.LoginComponent },
+    { path: "registration", component: registration_component_1.RegistrationComponent },
+    { path: "**", component: catalog_component_1.CatalogComponent }
 ];
 var AppModule = (function () {
     function AppModule() {
@@ -23,7 +29,8 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(routes)],
-            declarations: [app_component_1.AppComponent, login_component_1.LoginComponent],
+            declarations: [app_component_1.AppComponent, catalog_component_1.CatalogComponent, login_component_1.LoginComponent, registration_component_1.RegistrationComponent, user_edit_component_1.UserEditComponent],
+            providers: [user_service_1.UserService],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
