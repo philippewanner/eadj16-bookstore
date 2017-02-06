@@ -8,6 +8,7 @@ import {UserService} from "./service/user.service";
 import {RegistrationComponent} from "./component/user/registration.component";
 import {UserEditComponent} from "./component/user/user-edit.component";
 import {CatalogComponent} from "./component/catalog/catalog.component";
+import {BookListComponent} from "./component/booklist/booklist.component";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
@@ -17,7 +18,7 @@ const routes: Routes = [
 
 @NgModule({
     imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes)],
-    declarations: [AppComponent, CatalogComponent, LoginComponent, RegistrationComponent, UserEditComponent],
+    declarations: [AppComponent, CatalogComponent, LoginComponent, RegistrationComponent, UserEditComponent, BookListComponent],
     providers: [UserService],
     bootstrap: [AppComponent]
 })
