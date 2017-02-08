@@ -21,8 +21,15 @@ const routes: Routes = [
 
 @NgModule({
     imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes)],
-    declarations: [AppComponent, CatalogComponent, LoginComponent, RegistrationComponent, UserEditComponent, BookListComponent, BookDetailsComponent],
-    providers: [UserService, CatalogService],
+    declarations: [AppComponent,
+        CatalogComponent,
+        LoginComponent,
+        RegistrationComponent,
+        UserEditComponent,
+        BookListComponent,
+        BookDetailsComponent],
+    providers: [UserService,
+        CatalogService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
