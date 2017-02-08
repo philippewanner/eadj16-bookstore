@@ -11,7 +11,7 @@ export class BookListComponent {
     @Input() private books: Array<Book> = [];
     //@Output() private onSelect = new EventEmitter<Book>();
 
-    private elementName: string = "Booklist";
+    private elementName: string = "Found books";
 
     constructor(private router: Router) {
         console.log("constructor BookListComponent")

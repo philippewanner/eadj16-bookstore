@@ -1,0 +1,70 @@
+<div id="book-details">
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>{{elementName}}</h1>
+            <br>
+            <h6 *ngIf="!book && !msg">Loading...</h6>
+            <h6 *ngIf="msg">{{msg}}</h6>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table class="table" *ngIf="book">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>Title</th>
+                    <th>{{book.title}}</th>
+                </tr>
+                <tr>
+                    <th>ISBN</th>
+                    <th>{{book.isbn}}</th>
+                </tr>
+                <tr>
+                    <th>Authors</th>
+                    <th>{{book.authors}}</th>
+                </tr>
+                <tr>
+                    <th>Binding</th>
+                    <th>{{book.binding}}</th>
+                </tr>
+                <tr>
+                    <th>Pages</th>
+                    <th>{{book.numberOfPages}}</th>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <th>{{book.price}}</th>
+                </tr>
+                <tr>
+                    <th>Year</th>
+                    <th>{{book.publicationYear}}</th>
+                </tr>
+                <tr>
+                    <th>Publisher</th>
+                    <th>{{book.publisher}}</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <button (click)="goBack()">back</button>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
