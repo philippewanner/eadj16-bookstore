@@ -20,9 +20,11 @@ var user_edit_component_1 = require("./component/user/user-edit.component");
 var catalog_component_1 = require("./component/catalog/catalog.component");
 var booklist_component_1 = require("./component/booklist/booklist.component");
 var catalog_service_1 = require("./service/catalog.service");
+var book_details_component_1 = require("./component/book-details/book-details.component");
 var routes = [
     { path: "login", component: login_component_1.LoginComponent },
     { path: "registration", component: registration_component_1.RegistrationComponent },
+    { path: "book-details/:isbn", component: book_details_component_1.BookDetailsComponent },
     { path: "**", component: catalog_component_1.CatalogComponent }
 ];
 var AppModule = (function () {
@@ -31,8 +33,8 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(routes)],
-            declarations: [app_component_1.AppComponent, booklist_component_1.BookListComponent, catalog_component_1.CatalogComponent, login_component_1.LoginComponent, registration_component_1.RegistrationComponent, user_edit_component_1.UserEditComponent],
-            providers: [catalog_service_1.CatalogService, user_service_1.UserService],
+            declarations: [app_component_1.AppComponent, catalog_component_1.CatalogComponent, login_component_1.LoginComponent, registration_component_1.RegistrationComponent, user_edit_component_1.UserEditComponent, booklist_component_1.BookListComponent, book_details_component_1.BookDetailsComponent],
+            providers: [user_service_1.UserService, catalog_service_1.CatalogService],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
