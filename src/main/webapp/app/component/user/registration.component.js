@@ -15,6 +15,7 @@ var RegistrationComponent = (function () {
     function RegistrationComponent(userService) {
         this.registration = new registration_1.Registration();
     }
+    RegistrationComponent.prototype.onSubmit = function () { };
     RegistrationComponent = __decorate([
         core_1.Component({
             templateUrl: "app/component/user/registration.component.html"

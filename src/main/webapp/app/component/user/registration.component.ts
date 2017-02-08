@@ -12,4 +12,6 @@ export class RegistrationComponent {
     repeatPassword: string;
 
     constructor(userService: UserService) {}
+
+    public onSubmit(): void {}
 }

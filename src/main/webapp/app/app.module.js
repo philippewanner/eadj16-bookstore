@@ -18,6 +18,7 @@ var user_service_1 = require("./service/user.service");
 var registration_component_1 = require("./component/user/registration.component");
 var user_edit_component_1 = require("./component/user/user-edit.component");
 var catalog_component_1 = require("./component/catalog/catalog.component");
+var booklist_component_1 = require("./component/booklist/booklist.component");
 var routes = [
     { path: "login", component: login_component_1.LoginComponent },
     { path: "registration", component: registration_component_1.RegistrationComponent },
@@ -29,7 +30,7 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(routes)],
-            declarations: [app_component_1.AppComponent, catalog_component_1.CatalogComponent, login_component_1.LoginComponent, registration_component_1.RegistrationComponent, user_edit_component_1.UserEditComponent],
+            declarations: [app_component_1.AppComponent, booklist_component_1.BookListComponent, catalog_component_1.CatalogComponent, login_component_1.LoginComponent, registration_component_1.RegistrationComponent, user_edit_component_1.UserEditComponent],
             providers: [user_service_1.UserService],
             bootstrap: [app_component_1.AppComponent]
         }), 
