@@ -12,6 +12,8 @@ var core_1 = require("@angular/core");
 var LoginComponent = (function () {
     function LoginComponent() {
     }
+    LoginComponent.prototype.onSubmit = function () {
+    };
     LoginComponent = __decorate([
         core_1.Component({
             selector: "login",
