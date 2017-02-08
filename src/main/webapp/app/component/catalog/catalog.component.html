@@ -1,1 +1,31 @@
-<h1>Catalog</h1>
+<div id="catalog">
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <h1 class="col-md-8">{{elementName}}</h1>
+        <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" *ngIf="!selectedBook">
+
+            <input type="text" [(ngModel)]="keywords">
+            <button (click)="search()">search</button>
+
+            <book-list [books]="foundBooks" (onSelect)="selectBook($event)" *ngIf="foundBooks.length"></book-list>
+
+            <div *ngIf="searching">
+                <h6>{{searching}}</h6>
+                <br>
+            </div>
+
+            <h4 *ngIf="numberFoundBooks.length">{{numberFoundBooks}}</h4>
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+
+
+</div>
