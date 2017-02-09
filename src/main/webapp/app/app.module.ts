@@ -11,11 +11,14 @@ import {CatalogComponent} from "./component/catalog/catalog.component";
 import {BookListComponent} from "./component/booklist/booklist.component";
 import {CatalogService} from "./service/catalog.service";
 import {BookDetailsComponent} from "./component/book-details/book-details.component";
+import {ShoppingCartComponent} from "./component/shopping-cart/shopping-cart.component";
+import {ShoppingCartService} from "./service/shopping-cart.service";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "registration", component: RegistrationComponent},
     {path: "book-details/:isbn", component: BookDetailsComponent},
+    {path: "shopping-cart", component: ShoppingCartComponent},
     {path: "**", component: CatalogComponent}
 ];
 
@@ -27,9 +30,11 @@ const routes: Routes = [
         RegistrationComponent,
         UserEditComponent,
         BookListComponent,
-        BookDetailsComponent],
+        BookDetailsComponent,
+        ShoppingCartComponent],
     providers: [UserService,
-        CatalogService],
+        CatalogService,
+        ShoppingCartService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
