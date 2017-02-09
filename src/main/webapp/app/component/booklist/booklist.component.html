@@ -15,11 +15,11 @@
             </thead>
 
             <tbody>
-            <tr *ngFor="let book of books" (click)="select(book)">
-                <td class="col-md-1">{{book.isbn}}</td>
-                <td class="col-md-4">{{book.title}}</td>
-                <td class="col-md-1">{{book.price}}</td>
-                <td><button (click)="deleteBook(item)">add</button></td>
+            <tr *ngFor="let book of books" >
+                <td class="col-md-1" (click)="select(book)">{{book.isbn}}</td>
+                <td class="col-md-4" (click)="select(book)">{{book.title}}</td>
+                <td class="col-md-1" (click)="select(book)">{{book.price}}</td>
+                <td><button (click)="addBookToCart(book)">add to cart</button></td>
             </tr>
 
             </tbody>

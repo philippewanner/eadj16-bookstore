@@ -3,6 +3,7 @@ import {Book} from "../../core/book"
 import {ActivatedRoute, Router} from "@angular/router";
 import {CatalogService} from "../../service/catalog.service";
 import {Location} from "@angular/common";
+import {ShoppingCartService} from "../../service/shopping-cart.service";
 
 @Component({
     selector: 'book-details',
@@ -17,7 +18,10 @@ export class BookDetailsComponent {
 
     private elementName: string = "Book details";
 
-    constructor(private route: ActivatedRoute, private catalogService: CatalogService,private router: Router) {
+    constructor(private route: ActivatedRoute,
+                private catalogService: CatalogService,
+                private router: Router,
+                private shoppingCartService: ShoppingCartService) {
         console.log("constructor BookDetails");
 
         let isbn = route.snapshot.params['isbn'];
@@ -36,5 +40,9 @@ export class BookDetailsComponent {
 
     public goBack(): void {
         this.router.navigate((['/catalog']));
+    }
+
+    public addToCart():void{
+        this.shoppingCartService.addBook(this.book,1);
     }
 }
