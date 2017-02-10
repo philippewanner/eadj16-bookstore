@@ -15,7 +15,7 @@ export class ShoppingCartComponent {
 
 
     constructor(private shoppingCartService: ShoppingCartService) {
-        this.shoppingCart=this.shoppingCartService.getShoppingCart();
+        this.shoppingCart = this.shoppingCartService.getShoppingCart();
     }
 
 
@@ -24,8 +24,8 @@ export class ShoppingCartComponent {
             item.quantity = 0;
         }
 
-        this.shoppingCartService.addBook(item.book, item.quantity);
-        this.shoppingCart=this.shoppingCartService.getShoppingCart();
+        //this.shoppingCartService.addBook(item.book, item.quantity);
+        this.shoppingCart = this.shoppingCartService.getShoppingCart();
 
         this.shoppingCart.updateTotalPrice();
     }
@@ -35,8 +35,7 @@ export class ShoppingCartComponent {
 
         this.shoppingCartService.removeBook(item.book);
 
-        //this.shoppingCart.removeBook(item.book);
-        this.shoppingCart=this.shoppingCartService.getShoppingCart();
+        this.shoppingCart = this.shoppingCartService.getShoppingCart();
         this.shoppingCart.updateTotalPrice();
     }
 

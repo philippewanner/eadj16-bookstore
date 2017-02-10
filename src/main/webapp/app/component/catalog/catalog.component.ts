@@ -39,6 +39,7 @@ export class CatalogComponent {
 
     public search(): void {
         this.foundBooks = [];
+        this.numberFoundBooks="";
 
         this.searching = "searching...";
 
@@ -46,8 +47,6 @@ export class CatalogComponent {
             this.numberFoundBooks = "please enter any keywords";
             return;
         }
-
-        //this.foundBooks = this.catalogService.searchBooks(this.keywords);
 
         this.catalogService.searchBooksAsync(this.keywords).then((result: Book[]) => {
 

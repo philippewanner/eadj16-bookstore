@@ -1,5 +1,6 @@
 import {Component} from "@angular/core";
 import {UserService} from "../service/user.service";
+import {ShoppingCartService} from "../service/shopping-cart.service";
 
 @Component({
     selector: "app",
@@ -7,5 +8,6 @@ import {UserService} from "../service/user.service";
 })
 export class AppComponent {
 
-    constructor(public userService: UserService) {}
+    constructor(public userService: UserService, public shoppingCartService: ShoppingCartService) {
+    }
 }

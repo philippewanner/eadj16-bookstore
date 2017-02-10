@@ -1,29 +1,42 @@
 <div id="catalog">
-    <br>
-    <div class="row">
-        <div class="col-md-2"></div>
-        <h1 class="col-md-8">{{elementName}}</h1>
-        <div class="col-md-2"></div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8" *ngIf="!selectedBook">
+    <h1>{{elementName}}</h1>
 
-            <input type="text" [(ngModel)]="keywords">
-            <button (click)="search()">search</button>
+    <form class="form-horizontal" (ngSubmit)="search()" #catalogForm="ngForm">
 
-            <book-list [books]="foundBooks" (onSelect)="selectBook($event)" *ngIf="foundBooks.length"></book-list>
-
-            <div *ngIf="searching">
-                <h6>{{searching}}</h6>
-                <br>
+        <div class="form-group">
+            <label for="keywords" class="control-label col-sm-2">Enter keywords</label>
+            <div class="col-sm-4">
+                <input id="keywords" name="keywords" [(ngModel)]="keywords" class="form-control" type="keywords"/>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-default">Search</button>
             </div>
 
-            <h4 *ngIf="numberFoundBooks.length">{{numberFoundBooks}}</h4>
+        </div>
+
+    </form>
+
+
+    <div *ngIf="!selectedBook">
+        <div class="row">
+            <book-list [books]="foundBooks" (onSelect)="selectBook($event)" *ngIf="foundBooks.length"></book-list>
+        </div>
+
+        <div class="row" *ngIf="searching">
+
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6"><h6>{{searching}}</h6></div>
 
         </div>
-        <div class="col-md-2"></div>
+        <div class="row" *ngIf="numberFoundBooks.length">
+
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6"><h4>{{numberFoundBooks}}</h4></div>
+
+        </div>
+
+
     </div>
 
 

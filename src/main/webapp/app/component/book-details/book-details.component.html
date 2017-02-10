@@ -1,20 +1,20 @@
 <div id="book-details">
-    <br>
+    <h1>{{elementName}}</h1>
+
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <h1>{{elementName}}</h1>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
             <br>
             <h6 *ngIf="!book && !msg">Loading...</h6>
             <h6 *ngIf="msg">{{msg}}</h6>
         </div>
-        <div class="col-md-2"></div>
     </div>
 
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <table class="table" *ngIf="book">
+    <div class="row" *ngIf="book">
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <table class="table">
                 <thead>
                 <tr>
                     <th></th>
@@ -57,17 +57,15 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-2"></div>
     </div>
 
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-4">
+    <div class="row" *ngIf="book">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4">
             <button (click)="goBack()">back</button>
         </div>
-        <div class="col-md-4">
+        <div class="col-sm-4">
             <button (click)="addToCart()">add to cart</button>
         </div>
-        <div class="col-md-2"></div>
     </div>
 </div>
