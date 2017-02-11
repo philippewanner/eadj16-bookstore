@@ -11,7 +11,6 @@ import {ShoppingCartService} from "../../service/shopping-cart.service";
 })
 export class BookDetailsComponent {
 
-    ////@In//put()
     private book: Book = null;
 
     private msg: string = null;

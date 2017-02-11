@@ -13,12 +13,14 @@ import {CatalogService} from "./service/catalog.service";
 import {BookDetailsComponent} from "./component/book-details/book-details.component";
 import {ShoppingCartComponent} from "./component/shopping-cart/shopping-cart.component";
 import {ShoppingCartService} from "./service/shopping-cart.service";
+import {OrderComponent} from "./component/order/order.component";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "registration", component: RegistrationComponent},
     {path: "book-details/:isbn", component: BookDetailsComponent},
     {path: "shopping-cart", component: ShoppingCartComponent},
+    {path: "order", component: OrderComponent},
     {path: "**", component: CatalogComponent}
 ];
 
@@ -31,7 +33,8 @@ const routes: Routes = [
         UserEditComponent,
         BookListComponent,
         BookDetailsComponent,
-        ShoppingCartComponent],
+        ShoppingCartComponent,
+        OrderComponent],
     providers: [UserService,
         CatalogService,
         ShoppingCartService],
