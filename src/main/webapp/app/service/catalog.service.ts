@@ -2,14 +2,14 @@ import {Injectable} from "@angular/core";
 import {Book} from "../core/book";
 import {BOOK_DATA} from "../core/book-data";
 import {Http, Headers} from "@angular/http";
+import {BOOKSTORE_REST_URL, BOOKSTORE_REST_URLdystsys} from "../main";
+import {BookInfo} from "../core/book-info";
 
 @Injectable()
 export class CatalogService {
 
-    public lastKeywords:string;
-    public lastBooks:Book[];
-
-    private baseUrl: String = "http://localhost:8080/bookstore/rest/books";
+    public lastKeywords: string;
+    public lastBooks: BookInfo[];
 
     constructor(private http: Http) {
         console.log("constructor CatalogService");
@@ -28,7 +28,22 @@ export class CatalogService {
 
     public findBookAsync(isbn: string): Promise<Book> {
 
-        return new Promise(function (resolve, reject) {
+        let url = BOOKSTORE_REST_URL + "/books/" + isbn;
+
+        let headers = new Headers({"Accept": "application/json"});
+
+        return this.http.get(url).toPromise()
+            .then(response => {
+                console.log("got book");
+                return response.json() as Book;
+            })
+            .catch(error => {
+                console.error("CatalogService: " + error);
+                return Promise.reject(error);
+            });
+
+
+        /*return new Promise(function (resolve, reject) {
 
             let foundBook: Book = null;
             for (let book of BOOK_DATA) {
@@ -41,7 +56,7 @@ export class CatalogService {
             } else {
                 reject("book not found");
             }
-        });
+        });*/
 
     }
 
@@ -49,7 +64,7 @@ export class CatalogService {
 
         console.log("CatalogService: searchBooks");
 
-        this.lastKeywords=keywords;
+        this.lastKeywords = keywords;
 
         let foundBooks: Book[] = [];
         let myKeywords: Array<string> = keywords.split(" ");
@@ -59,18 +74,18 @@ export class CatalogService {
             }
         }
 
-        this.lastBooks=foundBooks;
+        this.lastBooks = foundBooks;
 
         return foundBooks;
     }
 
-    public searchBooksAsync(keywords: string): Promise<Book[]> {
+    public searchBooksAsync(keywords: string): Promise<BookInfo[]> {
 
         console.log("CatalogService: searchBooksAsync");
 
-        this.lastKeywords=keywords;
+        this.lastKeywords = keywords;
 
-        let url = this.baseUrl + "?keywords="+keywords;
+        let url = BOOKSTORE_REST_URL + "/books" + "?keywords=" + keywords;
 
         console.log("searchBooksAsync" + url);
 
@@ -79,7 +94,7 @@ export class CatalogService {
         return this.http.get(url).toPromise()
             .then(response => {
                 console.log("got any books");
-                return response.json() as Book[];
+                return response.json() as BookInfo[];
             })
             .catch(error => {
                 console.error("CatalogService: " + error);
@@ -88,17 +103,17 @@ export class CatalogService {
 
         /*return new Promise((resolve, reject) => {
 
-            let foundBooks: Book[] = [];
-            let myKeywords: Array<string> = keywords.split(" ");
-            for (let book of BOOK_DATA) {
-                if (book.containsKeywords(myKeywords)) {
-                    foundBooks.push(book);
-                }
-            }
+         let foundBooks: Book[] = [];
+         let myKeywords: Array<string> = keywords.split(" ");
+         for (let book of BOOK_DATA) {
+         if (book.containsKeywords(myKeywords)) {
+         foundBooks.push(book);
+         }
+         }
 
 
-            setTimeout(() => resolve(foundBooks), 2000);
+         setTimeout(() => resolve(foundBooks), 2000);
 
-        });*/
+         });*/
     }
 }

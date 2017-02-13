@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {Book} from "../../core/book";
 import {CatalogService} from "../../service/catalog.service";
+import {BookInfo} from "../../core/book-info";
 @Component({
     selector: 'catalog',
     templateUrl: "app/component/catalog/catalog.component.html"
@@ -12,7 +13,7 @@ export class CatalogComponent {
 
     public keywords: string = "";
 
-    public foundBooks: Array<Book> = [];
+    public foundBooks: Array<BookInfo> = [];
 
     public numberFoundBooks: string = "";
 
@@ -64,6 +65,5 @@ export class CatalogComponent {
             }
 
         });
-
     }
 }
