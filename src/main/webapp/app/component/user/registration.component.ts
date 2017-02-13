@@ -17,6 +17,12 @@ export class RegistrationComponent {
     constructor(private service: UserService, private router: Router) {}
 
     public onSubmit(): void {
+        if (this.password != this.repeatPassword) {
+            this.errorMessage = "Passwords are not identical";
+            return;
+        }
+
+        this.registration.password = this.password;
         this.service.register(this.registration)
             .then(response => this.router.navigate((["/catalog"])))
             .catch(error => this.errorMessage = "Unable to register");
