@@ -9,9 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var customer_1 = require("../../data/customer");
+var customer_1 = require("../../core/customer");
+var credit_card_1 = require("../../core/credit-card");
+var credit_card_type_1 = require("../../core/credit-card-type");
 var UserEditComponent = (function () {
     function UserEditComponent() {
+        this.creditCard = new credit_card_1.CreditCard();
+        this.creditCardTypes = [];
+        this.minYear = new Date().getFullYear();
+        this.maxYear = new Date().getFullYear() + 10;
+        this.creditCardPattern = "^5[1-5][0-9]{14}$";
+        console.log("log1");
+        this.creditCardTypes.push(new credit_card_type_1.CreditCardType("MASTER_CARD", "MasterCard"));
+        this.creditCardTypes.push(new credit_card_type_1.CreditCardType("VISA", "Visa"));
+        console.log("log2");
     }
     __decorate([
         core_1.Input(), 

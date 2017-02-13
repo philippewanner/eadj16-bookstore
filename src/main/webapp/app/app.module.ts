@@ -14,6 +14,7 @@ import {BookDetailsComponent} from "./component/book-details/book-details.compon
 import {ShoppingCartComponent} from "./component/shopping-cart/shopping-cart.component";
 import {ShoppingCartService} from "./service/shopping-cart.service";
 import {OrderComponent} from "./component/order/order.component";
+import {HttpModule} from "@angular/http";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
@@ -25,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes)],
+    imports: [BrowserModule, FormsModule, HttpModule, RouterModule.forRoot(routes)],
     declarations: [AppComponent,
         CatalogComponent,
         LoginComponent,

@@ -8,19 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var registration_1 = require("../../data/registration");
+var registration_1 = require("../../core/registration");
 var core_1 = require("@angular/core");
 var user_service_1 = require("../../service/user.service");
+var router_1 = require("@angular/router");
 var RegistrationComponent = (function () {
-    function RegistrationComponent(userService) {
+    function RegistrationComponent(service, router) {
+        this.service = service;
+        this.router = router;
         this.registration = new registration_1.Registration();
     }
-    RegistrationComponent.prototype.onSubmit = function () { };
+    RegistrationComponent.prototype.onSubmit = function () {
+        var _this = this;
+        this.service.register(this.registration)
+            .then(function (response) { return _this.router.navigate((["/catalog"])); })
+            .catch(function (error) { return _this.errorMessage = "Unable to register"; });
+    };
     RegistrationComponent = __decorate([
         core_1.Component({
             templateUrl: "app/component/user/registration.component.html"
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService])
+        __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router])
     ], RegistrationComponent);
     return RegistrationComponent;
 }());

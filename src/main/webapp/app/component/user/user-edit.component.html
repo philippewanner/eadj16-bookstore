@@ -1,18 +1,105 @@
 <div class="form-group">
     <label for="lastName" class="control-label col-sm-2">Last name</label>
     <div class="col-sm-4">
-        <input id="lastName" name="lastName" type="text" required class="form-control" [(ngModel)]="customer.lastName">
+        <input id="lastName" name="lastName" type="text" required class="form-control" [(ngModel)]="customer.lastName" #lastName>
+    </div>
+    <div class="col-sm-2 error" *ngIf="lastName.errors && (lastName.dirty || lastName.touched)">
+        <div [hidden]="!lastName.errors.required">Name is required</div>
     </div>
 </div>
 <div class="form-group">
     <label for="firstName" class="control-label col-sm-2">First name</label>
     <div class="col-sm-4">
-        <input id="firstName" name="firstName" type="text" required class="form-control" [(ngModel)]="customer.firstName">
+        <input id="firstName" name="firstName" type="text" required class="form-control" [(ngModel)]="customer.firstName" #firstName>
+    </div>
+    <div class="col-sm-2 error" *ngIf="firstName.errors && (firstName.dirty || firstName.touched)">
+        <div [hidden]="!firstName.errors.required">First name is required</div>
+    </div>
+</div>
+
+<h2>Address</h2>
+<div class="form-group">
+    <label for="street" class="control-label col-sm-2">Street</label>
+    <div class="col-sm-4">
+        <input id="street" name="street" type="text" required class="form-control" [(ngModel)]="customer.address.street" #street>
+    </div>
+    <div class="col-sm-2 error" *ngIf="street.errors && (street.dirty || street.touched)">
+        <div [hidden]="!street.errors.required">Street is required</div>
     </div>
 </div>
 <div class="form-group">
-    <label for="firstName" class="control-label col-sm-2">Street</label>
+    <label for="postalCode" class="control-label col-sm-2">Postal Code</label>
     <div class="col-sm-4">
-        <input id="street" name="street" type="text" required class="form-control" [(ngModel)]="customer.firstName">
+        <input id="postalCode" name="postalCode" type="text" required class="form-control" [(ngModel)]="customer.address.postalCode" #postalCode>
+    </div>
+    <div class="col-sm-2 error" *ngIf="postalCode.errors && (postalCode.dirty || postalCode.touched)">
+        <div [hidden]="!postalCode.errors.required">Postal Code is required</div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="city" class="control-label col-sm-2">City</label>
+    <div class="col-sm-4">
+        <input id="city" name="city" type="text" required class="form-control" [(ngModel)]="customer.address.city" #city>
+    </div>
+    <div class="col-sm-2 error" *ngIf="city.errors && (city.dirty || city.touched)">
+        <div [hidden]="!city.errors.required">City is required</div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="state" class="control-label col-sm-2">State</label>
+    <div class="col-sm-4">
+        <input id="state" name="state" type="text" class="form-control" [(ngModel)]="customer.address.state">
+    </div>
+</div>
+<div class="form-group">
+    <label for="country" class="control-label col-sm-2">Country</label>
+    <div class="col-sm-4">
+        <input id="country" name="country" type="text" required class="form-control" [(ngModel)]="customer.address.country" #country>
+    </div>
+    <div class="col-sm-2 error" *ngIf="country.errors && (country.dirty || country.touched)">
+        <div [hidden]="!country.errors.required">Country is required</div>
+    </div>
+</div>
+
+<h2>Credit card</h2>
+<div class="form-group">
+    <label for="type" class="col-sm-2 control-label">Type</label>
+    <div class="col-sm-2">
+        <select id="type" name="type" class="form-control" [(ngModel)]="customer.creditCard.type" #type="ngModel" required>
+            <option></option>
+            <option *ngFor="let creditCardType of creditCardTypes" [value]="creditCardType.value">
+                {{creditCardType.label}}
+            </option>
+        </select>
+        <div *ngIf="type?.errors && (type?.dirty || type?.touched)">
+            <div [hidden]="!type.errors.required">Type is required</div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="number" class="col-sm-2 control-label">Number</label>
+    <div class="col-sm-4">
+        <input id="number" name="number" type="text" class="form-control" [(ngModel)]="customer.creditCard.number"
+               #number="ngModel" required [pattern]="creditCardPattern"/>
+        <div *ngIf="number?.errors && (number?.dirty || number?.touched)">
+            <div [hidden]="!number.errors.required">Number is required</div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="month" class="col-sm-2 control-label">Expiration</label>
+    <div class="col-sm-2">
+        <input id="month" name="month" type="number" class="form-control" placeholder="month" min="1" max="12"
+               [(ngModel)]="customer.creditCard.expirationMonth" #month="ngModel" required/>
+    </div>
+    <div *ngIf="month?.errors && (month?.dirty || month?.touched)">
+        <div [hidden]="!month.errors.required">Month is required</div>
+    </div>
+    <div class="col-sm-2">
+        <input id="year" name="year" type="number" class="form-control" placeholder="year" min="{{minYear}}"
+               max="{{maxYear}}" [(ngModel)]="customer.creditCard.expirationYear" #year="ngModel" required/>
+    </div>
+    <div *ngIf="year.errors && (year.dirty || year.touched)">
+        <div [hidden]="!year.errors.required">Year is required</div>
     </div>
 </div>

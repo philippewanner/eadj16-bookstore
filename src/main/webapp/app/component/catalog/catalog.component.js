@@ -35,12 +35,12 @@ var CatalogComponent = (function () {
     CatalogComponent.prototype.search = function () {
         var _this = this;
         this.foundBooks = [];
+        this.numberFoundBooks = "";
         this.searching = "searching...";
         if (this.keywords.length === 0) {
             this.numberFoundBooks = "please enter any keywords";
             return;
         }
-        //this.foundBooks = this.catalogService.searchBooks(this.keywords);
         this.catalogService.searchBooksAsync(this.keywords).then(function (result) {
             _this.searching = "";
             _this.foundBooks = result;
