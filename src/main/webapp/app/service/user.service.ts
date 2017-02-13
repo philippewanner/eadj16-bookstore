@@ -19,7 +19,7 @@ export class UserService {
     public authenticate(email: string, password: string): Promise<boolean> {
         let url: string = BOOKSTORE_REST_URL + REGISTRATIONS_URL + email;
         let headers: Headers = new Headers({"password": password});
-        return this.http.get(url, headers).toPromise()
+        return this.http.get(url, {headers}).toPromise()
             .then(response => response.ok)
             .catch(error => {
                 console.log("UserService: " + error);
@@ -30,7 +30,7 @@ export class UserService {
     public register(registration: Registration): Promise<number> {
         let url: string = BOOKSTORE_REST_URL + REGISTRATIONS_URL;
         let headers: Headers = new Headers({"Content-Type": "application/json"});
-        return this.http.post(url, registration, headers).toPromise()
+        return this.http.post(url, registration, {headers}).toPromise()
             .then(response => {
                 if (response.status === 201) {
                     return response.json() as number;
