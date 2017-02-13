@@ -26,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes), HttpModule],
+    imports: [BrowserModule, FormsModule, HttpModule, RouterModule.forRoot(routes)],
     declarations: [AppComponent,
         CatalogComponent,
         LoginComponent,

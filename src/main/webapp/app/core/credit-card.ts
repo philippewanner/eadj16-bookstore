@@ -1,9 +1,5 @@
-export enum CreditCardType {
-    AMERICAN_EXPRESS, MASTER_CARD, VISA
-}
-
 export class CreditCard {
-    type: CreditCardType;
+    type: string;
     number: string;
     expirationMonth: number;
     expirationYear: number;

@@ -4,19 +4,21 @@
     <div class="form-group">
         <label for="email" class="control-label col-sm-2">Email</label>
         <div class="col-sm-4">
-            <input id="email" name="email" class="form-control" type="email" maxlength="255" required #email/>
+            <input id="email" name="email" class="form-control" type="email" maxlength="255" required
+                   [(ngModel)]="email" #mail/>
         </div>
-        <div *ngIf="email.errors && (email.dirty || email.touched)">
-            <div [hidden]="!email.errors.required">Email is required</div>
+        <div class="col-sm-2 error" *ngIf="mail.errors && (mail.dirty || mail.touched)">
+            <div [hidden]="!mail.errors.required">Email is required</div>
         </div>
     </div>
     <div class="form-group">
         <label for="password" class="control-label col-sm-2">Password</label>
         <div class="col-sm-4">
-            <input id="password" name="password" class="form-control" type="password" maxlength="255" required #password/>
+            <input id="password" name="password" class="form-control" type="password" maxlength="255" required
+                   [(ngModel)]="password" #pw/>
         </div>
-        <div *ngIf="password.errors && (password.dirty || password.touched)">
-            <div [hidden]="!password.errors.required">Password is required</div>
+        <div class="col-sm-2 error" *ngIf="pw.errors && (pw.dirty || pw.touched)">
+            <div [hidden]="!pw.errors.required">Password is required</div>
         </div>
     </div>
     <div class="form-group">
@@ -24,5 +26,8 @@
         <div class="col-sm-4">
             <button type="submit" class="btn btn-default" [disabled]="!loginForm.form.valid">Login</button>
         </div>
+    </div>
+    <div class="form-group" *ngIf="errorMessage != null">
+        <div class="col-sm-6 error">{{errorMessage}}</div>
     </div>
 </form>

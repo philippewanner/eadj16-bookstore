@@ -160,6 +160,7 @@
                 <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warSourceExcludes>node_modules/**</warSourceExcludes>
                 </configuration>
             </plugin>
         </plugins>
