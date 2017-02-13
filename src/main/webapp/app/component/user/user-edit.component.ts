@@ -21,9 +21,7 @@ export class UserEditComponent {
     customer: Customer;
 
     constructor() {
-        console.log("log1");
         this.creditCardTypes.push(new CreditCardType("MASTER_CARD", "MasterCard"));
         this.creditCardTypes.push(new CreditCardType("VISA", "Visa"));
-        console.log("log2");
     }
 }
