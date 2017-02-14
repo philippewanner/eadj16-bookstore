@@ -30,7 +30,7 @@
 <div class="form-group">
     <label for="postalCode" class="control-label col-sm-2">Postal Code</label>
     <div class="col-sm-4">
-        <input id="postalCode" name="postalCode" type="text" required class="form-control" [(ngModel)]="customer.address.postalCode" #postalCode>
+        <input id="postalCode" name="postalCode" type="text" required class="form-control" [(ngModel)]="customer.address.postalCode" #postalCode="ngModel">
     </div>
     <div class="col-sm-2 error" *ngIf="postalCode.errors && (postalCode.dirty || postalCode.touched)">
         <div [hidden]="!postalCode.errors.required">Postal Code is required</div>
@@ -39,7 +39,7 @@
 <div class="form-group">
     <label for="city" class="control-label col-sm-2">City</label>
     <div class="col-sm-4">
-        <input id="city" name="city" type="text" required class="form-control" [(ngModel)]="customer.address.city" #city>
+        <input id="city" name="city" type="text" required class="form-control" [(ngModel)]="customer.address.city" #city="ngModel">
     </div>
     <div class="col-sm-2 error" *ngIf="city.errors && (city.dirty || city.touched)">
         <div [hidden]="!city.errors.required">City is required</div>
@@ -54,7 +54,7 @@
 <div class="form-group">
     <label for="country" class="control-label col-sm-2">Country</label>
     <div class="col-sm-4">
-        <input id="country" name="country" type="text" required class="form-control" [(ngModel)]="customer.address.country" #country>
+        <input id="country" name="country" type="text" required class="form-control" [(ngModel)]="customer.address.country" #country="ngModel">
     </div>
     <div class="col-sm-2 error" *ngIf="country.errors && (country.dirty || country.touched)">
         <div [hidden]="!country.errors.required">Country is required</div>
@@ -71,7 +71,7 @@
                 {{creditCardType.label}}
             </option>
         </select>
-        <div *ngIf="type?.errors && (type?.dirty || type?.touched)">
+        <div *ngIf="type.errors && (type.dirty || type?.touched)">
             <div [hidden]="!type.errors.required">Type is required</div>
         </div>
     </div>
@@ -92,7 +92,7 @@
         <input id="month" name="month" type="number" class="form-control" placeholder="month" min="1" max="12"
                [(ngModel)]="customer.creditCard.expirationMonth" #month="ngModel" required/>
     </div>
-    <div *ngIf="month?.errors && (month?.dirty || month?.touched)">
+    <div *ngIf="month.errors && (month.dirty || month.touched)">
         <div [hidden]="!month.errors.required">Month is required</div>
     </div>
     <div class="col-sm-2">

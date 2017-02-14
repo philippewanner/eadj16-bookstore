@@ -5,7 +5,7 @@
         <label for="email" class="control-label col-sm-2">Email</label>
         <div class="col-sm-4">
             <input id="email" name="email" class="form-control" type="email" maxlength="255" required
-                   [(ngModel)]="email" #mail/>
+                   [(ngModel)]="email" #mail="ngModel"/>
         </div>
         <div class="col-sm-2 error" *ngIf="mail.errors && (mail.dirty || mail.touched)">
             <div [hidden]="!mail.errors.required">Email is required</div>
@@ -15,7 +15,7 @@
         <label for="password" class="control-label col-sm-2">Password</label>
         <div class="col-sm-4">
             <input id="password" name="password" class="form-control" type="password" maxlength="255" required
-                   [(ngModel)]="password" #pw/>
+                   [(ngModel)]="password" #pw="ngModel"/>
         </div>
         <div class="col-sm-2 error" *ngIf="pw.errors && (pw.dirty || pw.touched)">
             <div [hidden]="!pw.errors.required">Password is required</div>
