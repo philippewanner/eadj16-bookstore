@@ -4,6 +4,7 @@ import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 
 @Component({
+    selector: 'registration',
     templateUrl: "app/component/user/registration.component.html"
 })
 export class RegistrationComponent {
@@ -14,7 +15,8 @@ export class RegistrationComponent {
 
     errorMessage: string;
 
-    constructor(private service: UserService, private router: Router) {}
+    constructor(private service: UserService, private router: Router) {
+    }
 
     public onSubmit(): void {
         if (this.password != this.repeatPassword) {

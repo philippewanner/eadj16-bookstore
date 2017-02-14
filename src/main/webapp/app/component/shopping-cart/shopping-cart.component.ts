@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {ShoppingCart} from "./shopping-cart";
 import {ShoppingCartItem} from "./shopping-cart-item";
 import {ShoppingCartService} from "../../service/shopping-cart.service";
@@ -8,6 +8,9 @@ import {ShoppingCartService} from "../../service/shopping-cart.service";
     templateUrl: 'app/component/shopping-cart/shopping-cart.component.html'
 })
 export class ShoppingCartComponent {
+
+    @Input()
+    private isOrdering: boolean;
 
     private shoppingCart: ShoppingCart = new ShoppingCart();
 

@@ -13,14 +13,20 @@ export class UserService {
 
     public customer: Customer;
 
+    public loggedIn: boolean=false;
+
     constructor(private http: Http) {
+        this.loggedIn=false;
     }
 
     public authenticate(email: string, password: string): Promise<boolean> {
         let url: string = BOOKSTORE_REST_URL + REGISTRATIONS_URL + email;
         let headers: Headers = new Headers({"password": password});
         return this.http.get(url, {headers}).toPromise()
-            .then(response => response.ok)
+            .then(response => {
+                this.loggedIn=true;
+                return response.ok
+            })
             .catch(error => {
                 console.log("UserService: " + error);
                 return false;
