@@ -3,6 +3,7 @@ import {Book} from "../../core/book"
 import {Router} from "@angular/router";
 import {CatalogService} from "../../service/catalog.service";
 import {ShoppingCartService} from "../../service/shopping-cart.service";
+import {BookInfo} from "../../core/book-info";
 
 @Component({
     selector: 'book-list',
@@ -19,13 +20,13 @@ export class BookListComponent {
         console.log("constructor BookListComponent")
     }
 
-    public select(book: Book):void {
+    public select(book: BookInfo):void {
         console.log("call select");
 
         this.router.navigate((['/book-details',book.isbn]));
     }
 
-    public addBookToCart(book: Book):void{
+    public addBookToCart(book: BookInfo):void{
         console.log("add book to cart");
 
         this.shoppingCartService.addBook(book, 1);

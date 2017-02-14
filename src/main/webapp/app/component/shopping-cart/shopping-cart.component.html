@@ -24,9 +24,11 @@
                     <td class="col-sm-1">{{item.book.price}}</td>
                     <td class="col-sm-1">
                         <input type="number" [(ngModel)]="item.quantity" (click)="handleQuantityChange(item)"
-                               maxlength="4"></td>
+                               maxlength="4" *ngIf="!isOrdering">
+                        <div *ngIf="isOrdering">{{item.quantity}}</div>
+                    </td>
                     <td class="col-sm-1">
-                        <button (click)="deleteBook(item)">delete</button>
+                        <button (click)="deleteBook(item)" *ngIf="!isOrdering">delete</button>
                     </td>
                 </tr>
 
@@ -45,25 +47,30 @@
 
     </div>
 
-    <div *ngIf="shoppingCart.items.length===0">
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4"><h4>Your shopping cart is empty</h4></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4"><a routerLink="/catalog" routerLinkActive="active"><h4>Please browse our
-                sortiment</h4></a></div>
-        </div>
-    </div>
+    <div *ngIf="!isOrdering">
 
-    <div *ngIf="shoppingCart.items.length>0">
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4"><a routerLink="/catalog" routerLinkActive="active"><h4>Continue browsing our
-                sortiment</h4></a></div>
-            <div class="col-sm-4 text-right"><a routerLink="/order" routerLinkActive="active"><h4>Checkout</h4></a></div>
+        <div *ngIf="shoppingCart.items.length===0">
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4"><h4>Your shopping cart is empty</h4></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4"><a routerLink="/catalog" routerLinkActive="active"><h4>Please browse our
+                    sortiment</h4></a></div>
+            </div>
         </div>
+
+        <div *ngIf="shoppingCart.items.length>0">
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4"><a routerLink="/catalog" routerLinkActive="active"><h4>Continue browsing our
+                    sortiment</h4></a></div>
+                <div class="col-sm-4 text-right"><a routerLink="/order" routerLinkActive="active"><h4>Checkout</h4></a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>

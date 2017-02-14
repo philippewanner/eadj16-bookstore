@@ -1,5 +1,6 @@
 import {ShoppingCartItem} from "./shopping-cart-item";
 import {Book} from "../../core/book"
+import {BookInfo} from "../../core/book-info";
 
 export class ShoppingCart {
 
@@ -8,7 +9,7 @@ export class ShoppingCart {
 
     constructor() { this.updateTotalPrice();   }
 
-    public addBook(book: Book, quantity: number = 1) {
+    public addBook(book: BookInfo, quantity: number = 1) {
         let newItem: ShoppingCartItem = new ShoppingCartItem(book, quantity);
 
         let added: Boolean = false;
@@ -28,7 +29,7 @@ export class ShoppingCart {
         this.updateTotalPrice();
     }
 
-    public removeBook(book: Book) {
+    public removeBook(book: BookInfo) {
         let index: number = 0;
         for (index = 0; index < this.items.length; index++) {
             if (this.items[index].book.isbn === book.isbn) {

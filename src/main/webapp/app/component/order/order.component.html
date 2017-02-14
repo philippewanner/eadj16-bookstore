@@ -1,1 +1,25 @@
-<h1>TODO: place order</h1>
+<h1>Place order</h1>
+
+<div id="orderProcessing" *ngIf="!ordered">
+
+    <div id="loginrequired" *ngIf="!userService.loggedIn">
+        <login>loading login</login>
+    </div>
+
+    <div id="addressUsed" *ngIf="userService.loggedIn">
+        <registration>loading registration</registration>
+    </div>
+
+    <div id="shoppingCartState" *ngIf="userService.loggedIn">
+        <shopping-cart [isOrdering]="true">loading...</shopping-cart>
+    </div>
+
+    <div *ngIf="userService.loggedIn">
+        <button (click)="placeOrder()">Place order</button>
+    </div>
+
+</div>
+
+<div id="ordered" *ngIf="ordered">
+    <h1>thank you!</h1>
+</div>

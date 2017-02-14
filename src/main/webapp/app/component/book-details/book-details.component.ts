@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {CatalogService} from "../../service/catalog.service";
 import {Location} from "@angular/common";
 import {ShoppingCartService} from "../../service/shopping-cart.service";
+import {BookInfo} from "../../core/book-info";
 
 @Component({
     selector: 'book-details',
@@ -42,6 +43,6 @@ export class BookDetailsComponent {
     }
 
     public addToCart():void{
-        this.shoppingCartService.addBook(this.book,1);
+        this.shoppingCartService.addBook(this.book as BookInfo,1);
     }
 }
