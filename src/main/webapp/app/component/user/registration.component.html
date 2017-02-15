@@ -4,19 +4,28 @@
     <div class="form-group">
         <label for="email" class="control-label col-sm-2">Email</label>
         <div class="col-sm-4">
-            <input id="email" name="email" class="form-control" type="email" required [(ngModel)]="registration.customer.email">
+            <input id="email" name="email" class="form-control" type="email" required [(ngModel)]="registration.customer.email" #email="ngModel">
+        </div>
+        <div class="col-sm-2 error" *ngIf="email.errors && (email.dirty || email.touched)">
+            <div [hidden]="!email.errors.required">Email is required</div>
         </div>
     </div>
     <div class="form-group">
         <label for="password" class="control-label col-sm-2">Password</label>
         <div class="col-sm-4">
-            <input id="password" name="password" class="form-control" type="password" required [(ngModel)]="password">
+            <input id="password" name="password" class="form-control" type="password" required [(ngModel)]="password" #pw="ngModel">
+        </div>
+        <div class="col-sm-2 error" *ngIf="pw.errors && (pw.dirty || pw.touched)">
+            <div [hidden]="!pw.errors.required">Password is required</div>
         </div>
     </div>
     <div class="form-group">
         <label for="repeatPassword" class="control-label col-sm-2">Repeat password</label>
         <div class="col-sm-4">
-            <input id="repeatPassword" name="repeatPassword" class="form-control" type="password" required [(ngModel)]="repeatPassword">
+            <input id="repeatPassword" name="repeatPassword" class="form-control" type="password" required [(ngModel)]="repeatPassword" #pwRepeat="ngModel">
+        </div>
+        <div class="col-sm-2 error" *ngIf="pwRepeat.errors && (pwRepeat.dirty || pwRepeat.touched)">
+            <div [hidden]="!pwRepeat.errors.required">Password is required</div>
         </div>
     </div>
     <user-edit [customer]="registration.customer"></user-edit>

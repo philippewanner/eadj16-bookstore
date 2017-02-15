@@ -2,19 +2,26 @@
 
 <div id="orderProcessing" *ngIf="!ordered">
 
-    <div id="loginrequired" *ngIf="!userService.loggedIn">
-        <login>loading login</login>
+    <div id="loginrequired" *ngIf="!userService.isloggedIn">
+        <login></login>
     </div>
 
-    <div id="addressUsed" *ngIf="userService.loggedIn">
-        <registration>loading registration</registration>
+    <div id="addressUsed" *ngIf="userService.isloggedIn">
+        <form *ngIf="isUserEditing" class="form-horizontal" (ngSubmit)="onSubmit()" #registationForm="ngForm">
+            <user-edit [customer]="userService.customer"></user-edit>
+            <button class="btn btn-primary" (click)="saveCustomer()">Save changes</button>
+        </form>
+        <div *ngIf="!isUserEditing" class="form-horizontal">
+            <user-view [customer]="userService.customer"></user-view>
+            <button class="btn btn-primary" (click)="editCustomer()">Edit</button>
+        </div>
     </div>
 
-    <div id="shoppingCartState" *ngIf="userService.loggedIn">
+    <div id="shoppingCartState" *ngIf="userService.isloggedIn">
         <shopping-cart [isOrdering]="true">loading...</shopping-cart>
     </div>
 
-    <div *ngIf="userService.loggedIn">
+    <div *ngIf="userService.isloggedIn">
         <button (click)="placeOrder()">Place order</button>
     </div>
 

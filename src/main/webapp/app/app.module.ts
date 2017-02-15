@@ -15,6 +15,8 @@ import {ShoppingCartComponent} from "./component/shopping-cart/shopping-cart.com
 import {ShoppingCartService} from "./service/shopping-cart.service";
 import {OrderComponent} from "./component/order/order.component";
 import {HttpModule} from "@angular/http";
+import {UserViewComponent} from "./component/user/user-view.component";
+import {OrderService} from "./service/order.service";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
@@ -32,13 +34,15 @@ const routes: Routes = [
         LoginComponent,
         RegistrationComponent,
         UserEditComponent,
+        UserViewComponent,
         BookListComponent,
         BookDetailsComponent,
         ShoppingCartComponent,
         OrderComponent],
-    providers: [UserService,
-        CatalogService,
-        ShoppingCartService],
+    providers: [CatalogService,
+        OrderService,
+        ShoppingCartService,
+        UserService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {OrderService} from "../../service/order.service";
 import {ShoppingCartService} from "../../service/shopping-cart.service";
+import {UserService} from "../../service/user.service";
 
 @Component({
     selector: 'order',
@@ -8,17 +9,24 @@ import {ShoppingCartService} from "../../service/shopping-cart.service";
 })
 export class OrderComponent {
 
-    public ordered: boolean=false;
+    private ordered: boolean;
+    private isUserEditing: boolean;
 
-    constructor(private orderService: OrderService, private shoppingCartService: ShoppingCartService){
+    constructor(private orderService: OrderService, private shoppingCartService: ShoppingCartService, private userService: UserService) {
     }
 
     public placeOrder(): void {
         console.log("place order");
 
         this.shoppingCartService.clearShoppingCart();
-        this.ordered=true;
+        this.ordered = true;
     }
 
+    public editCustomer(): void {
+        this.isUserEditing = true;
+    }
 
+    public saveCustomer(): void {
+        this.isUserEditing = false;
+    }
 }
