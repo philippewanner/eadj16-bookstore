@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {ShoppingCart} from "../component/shopping-cart/shopping-cart";
-import {Book} from "../core/book";
 import {BookInfo} from "../core/book-info";
 
 @Injectable()
