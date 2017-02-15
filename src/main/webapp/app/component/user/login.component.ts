@@ -17,8 +17,16 @@ export class LoginComponent {
     public onSubmit(): void {
         this.service.authenticate(this.email, this.password)
             .then(response => {
-                if (response) {
-                    this.router.navigate((["/catalog"]));
+                if (response != null) {
+                    this.service.getCustomer(response)
+                        .then(response => {
+                            if (response != null) {
+                                this.service.customer = response;
+                                this.router.navigate((["/catalog"]));
+                            } else {
+                                this.errorMessage = "Unable to login with this username/password";
+                            }
+                        });
                 } else {
                     this.errorMessage = "Unable to login with this username/password";
                 }

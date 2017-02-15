@@ -13,23 +13,19 @@ export class UserService {
 
     public customer: Customer;
 
-    public loggedIn: boolean=false;
-
     constructor(private http: Http) {
-        this.loggedIn=false;
     }
 
-    public authenticate(email: string, password: string): Promise<boolean> {
+    public authenticate(email: string, password: string): Promise<number> {
         let url: string = BOOKSTORE_REST_URL + REGISTRATIONS_URL + email;
         let headers: Headers = new Headers({"password": password});
         return this.http.get(url, {headers}).toPromise()
             .then(response => {
-                this.loggedIn=true;
-                return response.ok
+                return response.json() as number;
             })
             .catch(error => {
                 console.log("UserService: " + error);
-                return false;
+                return null;
             });
     }
 
@@ -46,5 +42,25 @@ export class UserService {
                 console.log("UserService: " + error);
                 return Promise.reject(error);
             });
+    }
+
+    public getCustomer(number: number): Promise<Customer> {
+        let url: string = BOOKSTORE_REST_URL + CUSTOMER_URL + number;
+        let headers: Headers = new Headers({"Accept": "application/json"});
+        return this.http.get(url, {headers}).toPromise()
+            .then(response => {
+                if (response.ok) {
+                    return response.json() as Customer;
+                }
+                return null;
+            })
+            .catch(error => {
+                console.log("UserService: " + error);
+                return Promise.reject(error);
+            });
+    }
+
+    public get isloggedIn(): boolean {
+        return this.customer != null;
     }
 }

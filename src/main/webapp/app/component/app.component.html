@@ -5,11 +5,10 @@
     <nav class="navbar navbar-inverse">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li *ngIf="userService.customer == null"><a routerLink="/login" routerLinkActive="active">Login</a></li>
-                <li *ngIf="userService.customer == null"><a routerLink="/registration" routerLinkActive="active">Registration</a>
-                </li>
+                <li *ngIf="!userService.isloggedIn"><a routerLink="/login" routerLinkActive="active">Login</a></li>
+                <li *ngIf="!userService.isloggedIn"><a routerLink="/registration" routerLinkActive="active">Registration</a></li>
                 <li><a routerLink="/catalog" routerLinkActive="active">Catalog</a></li>
-                <li><a routerLink="/shopping-cart" routerLinkActive="active">Shopping cart <span
+                <li><a routerLink="/shopping-cart" routerLinkActive="active">Shopping cart<span
                         *ngIf="shoppingCartService.getShoppingCart().items.length">({{shoppingCartService.getShoppingCart().items.length}})</span></a>
                 </li>
                 <li><a routerLink="/order" routerLinkActive="active">Checkout</a></li>

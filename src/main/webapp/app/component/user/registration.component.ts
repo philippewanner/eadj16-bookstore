@@ -26,7 +26,17 @@ export class RegistrationComponent {
 
         this.registration.password = this.password;
         this.service.register(this.registration)
-            .then(response => this.router.navigate((["/catalog"])))
+            .then(response => {
+                this.service.getCustomer(response)
+                    .then(response => {
+                        if (response != null) {
+                            this.service.customer = response;
+                            this.router.navigate((["/catalog"]));
+                        } else {
+                            this.errorMessage = "Unable to register";
+                        }
+                    });
+            })
             .catch(error => this.errorMessage = "Unable to register");
     }
 }
