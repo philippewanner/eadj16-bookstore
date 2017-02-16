@@ -7,7 +7,7 @@
         <div class="col-sm-2"></div>
 
         <div class="col-sm-10">
-            <table class="table table-hover table-bordered">
+            <table id="pagedTable" class="table table-striped">
                 <thead>
                 <tr>
                     <th class="col-sm-1">ISBN</th>
@@ -18,7 +18,7 @@
                 </thead>
 
                 <tbody>
-                <tr *ngFor="let book of books">
+                <tr *ngFor="let book of pagedBooks">
                     <td class="col-sm-1" (click)="select(book)">{{book.isbn}}</td>
                     <td class="col-sm-6" (click)="select(book)">{{book.title}}</td>
                     <td class="col-sm-1" (click)="select(book)">{{book.price}}</td>
@@ -33,4 +33,22 @@
         </div>
 
     </div>
+
+    <div class="row">
+        <div class="col-sm-2"></div>
+
+        <div class="row">
+
+            <button (click)="previousPage()" *ngIf="pager.hasPrevious">{{previous}}</button>
+
+            <button disabled *ngIf="!pager.hasPrevious">{{previous}}</button>
+
+            <button (click)="nextPage()" *ngIf="pager.hasNext">{{next}}</button>
+
+            <button disabled *ngIf="!pager.hasNext">{{next}}</button>
+
+        </div>
+
+    </div>
+
 </div>

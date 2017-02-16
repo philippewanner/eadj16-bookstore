@@ -23,16 +23,23 @@
             <book-list [books]="foundBooks" (onSelect)="selectBook($event)" *ngIf="foundBooks.length"></book-list>
         </div>
 
-        <div class="row" *ngIf="searching">
+        <div class="row" *ngIf="!searching.length && noBooksFound.length">
+
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6"><h4>{{noBooksFound}}</h4></div>
+
+        </div>
+
+        <div class="row" *ngIf="searching && !keywordsRequired.length">
 
             <div class="col-sm-2"></div>
             <div class="col-sm-6"><h6>{{searching}}</h6></div>
 
         </div>
-        <div class="row" *ngIf="numberFoundBooks.length">
+        <div class="row" *ngIf="keywordsRequired.length">
 
             <div class="col-sm-2"></div>
-            <div class="col-sm-6"><h4>{{numberFoundBooks}}</h4></div>
+            <div class="col-sm-6"><h4>{{keywordsRequired}}</h4></div>
 
         </div>
 

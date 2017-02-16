@@ -8,7 +8,7 @@ import {BookInfo} from "../core/book-info";
 @Injectable()
 export class CatalogService {
 
-    public lastKeywords: string;
+    public lastKeywords: string="";
     public lastBooks: BookInfo[];
 
     constructor(private http: Http) {

@@ -15,9 +15,11 @@ export class CatalogComponent {
 
     public foundBooks: Array<BookInfo> = [];
 
-    public numberFoundBooks: string = "";
-
     public selectedBook: Book = null;
+
+    public keywordsRequired: String="";
+
+    public noBooksFound:string="";
 
     constructor(private catalogService: CatalogService) {
         console.log("constructor CatalogComponent");
@@ -40,14 +42,17 @@ export class CatalogComponent {
 
     public search(): void {
         this.foundBooks = [];
-        this.numberFoundBooks="";
 
         this.searching = "searching...";
 
+        this.noBooksFound="";
+
         if (this.keywords.length === 0) {
-            this.numberFoundBooks = "please enter any keywords";
+            this.keywordsRequired = "please enter any keywords";
             return;
         }
+
+        this.keywordsRequired = "";
 
         this.catalogService.searchBooksAsync(this.keywords).then((result: Book[]) => {
 
@@ -59,10 +64,8 @@ export class CatalogComponent {
 
                 this.catalogService.lastBooks = this.foundBooks;
 
-                this.numberFoundBooks = this.foundBooks.length + " books found";
-            } else {
-                this.numberFoundBooks = "no books found";
-            }
+
+            }else{this.noBooksFound="no books found";}
 
         });
     }
