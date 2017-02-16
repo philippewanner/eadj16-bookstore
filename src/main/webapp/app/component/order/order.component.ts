@@ -12,11 +12,15 @@ export class OrderComponent {
     private ordered: boolean;
     private isUserEditing: boolean;
 
-    constructor(private orderService: OrderService, private shoppingCartService: ShoppingCartService, private userService: UserService) {
+    constructor(private orderService: OrderService,
+                private shoppingCartService: ShoppingCartService,
+                private userService: UserService) {
     }
 
-    public placeOrder(): void {
-        console.log("place order");
+    public order(): void {
+        console.log("place the order");
+
+        this.orderService.placeOrder();
 
         this.shoppingCartService.clearShoppingCart();
         this.ordered = true;
