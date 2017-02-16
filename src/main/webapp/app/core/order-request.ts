@@ -1,8 +1,8 @@
-import {BookInfo} from "./book-info";
+import {ShoppingCartItem} from "../component/shopping-cart/shopping-cart-item";
 export class OrderRequest {
 
     constructor(public customerNr: number,
-                public items: Array<BookInfo>) {
+                public items: Array<ShoppingCartItem>) {
     }
 
 }

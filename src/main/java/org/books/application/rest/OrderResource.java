@@ -1,6 +1,5 @@
 package org.books.application.rest;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.books.application.dto.PurchaseOrder;
 import org.books.application.dto.PurchaseOrderItem;
 import org.books.application.exception.*;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 /**
@@ -70,8 +70,8 @@ public class OrderResource {
      *  Body            order data (see XML schema)
      */
     @POST
-    @Consumes({APPLICATION_XML})
-    @Produces({APPLICATION_XML})
+    @Consumes({APPLICATION_XML, APPLICATION_JSON})
+    @Produces({APPLICATION_XML, APPLICATION_JSON})
     public Order placeOrder(OrderRequest orderRequest) {
 
         logger.log(Level.INFO, "placeOrder");
@@ -123,7 +123,7 @@ public class OrderResource {
      */
     @GET
     @Path("{number}")
-    @Produces({APPLICATION_XML})
+    @Produces({APPLICATION_XML, APPLICATION_JSON})
     public Order findOrderByNumber(@PathParam("number") Long number) {
 
         logger.log(Level.INFO, "findOrderByNumber " + number);
@@ -160,7 +160,7 @@ public class OrderResource {
      *  Body            list of order infos (see XML schema)
      */
     @GET
-    @Produces({APPLICATION_XML})
+    @Produces({APPLICATION_XML, APPLICATION_JSON})
     public List<OrderInfo> searchOrdersOfCustomer(@QueryParam("number") Long customerNr, @QueryParam("year") Integer year) {
 
         logger.log(Level.INFO, "searchOrdersOfCustomer " + customerNr);
