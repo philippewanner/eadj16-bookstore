@@ -28,7 +28,6 @@ export class OrdersComponent {
 
             this.orderService.searchOrdersByCustomerAndYear(this.userService.customer.number, year)
                 .then((result: Array<OrderInfo>) => {
-                    console.log("here");
                     this.orders = result;
                 })
                 .catch((error: any) => {
@@ -45,9 +44,10 @@ export class OrdersComponent {
 
     public onCancel(orderNr: number){
 
-        console.log("clicked on cancel order number "+orderNr);
+        console.log("clicked on cancel order number "+orderNr)
 
-        this.getOrdersByCurrentCustomerAndYear(this.selectedYear)
+        this.orderService.cancelOrderWithNumber(orderNr)
+            .then(r => this.getOrdersByCurrentCustomerAndYear(this.selectedYear))
     }
 
     public isValid(orderInfo: OrderInfo): boolean{

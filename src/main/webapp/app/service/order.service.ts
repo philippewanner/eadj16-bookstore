@@ -26,7 +26,7 @@ export class OrderService {
         return this.http.post(url, orderRequest, {headers}).toPromise()
             .then(response => {
                 if (response.status === 201) {
-                    console.log("placeOrderResponse="+response.json())
+                    console.log("placeOrderResponse=" + response.json())
                     return response.json() as number;
                 }
             })
@@ -38,7 +38,7 @@ export class OrderService {
 
     public searchOrdersByCustomerAndYear(customerNr: number, year: number): Promise<Array<OrderInfo>> {
 
-        console.log("OrderService: searchOrdersByCustomerAndYear("+customerNr+","+year+")");
+        console.log("OrderService: searchOrdersByCustomerAndYear(" + customerNr + "," + year + ")");
 
         let url = BOOKSTORE_REST_URL + ORDER_URL;
 
@@ -55,7 +55,22 @@ export class OrderService {
                 console.error("OrderService: " + error);
                 return Promise.reject(error);
             });
-}
+    }
+
+    public cancelOrderWithNumber(orderNumber: number): Promise<any> {
+
+        console.log("OrderService: cancelOrderWithNumber(" + orderNumber + ")");
+
+        let url = BOOKSTORE_REST_URL + ORDER_URL + orderNumber;
+
+        return this.http.delete(url).toPromise()
+            .then(response => {
+                console.log("order number " + orderNumber + " has been cancel.")
+            })
+            .catch(error => {
+                console.error("OrderService: " + error);
+            });
+    }
 
     private convertShoppingCartToOrderRequest(shoppingCart: ShoppingCart): OrderRequest {
 
