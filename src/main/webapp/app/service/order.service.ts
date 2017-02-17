@@ -20,7 +20,7 @@ export class OrderService {
         let orderRequest = this.convertShoppingCartToOrderRequest(this.shoppingCartService.getShoppingCart());
 
         let url: string = BOOKSTORE_REST_URL + ORDER_URL;
-        let headers: Headers = new Headers({"Content-Type": "application/xml"});
+        let headers: Headers = new Headers({"Content-Type": "application/json"});
         return this.http.post(url, orderRequest, {headers}).toPromise()
             .then(response => {
                 if (response.status === 201) {
