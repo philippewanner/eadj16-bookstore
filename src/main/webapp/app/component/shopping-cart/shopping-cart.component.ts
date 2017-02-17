@@ -34,9 +34,9 @@ export class ShoppingCartComponent {
     }
 
     public deleteBook(item: ShoppingCartItem): void {
-        console.log("deleteBook " + item.book.title);
+        console.log("deleteBook " + item.bookInfo.title);
 
-        this.shoppingCartService.removeBook(item.book);
+        this.shoppingCartService.removeBook(item.bookInfo);
 
         this.shoppingCart = this.shoppingCartService.getShoppingCart();
         this.shoppingCart.updateTotalPrice();

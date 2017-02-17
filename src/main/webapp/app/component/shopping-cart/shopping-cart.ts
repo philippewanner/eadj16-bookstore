@@ -15,7 +15,7 @@ export class ShoppingCart {
         let added: Boolean = false;
 
         for (let entry of this.items) {
-            if (entry.book.isbn === newItem.book.isbn) {
+            if (entry.bookInfo.isbn === newItem.bookInfo.isbn) {
                 entry.quantity += newItem.quantity;
                 added = true;
                 break;
@@ -32,7 +32,7 @@ export class ShoppingCart {
     public removeBook(book: BookInfo) {
         let index: number = 0;
         for (index = 0; index < this.items.length; index++) {
-            if (this.items[index].book.isbn === book.isbn) {
+            if (this.items[index].bookInfo.isbn === book.isbn) {
 
                 this.items.splice(index,1);
                 break;

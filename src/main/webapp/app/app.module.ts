@@ -13,17 +13,17 @@ import {CatalogService} from "./service/catalog.service";
 import {BookDetailsComponent} from "./component/book-details/book-details.component";
 import {ShoppingCartComponent} from "./component/shopping-cart/shopping-cart.component";
 import {ShoppingCartService} from "./service/shopping-cart.service";
-import {OrderComponent} from "./component/order/order.component";
 import {HttpModule} from "@angular/http";
 import {UserViewComponent} from "./component/user/user-view.component";
 import {OrderService} from "./service/order.service";
+import {CheckoutComponent} from "./component/checkout/checkout.component";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "registration", component: RegistrationComponent},
     {path: "book-details/:isbn", component: BookDetailsComponent},
     {path: "shopping-cart", component: ShoppingCartComponent},
-    {path: "order", component: OrderComponent},
+    {path: "checkout", component: CheckoutComponent},
     {path: "**", component: CatalogComponent}
 ];
 
@@ -38,7 +38,7 @@ const routes: Routes = [
         BookListComponent,
         BookDetailsComponent,
         ShoppingCartComponent,
-        OrderComponent],
+        CheckoutComponent],
     providers: [CatalogService,
         OrderService,
         ShoppingCartService,
