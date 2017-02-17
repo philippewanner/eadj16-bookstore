@@ -5,7 +5,8 @@ import {OrderInfo} from "../../core/order-info";
 
 @Component({
     selector: 'orders',
-    templateUrl: 'app/component/orders/orders.component.html'
+    templateUrl: 'app/component/orders/orders.component.html',
+    styleUrls: ['app/component/orders/orders.component.css']
 })
 export class OrdersComponent {
 
@@ -40,5 +41,26 @@ export class OrdersComponent {
         console.log("clicked on year input");
 
         this.getOrdersByCurrentCustomerAndYear(this.selectedYear)
+    }
+
+    public onCancel(orderNr: number){
+
+        console.log("clicked on cancel order number "+orderNr);
+
+        this.getOrdersByCurrentCustomerAndYear(this.selectedYear)
+    }
+
+    public isValid(orderInfo: OrderInfo): boolean{
+        return orderInfo.status === "PROCESSING";
+    }
+
+    public setStyles(isVisible: boolean) {
+
+        let styles = {
+            // CSS property names
+            'font-style':  isVisible ? 'italic' : 'normal',
+            'opacity': isVisible ? 1: 0.4
+        };
+        return styles;
     }
 }
