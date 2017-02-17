@@ -6,6 +6,12 @@
         <login></login>
     </div>
 
+    <div class="col-sm-2" *ngIf="userService.isloggedIn">
+        Order's year
+        <input id="year" name="year" type="number" class="form-control" placeholder="year" min="{{minYear}}"
+               max="{{maxYear}}" [(ngModel)]="selectedYear" #year="ngModel" (click)="onClick()" required/>
+    </div>
+
     <div id="noorder" *ngIf="orders.length == 0 && userService.isloggedIn">
         No order to display
     </div>
