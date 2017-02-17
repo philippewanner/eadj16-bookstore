@@ -19,9 +19,9 @@
 
                 <tbody>
                 <tr *ngFor="let item of shoppingCart.items">
-                    <td class="col-sm-1">{{item.book.isbn}}</td>
-                    <td class="col-sm-6">{{item.book.title}}</td>
-                    <td class="col-sm-1">{{item.book.price}}</td>
+                    <td class="col-sm-1">{{item.bookInfo.isbn}}</td>
+                    <td class="col-sm-6">{{item.bookInfo.title}}</td>
+                    <td class="col-sm-1">{{item.bookInfo.price}}</td>
                     <td class="col-sm-1">
                         <input type="number" [(ngModel)]="item.quantity" (click)="handleQuantityChange(item)"
                                maxlength="4" *ngIf="!isOrdering">
