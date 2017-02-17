@@ -25,9 +25,6 @@ export class CheckoutComponent {
 
         this.shoppingCartService.clearShoppingCart();
         this.ordered = true;
-
-        //let orderInfos: Array<OrderInfo> = this.orderService.searchOrdersByCustomerAndYear(this.userService.customer.number, 2017);
-        //console.log(orderInfos);
     }
 
     public editCustomer(): void {

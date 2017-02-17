@@ -17,6 +17,7 @@ import {HttpModule} from "@angular/http";
 import {UserViewComponent} from "./component/user/user-view.component";
 import {OrderService} from "./service/order.service";
 import {CheckoutComponent} from "./component/checkout/checkout.component";
+import {OrdersComponent} from "./component/orders/orders.component";
 
 const routes: Routes = [
     {path: "login", component: LoginComponent},
@@ -24,6 +25,7 @@ const routes: Routes = [
     {path: "book-details/:isbn", component: BookDetailsComponent},
     {path: "shopping-cart", component: ShoppingCartComponent},
     {path: "checkout", component: CheckoutComponent},
+    {path: "orders", component: OrdersComponent},
     {path: "**", component: CatalogComponent}
 ];
 
@@ -32,6 +34,7 @@ const routes: Routes = [
     declarations: [AppComponent,
         CatalogComponent,
         LoginComponent,
+        OrdersComponent,
         RegistrationComponent,
         UserEditComponent,
         UserViewComponent,
