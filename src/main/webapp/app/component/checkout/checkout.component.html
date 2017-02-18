@@ -38,6 +38,41 @@
         <div class="col-sm-4"><h1>Thank you!</h1></div>
     </div>
 
+
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6" style="border: 1px solid gray">
+            <h4>Order summary</h4>
+
+            <p>{{userService.customer.email}}<br>
+                {{userService.customer.firstName}} {{userService.customer.lastName}}<br>
+                {{userService.customer.address.street}}<br>
+                {{userService.customer.address.postalCode}} {{userService.customer.address.city}}<br>
+                {{userService.customer.address.state}} / {{userService.customer.address.country}}<br>
+                <br>
+            </p>
+
+            <table class="table">
+                <thead>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Unit price</th>
+                <th>Quantity</th>
+                </thead>
+                <tbody>
+                <tr *ngFor="let itm of orderedItems">
+                    <td>{{itm.bookInfo.isbn}}</td>
+                    <td>{{itm.bookInfo.title}}</td>
+                    <td>{{itm.bookInfo.price | currency:'USD':true:'1.2-2'}}</td>
+                    <td>{{itm.quantity}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
     <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-4"><h4>You can review your order in</h4> <a routerLink="/orders"

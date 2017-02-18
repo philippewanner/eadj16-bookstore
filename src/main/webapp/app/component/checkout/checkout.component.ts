@@ -3,6 +3,7 @@ import {OrderService} from "../../service/order.service";
 import {ShoppingCartService} from "../../service/shopping-cart.service";
 import {UserService} from "../../service/user.service";
 import {OrderInfo} from "../../core/order-info";
+import {ShoppingCartItem} from "../shopping-cart/shopping-cart-item";
 
 @Component({
     selector: 'order',
@@ -13,6 +14,8 @@ export class CheckoutComponent {
     private ordered: boolean;
     private isUserEditing: boolean;
 
+    private orderedItems:Array<ShoppingCartItem>=[];
+
     constructor(private orderService: OrderService,
                 private shoppingCartService: ShoppingCartService,
                 private userService: UserService) {
@@ -22,6 +25,8 @@ export class CheckoutComponent {
         console.log("place the order");
 
         this.orderService.placeOrder();
+
+        this.orderedItems = this.shoppingCartService.getShoppingCart().items;
 
         this.shoppingCartService.clearShoppingCart();
         this.ordered = true;
