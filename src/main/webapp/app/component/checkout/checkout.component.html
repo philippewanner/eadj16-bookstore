@@ -1,32 +1,61 @@
 <h1>Place order</h1>
 
-<div id="orderProcessing" *ngIf="!ordered">
+<div *ngIf="shoppingCartService.getShoppingCart().items.length>0">
 
-    <div id="loginrequired" *ngIf="!userService.isloggedIn">
-        <login></login>
-    </div>
+    <div id="orderProcessing" *ngIf="!ordered">
 
-    <div id="addressUsed" *ngIf="userService.isloggedIn">
-        <form *ngIf="isUserEditing" class="form-horizontal" (ngSubmit)="onSubmit()" #registationForm="ngForm">
-            <user-edit [customer]="userService.customer"></user-edit>
-            <button class="btn btn-primary" (click)="saveCustomer()">Save changes</button>
-        </form>
-        <div *ngIf="!isUserEditing" class="form-horizontal">
-            <user-view [customer]="userService.customer"></user-view>
-            <button class="btn btn-primary" (click)="editCustomer()">Edit</button>
+        <div id="loginrequired" *ngIf="!userService.isloggedIn">
+            <login></login>
         </div>
-    </div>
 
-    <div id="shoppingCartState" *ngIf="userService.isloggedIn">
-        <shopping-cart [isOrdering]="true">loading...</shopping-cart>
-    </div>
+        <div id="addressUsed" *ngIf="userService.isloggedIn">
+            <form *ngIf="isUserEditing" class="form-horizontal" (ngSubmit)="onSubmit()" #registationForm="ngForm">
+                <user-edit [customer]="userService.customer"></user-edit>
+                <button class="btn btn-primary" (click)="saveCustomer()">Save changes</button>
+            </form>
+            <div *ngIf="!isUserEditing" class="form-horizontal">
+                <user-view [customer]="userService.customer"></user-view>
+                <button class="btn btn-primary" (click)="editCustomer()">Edit</button>
+            </div>
+        </div>
 
-    <div *ngIf="userService.isloggedIn">
-        <button (click)="order()">Place order</button>
+        <div id="shoppingCartState" *ngIf="userService.isloggedIn">
+            <shopping-cart [isOrdering]="true">loading...</shopping-cart>
+        </div>
+
+        <div *ngIf="userService.isloggedIn && shoppingCartService.getShoppingCart().items">
+            <button (click)="order()">Place order</button>
+        </div>
+
     </div>
 
 </div>
 
 <div id="ordered" *ngIf="ordered">
-    <h1>thank you!</h1>
+
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4"><h1>Thank you!</h1></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4"><h4>You can review your order in</h4> <a routerLink="/orders"
+                                                                       routerLinkActive="active"><h4>My Orders</h4>
+        </a></div>
+    </div>
+
+</div>
+
+
+<div *ngIf="shoppingCartService.getShoppingCart().items.length===0 && !ordered">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4"><h4>Your shopping cart is empty</h4></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4"><a routerLink="/catalog" routerLinkActive="active"><h4>Please browse our
+            sortiment</h4></a></div>
+    </div>
 </div>

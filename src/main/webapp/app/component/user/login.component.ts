@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {UserService} from "../../service/user.service";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: "login",
@@ -12,7 +12,9 @@ export class LoginComponent {
     private password: string;
     private errorMessage: string;
 
-    constructor(private service: UserService, private router: Router) {}
+    constructor(private service: UserService, private router: Router, private activatedRoute: ActivatedRoute) {
+        console.log(this.activatedRoute.toString());
+    }
 
     public onSubmit(): void {
         this.service.authenticate(this.email, this.password)
@@ -22,7 +24,15 @@ export class LoginComponent {
                         .then(response => {
                             if (response != null) {
                                 this.service.customer = response;
-                                this.router.navigate((["/catalog"]));
+
+                                if (this.activatedRoute.toString().includes("url:'login") && this.activatedRoute.toString().includes("path:'login")){
+                                    console.log("jump to catalog");
+
+                                    this.router.navigate((["/catalog"]));
+
+                                }else{
+                                    console.log("stay on route");
+                                }
                             } else {
                                 this.errorMessage = "Unable to login with this username/password";
                             }

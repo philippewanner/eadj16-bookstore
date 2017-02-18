@@ -1,53 +1,62 @@
-import {Book} from "./book";
+import {BookInfo} from "./book-info";
 export class Pager {
 
-    public hasNext: boolean = true;
-    public hasPrevious: boolean = false;
+    private readonly pageItemCount: number = 10;
 
-    public currentNextPosition: number = 0;
-    public currentPreviousPosition: number = 0;
+    // zero based index
+    public currentPage: number = -1;
 
-    constructor(private items: Array<Book>) {
+    // 1...x
+    public pagesCount: number = 0;
 
+    private pages: Array<Array<BookInfo>>;
+
+    constructor(private items: Array<BookInfo>) {
+
+        let pageIdx: number = 0;
+        this.pagesCount = this.getPagesCount();
+
+        this.pages = new Array<Array<BookInfo>>();
+
+        for (let pageIdx: number = 0; pageIdx < this.pagesCount; pageIdx++) {
+
+            this.pages[pageIdx] = new Array<BookInfo>();
+
+            let offset: number = pageIdx * this.pageItemCount;
+
+            for (let idx: number = offset; (idx < offset + this.pageItemCount) && (idx < this.items.length); idx++) {
+                this.pages[pageIdx].push(this.items[idx]);
+            }
+        }
     }
 
-    public getNext(itemCount: number = 10): Array<Book> {
+    public getNext(): Array<BookInfo> {
 
-        let page: Array<Book> = [];
-
-        let idx: number;
-
-        this.currentPreviousPosition = this.currentNextPosition;
-
-        for (idx = this.currentNextPosition; (idx < (this.currentNextPosition + itemCount) && idx < this.items.length); idx++) {
-            page.push(this.items[idx]);
+        this.currentPage++;
+        if (this.currentPage >= this.pagesCount) {
+            this.currentPage--;
         }
 
-        this.currentNextPosition = idx;
-
-        this.hasNext = this.currentNextPosition < this.items.length;
-        this.hasPrevious = this.currentPreviousPosition > 0;
-
-        return page;
+        return this.pages[this.currentPage];
     }
 
-    public getPrevious(itemCount: number = 10): Array<Book> {
+    public getPrevious(): Array<BookInfo> {
 
-        let page: Array<Book> = [];
-
-        this.currentPreviousPosition -= itemCount;
-
-        let idx: number;
-
-        for (idx = this.currentPreviousPosition; (idx < (this.currentPreviousPosition + itemCount) && idx < this.items.length); idx++) {
-            page.push(this.items[idx]);
+        this.currentPage--;
+        if (this.currentPage < 0) {
+            this.currentPage = 0;
         }
 
-        this.currentNextPosition = idx;
+        return this.pages[this.currentPage];
+    }
 
-        this.hasNext = true;
-        this.hasPrevious = this.currentPreviousPosition > 0;
+    private getPagesCount() {
+        let remainder: number = this.items.length % this.pageItemCount;
 
-        return page;
+        if (remainder === 0) {
+            return this.items.length / this.pageItemCount;
+        } else {
+            return (this.items.length - remainder) / this.pageItemCount + 1;
+        }
     }
 }

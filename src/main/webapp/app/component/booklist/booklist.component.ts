@@ -12,10 +12,10 @@ import {Pager} from "../../core/pager";
 })
 export class BookListComponent implements OnInit{
 
-    @Input() private books: Array<Book> = [];
+    @Input() private books: Array<BookInfo> = [];
     //@Output() private onSelect = new EventEmitter<Book>();
 
-    private pagedBooks: Array<Book>;
+    private pagedBooks: Array<BookInfo>;
 
     private elementName: string = "Found books";
     private previous:string="<<";

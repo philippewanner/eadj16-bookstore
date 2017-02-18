@@ -32,7 +32,7 @@
             <tr *ngFor="let order of orders">
                 <td class="col-sm-1">{{order.number}}</td>
                 <td class="col-sm-6">{{order.date | date:"MM/dd/yy"}}</td>
-                <td class="col-sm-1">{{order.amount | currency:"CHF"}}</td>
+                <td class="col-sm-1">{{order.amount | currency:'USD':true:'1.2-2'}}</td>
                 <td class="col-sm-1">{{order.status}}</td>
                 <td class="col-sm-1">
                     <button [ngStyle]="setStyles(isValid(order))"

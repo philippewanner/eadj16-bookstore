@@ -21,7 +21,7 @@
                 <tr *ngFor="let book of pagedBooks">
                     <td class="col-sm-1" (click)="select(book)">{{book.isbn}}</td>
                     <td class="col-sm-6" (click)="select(book)">{{book.title}}</td>
-                    <td class="col-sm-1" (click)="select(book)">{{book.price}}</td>
+                    <td class="col-sm-1" (click)="select(book)">{{book.price | currency:'USD':true:'1.2-2'}}</td>
                     <td class="col-sm-2">
                         <button (click)="addBookToCart(book)">add to cart</button>
                     </td>
@@ -39,13 +39,12 @@
 
         <div class="row">
 
-            <button (click)="previousPage()" *ngIf="pager.hasPrevious">{{previous}}</button>
+            <button (click)="previousPage()">{{previous}}</button>
 
-            <button disabled *ngIf="!pager.hasPrevious">{{previous}}</button>
+            <span>{{pager.currentPage+1}} / {{pager.pagesCount}}</span>
 
-            <button (click)="nextPage()" *ngIf="pager.hasNext">{{next}}</button>
+            <button (click)="nextPage()">{{next}}</button>
 
-            <button disabled *ngIf="!pager.hasNext">{{next}}</button>
 
         </div>
 
