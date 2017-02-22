@@ -155,20 +155,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>../client/dist</directory>
-                            <includes>
-                                <include>*</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.5.0</version>
@@ -184,7 +170,8 @@
                                 <argument>ng</argument>
                                 <argument>build</argument>
                                 <argument>-prod</argument>
-                                <argument>--base-href /bookstore/</argument>
+                                <argument>--base-href</argument>
+                                <argument>/bookstore/</argument>
                             </arguments>
                         </configuration>
                         <goals>
