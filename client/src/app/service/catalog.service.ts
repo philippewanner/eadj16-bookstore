@@ -3,7 +3,7 @@ import {Book} from "../core/book";
 import {BOOK_DATA} from "../core/book-data";
 import {Http, Headers} from "@angular/http";
 import {BookInfo} from "../core/book-info";
-import {BOOKSTORE_REST_URL} from "../../main";
+import {Config} from "../../main";
 
 @Injectable()
 export class CatalogService {
@@ -28,7 +28,7 @@ export class CatalogService {
 
     public findBookAsync(isbn: string): Promise<Book> {
 
-        let url = BOOKSTORE_REST_URL + "/books/" + isbn;
+        let url = Config.RestUrl() + "/books/" + isbn;
 
         let headers = new Headers({"Accept": "application/json"});
 
@@ -85,7 +85,7 @@ export class CatalogService {
 
         this.lastKeywords = keywords;
 
-        let url = BOOKSTORE_REST_URL + "/books" + "?keywords=" + keywords;
+        let url = Config.RestUrl() + "/books" + "?keywords=" + keywords;
 
         console.log("searchBooksAsync" + url);
 

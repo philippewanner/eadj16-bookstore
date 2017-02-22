@@ -3,10 +3,10 @@ import {ShoppingCartService} from "./shopping-cart.service";
 import {UserService} from "./user.service";
 import {OrderRequest} from "../core/order-request";
 import {OrderInfo} from "../core/order-info";
-import {BOOKSTORE_REST_URL} from "../../main";
 import {Http, Headers} from "@angular/http";
 import {ShoppingCart} from "../component/shopping-cart/shopping-cart";
 import {URLSearchParams, QueryEncoder} from '@angular/http';
+import {Config} from "../../main";
 
 const ORDER_URL: string = "/orders/";
 
@@ -21,7 +21,7 @@ export class OrderService {
 
         let orderRequest = this.convertShoppingCartToOrderRequest(this.shoppingCartService.getShoppingCart());
 
-        let url: string = BOOKSTORE_REST_URL + ORDER_URL;
+        let url: string = Config.RestUrl() + ORDER_URL;
         let headers: Headers = new Headers({"Content-Type": "application/json"});
         return this.http.post(url, orderRequest, {headers}).toPromise()
             .then(response => {
@@ -40,7 +40,7 @@ export class OrderService {
 
         console.log("OrderService: searchOrdersByCustomerAndYear(" + customerNr + "," + year + ")");
 
-        let url = BOOKSTORE_REST_URL + ORDER_URL;
+        let url = Config.RestUrl() + ORDER_URL;
 
         let params = new URLSearchParams();
         params.set('number', customerNr.toString());
@@ -61,7 +61,7 @@ export class OrderService {
 
         console.log("OrderService: cancelOrderWithNumber(" + orderNumber + ")");
 
-        let url = BOOKSTORE_REST_URL + ORDER_URL + orderNumber;
+        let url = Config.RestUrl() + ORDER_URL + orderNumber;
 
         return this.http.delete(url).toPromise()
             .then(response => {

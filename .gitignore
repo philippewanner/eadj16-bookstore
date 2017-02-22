@@ -26,3 +26,5 @@ target/
 **/client/app/**/*.js
 /server/bookstore-server.iml
 /server/nb-configuration.xml
+/client/*.iml
+/client/dist

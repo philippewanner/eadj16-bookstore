@@ -1,6 +1,0 @@
-{
-  "/bookstore": {
-    "target": "http://localhost:8080",
-    "sercure": false
-  }
-}

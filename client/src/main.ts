@@ -3,10 +3,17 @@ import { enableProdMode } from "@angular/core";
 import { environment } from "./environments/environment";
 import { AppModule } from "./app/app.module";
 
-export const BOOKSTORE_REST_URL: string = "http://localhost:8080/bookstore/rest";
+export namespace Config {
+    export function RestUrl(): string {
+        if (environment.production) {
+            return "/bookstore/rest";
+        }
+        return "http://localhost:8080/bookstore/rest";
+    }
+}
 
 if (environment.production) {
-  enableProdMode();
+    enableProdMode();
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule);
