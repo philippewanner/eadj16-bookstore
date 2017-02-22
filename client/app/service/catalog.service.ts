@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Book} from "../core/book";
 import {BOOK_DATA} from "../core/book-data";
 import {Http, Headers} from "@angular/http";
-import {BOOKSTORE_REST_URL, BOOKSTORE_REST_URLdystsys} from "../main";
+import {BOOKSTORE_REST_URL} from "../main";
 import {BookInfo} from "../core/book-info";
 
 @Injectable()

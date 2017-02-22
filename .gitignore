@@ -19,8 +19,10 @@ hs_err_pid*
 target/
 /nb-configuration.xml
 *.log
-/src/main/webapp/node_modules
+/client/node_modules
 
 # Ignores compiled TypeScript files
-**/webapp/app/**/*.map
-**/webapp/app/**/*.js
+**/client/app/**/*.map
+**/client/app/**/*.js
+/server/bookstore-server.iml
+/server/nb-configuration.xml
