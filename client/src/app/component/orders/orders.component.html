@@ -36,7 +36,7 @@
                 <td class="col-sm-1">{{order.status}}</td>
                 <td class="col-sm-1">
                     <button [ngStyle]="setStyles(isValid(order))"
-                            (click)="isValid(order) && onCancel(order.number)">
+                            (click)="isValid(order) && onCancel(order.number)" class="btn btn-default">
                         Cancel
                     </button></td>
 

@@ -24,7 +24,7 @@
         </div>
 
         <div *ngIf="userService.isloggedIn && shoppingCartService.getShoppingCart().items">
-            <button (click)="order()">Place order</button>
+            <button (click)="order()" class="btn btn-default">Place order</button>
         </div>
 
     </div>
