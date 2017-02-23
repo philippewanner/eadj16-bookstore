@@ -160,7 +160,23 @@
                 <version>1.5.0</version>
                 <executions>
                     <execution>
-                        <id>exec-npm-ng-build</id>
+                        <id>exec-npm-install</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>../client/</workingDirectory>
+                            <executable>cmd</executable>
+                            <arguments>
+                                <argument>/C</argument>
+                                <argument>npm</argument>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>exec-ng-build</id>
                         <phase>generate-sources</phase>
                         <configuration>
                             <workingDirectory>../client/</workingDirectory>
