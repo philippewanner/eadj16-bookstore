@@ -52,14 +52,4 @@ export class OrdersComponent {
     public isValid(orderInfo: OrderInfo): boolean{
         return orderInfo.status === "PROCESSING";
     }
-
-    public setStyles(isVisible: boolean) {
-
-        let styles = {
-            // CSS property names
-            'font-style':  isVisible ? 'italic' : 'normal',
-            'opacity': isVisible ? 1: 0.4
-        };
-        return styles;
-    }
 }

@@ -6,10 +6,12 @@
         <login></login>
     </div>
 
-    <div class="col-sm-2" *ngIf="userService.isloggedIn">
-        Order's year
-        <input id="year" name="year" type="number" class="form-control" placeholder="year" min="{{minYear}}"
-               max="{{maxYear}}" [(ngModel)]="selectedYear" #year="ngModel" (click)="onClick()" required/>
+    <div *ngIf="userService.isloggedIn">
+        <label for="year" class="control-label col-sm-2">Order's year</label>
+        <div class="col-sm-4">
+            <input id="year" name="year" type="number" class="form-control" placeholder="year" min="{{minYear}}"
+                 max="{{maxYear}}" [(ngModel)]="selectedYear" #year="ngModel" (click)="onClick()" required/>
+        </div>
     </div>
 
     <div id="noorder" *ngIf="orders.length == 0 && userService.isloggedIn">
@@ -18,7 +20,7 @@
 
     <div id="orders" *ngIf="orders.length > 0 && userService.isloggedIn">
 
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-striped">
             <thead>
             <tr>
                 <th class="col-sm-1">Order #</th>
@@ -35,11 +37,10 @@
                 <td class="col-sm-1">{{order.amount | currency:'USD':true:'1.2-2'}}</td>
                 <td class="col-sm-1">{{order.status}}</td>
                 <td class="col-sm-1">
-                    <button [ngStyle]="setStyles(isValid(order))"
-                            (click)="isValid(order) && onCancel(order.number)" class="btn btn-default">
+                    <button [disabled]="!isValid(order)" (click)="onCancel(order.number)" class="btn btn-default">
                         Cancel
-                    </button></td>
-
+                    </button>
+                </td>
             </tr>
 
             </tbody>
