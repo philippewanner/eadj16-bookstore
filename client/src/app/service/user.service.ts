@@ -60,6 +60,21 @@ export class UserService {
             });
     }
 
+    public updateCustomer(customer: Customer): Promise<Customer> {
+        let url: string = Config.RestUrl() + CUSTOMER_URL + customer.number;
+        let headers: Headers = new Headers({"Content-Type": "application/json"});
+        return this.http.put(url, customer, {headers}).toPromise()
+            .then(response => {
+                if (response.ok) {
+                    return response.json() as Customer;
+                }
+            })
+            .catch(error => {
+                console.log("UserService: " + error);
+                return Promise.reject(error);
+            });
+    }
+
     public get isloggedIn(): boolean {
         return this.customer != null;
     }

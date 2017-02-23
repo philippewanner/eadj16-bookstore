@@ -1,6 +1,5 @@
 import {Component, Input} from "@angular/core";
 import {Customer} from "../../core/customer";
-import {CreditCard} from "../../core/credit-card";
 import {CreditCardType} from "../../core/credit-card-type";
 
 @Component({
@@ -9,7 +8,6 @@ import {CreditCardType} from "../../core/credit-card-type";
 })
 export class UserEditComponent {
 
-    creditCard: CreditCard = new CreditCard();
     creditCardTypes: CreditCardType[] = [];
 
     minYear: number = new Date().getFullYear();

@@ -83,7 +83,7 @@
                #number="ngModel" required [pattern]="creditCardPattern"/>
     </div>
     <div class="col-sm-2 error" *ngIf="number.errors && (number.dirty || number.touched)">
-        <div [hidden]="!number.errors.required">Number is required</div>
+        <div [hidden]="!number.errors.required">Number must have 16 numbers</div>
     </div>
 </div>
 <div class="form-group">

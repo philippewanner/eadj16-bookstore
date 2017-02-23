@@ -9,9 +9,9 @@
         </div>
 
         <div id="addressUsed" *ngIf="userService.isloggedIn">
-            <form *ngIf="isUserEditing" class="form-horizontal" (ngSubmit)="onSubmit()" #registationForm="ngForm">
+            <form *ngIf="isUserEditing" class="form-horizontal" (ngSubmit)="saveCustomer()" #registationForm="ngForm">
                 <user-edit [customer]="userService.customer"></user-edit>
-                <button class="btn btn-primary" (click)="saveCustomer()">Save changes</button>
+                <button class="btn btn-primary" type="submit">Save changes</button>
             </form>
             <div *ngIf="!isUserEditing" class="form-horizontal">
                 <user-view [customer]="userService.customer"></user-view>

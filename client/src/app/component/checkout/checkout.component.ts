@@ -37,6 +37,15 @@ export class CheckoutComponent {
     }
 
     public saveCustomer(): void {
-        this.isUserEditing = false;
+        this.userService.updateCustomer(this.userService.customer)
+          .then(response => {
+                if (response != null) {
+                    this.userService.customer = response;
+                    this.isUserEditing = false;
+                } else {
+                    alert("Unable to save customer");
+                }
+          })
+          .catch(error => alert("Unable to save customer"));
     }
 }
